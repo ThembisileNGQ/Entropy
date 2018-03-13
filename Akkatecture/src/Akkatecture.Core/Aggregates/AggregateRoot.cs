@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using Akka.Persistence;
 using Akkatecture.Core;
 using Akkatecture.Extensions;
 
 namespace Akkatecture.Aggregates
 {
-    public abstract class AggregateRoot<TAggregate, TIdentity> : IAggregateRoot<TIdentity>
+    public abstract class AggregateRoot<TAggregate, TIdentity> : ReceivePersistentActor, IAggregateRoot<TIdentity>
         where TAggregate : AggregateRoot<TAggregate, TIdentity>
         where TIdentity : IIdentity
     {
@@ -19,6 +17,7 @@ namespace Akkatecture.Aggregates
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(10);
 
         public IAggregateName Name => AggregateName;
+        public override string PersistenceId => Id.Value;
         public TIdentity Id { get; }
         public int Version { get; protected set; }
         public bool IsNew => Version <= 0;
