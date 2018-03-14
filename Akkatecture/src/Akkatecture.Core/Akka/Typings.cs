@@ -84,20 +84,20 @@ namespace Akkatecture.Akka
         public ISurrogated FromSurrogate(ActorSystem system) => new TypedActorReference<TMessage>((IActorRef)RefSurrogate.FromSurrogate(system));
     }
 
-    public abstract class Actor<T> : UntypedActor
+    public abstract class Actor<TMessage> : UntypedActor
     {
-        protected abstract void OnReceive(T message);
+        protected abstract void OnReceive(TMessage message);
 
         protected override void OnReceive(object message)
         {
-            if (message is T)
-                OnReceive((T)message);
+            if (message is TMessage)
+                OnReceive((TMessage)message);
             else Unhandled(message);
         }
     }
 
 
-    public abstract class PersistentActor<T> : ReceivePersistentActor
+    public abstract class PersistentActor<TMessage> : ReceivePersistentActor
     {
 
         
