@@ -5,7 +5,7 @@ using Akkatecture.Core;
 
 namespace Akkatecture.Messaging
 {
-    public abstract class Envelope<TAggregate,TIdentity,TCommand>
+    public abstract class Envelope<TAggregate,TIdentity,TCommand> : IEnvelope<TAggregate,TIdentity,TCommand>
         where TAggregate : IAggregateRoot<TIdentity>
         where TIdentity : IIdentity
         where TCommand : ICommand<TAggregate,TIdentity>

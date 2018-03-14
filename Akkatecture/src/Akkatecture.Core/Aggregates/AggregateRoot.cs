@@ -8,13 +8,15 @@ using Akkatecture.Extensions;
 
 namespace Akkatecture.Aggregates
 {
-    public abstract class AggregateRoot<TAggregate, TIdentity> : ReceivePersistentActor, IAggregateRoot<TIdentity>
-        where TAggregate : AggregateRoot<TAggregate, TIdentity>
+    public abstract class AggregateRoot<TAggregate, TIdentity, TState> : ReceivePersistentActor, IAggregateRoot<TIdentity>
+        where TAggregate : AggregateRoot<TAggregate, TIdentity, TState>
+        where TState : AggregateState<TAggregate,TIdentity, IEventApplier<TAggregate,TIdentity>>
         where TIdentity : IIdentity
     {
         private static readonly IReadOnlyDictionary<Type, Action<TAggregate, IAggregateEvent>> ApplyMethods;
         private static readonly IAggregateName AggregateName = typeof(TAggregate).GetAggregateName();
         //private readonly List<IUncommittedEvent> _uncommittedEvents = new List<IUncommittedEvent>();
+        private TState State { get; set; } = null;
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(10);
         private ILoggingAdapter Logger { get; set; }
 
@@ -37,6 +39,12 @@ namespace Akkatecture.Aggregates
             {
                 throw new InvalidOperationException(
                     $"Aggregate '{GetType().PrettyPrint()}' specifies '{typeof(TAggregate).PrettyPrint()}' as generic argument, it should be its own type");
+            }
+
+            if (State == null)
+            {
+                throw new InvalidOperationException(
+                    $"Aggregate '{GetType().PrettyPrint()}' requires '{typeof(TState).PrettyPrint()}' to be initialized");
             }
 
             Id = id;
