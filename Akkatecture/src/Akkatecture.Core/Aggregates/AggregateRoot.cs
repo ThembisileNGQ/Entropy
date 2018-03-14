@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Akka.Event;
 using Akka.Persistence;
 using Akkatecture.Core;
 using Akkatecture.Extensions;
@@ -15,6 +16,7 @@ namespace Akkatecture.Aggregates
         private static readonly IAggregateName AggregateName = typeof(TAggregate).GetAggregateName();
         //private readonly List<IUncommittedEvent> _uncommittedEvents = new List<IUncommittedEvent>();
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(10);
+        private ILoggingAdapter Logger { get; set; }
 
         public IAggregateName Name => AggregateName;
         public override string PersistenceId => Id.Value;
@@ -38,6 +40,7 @@ namespace Akkatecture.Aggregates
             }
 
             Id = id;
+            Logger = Context.GetLogger();
         }
 
         protected void SetSourceIdHistory(int count)
