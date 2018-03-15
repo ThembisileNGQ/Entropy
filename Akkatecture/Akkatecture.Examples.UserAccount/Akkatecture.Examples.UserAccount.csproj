@@ -8,8 +8,4 @@
     <ProjectReference Include="..\src\Akkatecture.Core\Akkatecture.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Domain\UserAccountModel\Commands\" />
-  </ItemGroup>
-
 </Project>

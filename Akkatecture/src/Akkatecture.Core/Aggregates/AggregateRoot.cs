@@ -5,6 +5,7 @@ using Akka.Event;
 using Akka.Persistence;
 using Akkatecture.Core;
 using Akkatecture.Extensions;
+using static LanguageExt.Prelude;
 
 namespace Akkatecture.Aggregates
 {
@@ -14,9 +15,11 @@ namespace Akkatecture.Aggregates
         where TIdentity : IIdentity
     {
         private static readonly IReadOnlyDictionary<Type, Action<TAggregate, IAggregateEvent>> ApplyMethods;
+        private static readonly IReadOnlyDictionary<Type, Func<TAggregate, IAggregateEvent, bool>> ApplyMethods3;
+        private static readonly IReadOnlyDictionary<Type, Action<IAggregateEvent>> ApplyMethods2;
         private static readonly IAggregateName AggregateName = typeof(TAggregate).GetAggregateName();
         //private readonly List<IUncommittedEvent> _uncommittedEvents = new List<IUncommittedEvent>();
-        private TState State { get; set; } = null;
+        public TState State { get; protected set; } = null;
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(10);
         private ILoggingAdapter Logger { get; set; }
 
@@ -30,6 +33,7 @@ namespace Akkatecture.Aggregates
         static AggregateRoot()
         {
             ApplyMethods = typeof(TAggregate).GetAggregateEventApplyMethods<TAggregate, TIdentity, TAggregate>();
+            ApplyMethods2 = typeof(TAggregate).GetAggregateEventApplyMethods2<TAggregate, TIdentity>();
         }
 
         protected AggregateRoot(TIdentity id)
@@ -91,6 +95,20 @@ namespace Akkatecture.Aggregates
             //var uncommittedEvent = new UncommittedEvent(aggregateEvent, eventMetadata);
 
             ApplyEvent(aggregateEvent);
+
+
+            var type = typeof(TEvent);
+
+
+
+            var m = ApplyMethods[type];
+
+            var x = m.Bind(this as TAggregate);
+
+            var Method = ApplyMethods2[type];
+
+
+            Persist(aggregateEvent, x);
             //_uncommittedEvents.Add(uncommittedEvent);
         }
 
