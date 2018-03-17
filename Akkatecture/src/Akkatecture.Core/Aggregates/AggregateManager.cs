@@ -13,7 +13,7 @@ namespace Akkatecture.Aggregates
         where TIdentity : IIdentity
         where TCommand : ICommand<TAggregate,TIdentity>
     {
-        private ILoggingAdapter Logger { get; set; }
+        protected ILoggingAdapter Logger { get; set; }
 
         protected AggregateManager()
         {
@@ -24,17 +24,17 @@ namespace Akkatecture.Aggregates
 
         protected virtual void Manager()
         {
-            Receive<Envelope<TAggregate, TIdentity, TCommand>>(Dispatch);
+            Receive<TCommand>(Dispatch);
             Receive<object>(Fail);
         }
-
-        protected virtual bool Dispatch(Envelope<TAggregate, TIdentity, TCommand> message)
+        
+        protected virtual bool Dispatch(TCommand command)
         {
-            Logger.Info($"{this.GetType().DeclaringType} received {message.GetType()}");
-            
-            var aggregateRef = FindOrCreate(message.Command.AggregateId);
+            Logger.Info($"{GetType().DeclaringType} received {command.GetType()}");
 
-            aggregateRef.Tell(message.Command);
+            var aggregateRef = FindOrCreate(command.AggregateId);
+
+            aggregateRef.Tell(command);
 
             return true;
         }
@@ -42,7 +42,7 @@ namespace Akkatecture.Aggregates
         protected virtual bool Fail(object message)
         {
             Logger.Warning($"{this.GetType().DeclaringType} received {message.GetType()}");
-
+            Unhandled(message);
             return true;
         }
 
@@ -65,6 +65,20 @@ namespace Akkatecture.Aggregates
             var aggregateRef = Context.ActorOf(Props.Create<TAggregate>(aggregateId),aggregateId.Value);
 
             return aggregateRef;
+        }
+
+        protected  override SupervisorStrategy SupervisorStrategy()
+        {
+            return new OneForOneStrategy(
+                maxNrOfRetries: 3,
+                withinTimeMilliseconds: 3000,
+                localOnlyDecider: x =>
+                {
+
+                    Logger.Error($"[{GetType()}] Exception={x.ToString()} to be decided.");
+                    return Directive.Restart;
+                },
+                loggingEnabled: true);
         }
     }
 }

@@ -5,20 +5,17 @@ using Akka.Event;
 using Akka.Persistence;
 using Akkatecture.Core;
 using Akkatecture.Extensions;
-using static LanguageExt.Prelude;
 
 namespace Akkatecture.Aggregates
 {
+    //TODO Uncomitted Events
     public abstract class AggregateRoot<TAggregate, TIdentity, TState> : ReceivePersistentActor, IAggregateRoot<TIdentity>
         where TAggregate : AggregateRoot<TAggregate, TIdentity, TState>
         where TState : AggregateState<TAggregate,TIdentity, IEventApplier<TAggregate,TIdentity>>
         where TIdentity : IIdentity
     {
         private static readonly IReadOnlyDictionary<Type, Action<TAggregate, IAggregateEvent>> ApplyMethods;
-        private static readonly IReadOnlyDictionary<Type, Func<TAggregate, IAggregateEvent, bool>> ApplyMethods3;
-        private static readonly IReadOnlyDictionary<Type, Action<IAggregateEvent>> ApplyMethods2;
         private static readonly IAggregateName AggregateName = typeof(TAggregate).GetAggregateName();
-        //private readonly List<IUncommittedEvent> _uncommittedEvents = new List<IUncommittedEvent>();
         public TState State { get; protected set; } = null;
         private CircularBuffer<ISourceId> _previousSourceIds = new CircularBuffer<ISourceId>(10);
         private ILoggingAdapter Logger { get; set; }
@@ -28,12 +25,10 @@ namespace Akkatecture.Aggregates
         public TIdentity Id { get; }
         public int Version { get; protected set; }
         public bool IsNew => Version <= 0;
-        //public IEnumerable<IUncommittedEvent> UncommittedEvents => _uncommittedEvents;
-
+        
         static AggregateRoot()
         {
             ApplyMethods = typeof(TAggregate).GetAggregateEventApplyMethods<TAggregate, TIdentity, TAggregate>();
-            ApplyMethods2 = typeof(TAggregate).GetAggregateEventApplyMethods2<TAggregate, TIdentity>();
         }
 
         protected AggregateRoot(TIdentity id)
@@ -46,9 +41,16 @@ namespace Akkatecture.Aggregates
             }
 
             if (State == null)
-            {
-                throw new InvalidOperationException(
-                    $"Aggregate '{GetType().PrettyPrint()}' requires '{typeof(TState).PrettyPrint()}' to be initialized");
+            {     
+                try
+                {
+                    State = (TState)Activator.CreateInstance(typeof(TState));
+                }
+                catch
+                {
+                    Logger.Warning($"Unable to activate State for {GetType()}");
+                }
+                
             }
 
             Id = id;
@@ -65,8 +67,8 @@ namespace Akkatecture.Aggregates
             return !sourceId.IsNone() && _previousSourceIds.Any(s => s.Value == sourceId.Value);
         }
 
-        protected virtual void Emit<TEvent>(TEvent aggregateEvent, IMetadata metadata = null)
-            where TEvent : IAggregateEvent<TAggregate, TIdentity>
+        protected virtual void Emit<TAggregateEvent>(TAggregateEvent aggregateEvent, IMetadata metadata = null)
+            where TAggregateEvent : IAggregateEvent<TAggregate, TIdentity>
         {
             if (aggregateEvent == null)
             {
@@ -91,53 +93,30 @@ namespace Akkatecture.Aggregates
             {
                 eventMetadata.AddRange(metadata);
             }
+            
+            var type = typeof(TAggregateEvent);
+            var applyMethod = ApplyMethods[type];
+            var aggregateApplyMethod = applyMethod.Bind(this as TAggregate);
+            
+            //Need to figure out how to Persist CommittedEvent with Metadata and then publish the DomainEvent (not aggregate event to event stream)
 
-            //var uncommittedEvent = new UncommittedEvent(aggregateEvent, eventMetadata);
+            Persist(aggregateEvent, aggregateApplyMethod);
 
-            ApplyEvent(aggregateEvent);
-
-
-            var type = typeof(TEvent);
-
-
-
-            var m = ApplyMethods[type];
-
-            var x = m.Bind(this as TAggregate);
-
-            var Method = ApplyMethods2[type];
+            Logger.Info($"[{Name}] With Id={Id} Commited [{typeof(TAggregateEvent)}]");
 
 
-            Persist(aggregateEvent, x);
-            //_uncommittedEvents.Add(uncommittedEvent);
+            //Eventsourced.LastSequenceNr or Version
+            var domainEvent = new DomainEvent<TAggregate,TIdentity,TAggregateEvent>(aggregateEvent,eventMetadata,now,Id,Version);
+
+            Publish(domainEvent);
         }
 
-        /*public virtual async Task LoadAsync(
-            IEventStore eventStore,
-            ISnapshotStore snapshotStore,
-            CancellationToken cancellationToken)
+        protected virtual void Publish<TEvent>(TEvent aggregateEvent)
         {
-            var domainEvents = await eventStore.LoadEventsAsync<TAggregate, TIdentity>(Id, cancellationToken).ConfigureAwait(false);
-
-            ApplyEvents(domainEvents);
-        }*/
-
-        /*public virtual async Task<IReadOnlyCollection<IDomainEvent>> CommitAsync(
-            IEventStore eventStore,
-            ISnapshotStore snapshotStore,
-            ISourceId sourceId,
-            CancellationToken cancellationToken)
-        {
-            var domainEvents = await eventStore.StoreAsync<TAggregate, TIdentity>(
-                Id,
-                _uncommittedEvents,
-                sourceId,
-                cancellationToken)
-                .ConfigureAwait(false);
-            _uncommittedEvents.Clear();
-            return domainEvents;
-        }*/
-
+            Context.System.EventStream.Publish(aggregateEvent);
+            Logger.Info($"[{Name}] With Id={Id} Published [{typeof(TEvent)}]");
+        }
+        
         public void ApplyEvents(IReadOnlyCollection<IDomainEvent> domainEvents)
         {
             if (!domainEvents.Any())
@@ -203,6 +182,34 @@ namespace Akkatecture.Aggregates
             Version++;
         }
 
+        protected virtual bool Recover(IAggregateEvent<TAggregate, TIdentity> aggregateEvent)
+        {
+            try
+            {
+                ApplyEvent(aggregateEvent);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        protected virtual bool Recover(SnapshotOffer aggregateSnapshotOffer)
+        {
+            try
+            {
+                State = aggregateSnapshotOffer.Snapshot as TState;
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         private readonly Dictionary<Type, Action<object>> _eventHandlers = new Dictionary<Type, Action<object>>();
         protected void Register<TAggregateEvent>(Action<TAggregateEvent> handler)
             where TAggregateEvent : IAggregateEvent<TAggregate, TIdentity>
@@ -225,7 +232,6 @@ namespace Akkatecture.Aggregates
         public override string ToString()
         {
             return $"{GetType().PrettyPrint()} v{Version}";
-            //return $"{GetType().PrettyPrint()} v{Version}(-{_uncommittedEvents.Count})";
         }
     }
 }

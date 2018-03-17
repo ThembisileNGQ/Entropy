@@ -6,7 +6,7 @@ namespace Akkatecture.Examples.UserAccount.Domain.UserAccountModel
     public class UserAccountState : AggregateState<UserAccountAggregate,UserAccountId,IEventApplier<UserAccountAggregate, UserAccountId>>,
         IApply<UserAccountCreatedEvent>
     {
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         public void Apply(UserAccountCreatedEvent aggregateEvent)
         {

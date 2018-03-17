@@ -3,7 +3,7 @@ using Akkatecture.Examples.UserAccount.Domain.UserAccountModel.Events;
 
 namespace Akkatecture.Examples.UserAccount.Domain.UserAccountModel.Commands
 {
-    public class CreateUserAccountCommand : Command<UserAccountAggregate,UserAccountId>
+    public class CreateUserAccountCommand : Command<UserAccountAggregate, UserAccountId>
     {
         public string Name { get; }
         public CreateUserAccountCommand(
@@ -17,13 +17,11 @@ namespace Akkatecture.Examples.UserAccount.Domain.UserAccountModel.Commands
 
 
     //not in use yet
-    public static class CreateUserAccountHandler
+    public class CreateUserAccountCommandHandler : CommandHandler<UserAccountAggregate, UserAccountId, CreateUserAccountCommand>
     {
-        public static bool HandleCommand(UserAccountAggregate aggregate, UserAccountState aggregateState,
-            CreateUserAccountCommand command)
+        public override bool Handle(UserAccountAggregate aggregate, CreateUserAccountCommand command)
         {
-            var aggregateEvent = new UserAccountCreatedEvent(command.Name);
-
+            aggregate.Create(command.Name);
             return true;
         }
     }
