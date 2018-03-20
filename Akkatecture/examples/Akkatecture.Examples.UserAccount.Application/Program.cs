@@ -14,7 +14,8 @@ namespace Akkatecture.Examples.UserAccount.Application
             var aggregateManager = system.ActorOf(Props.Create(() => new UserAccountAggregateManager()));
 
             var aggregateId = UserAccountId.New;
-            var command = new CreateUserAccountCommand(aggregateId, "foo");
+            var command = new CreateUserAccountCommand(aggregateId, "foo user");
+
             aggregateManager.Tell(command);
 
             while (true)

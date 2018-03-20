@@ -43,20 +43,5 @@ namespace Akkatecture.Aggregates
             applier((TEventApplier)(object)this, aggregateEvent);
             return true;
         }
-
-        public bool Apply2(
-            IAggregateEvent<TAggregate, TIdentity> aggregateEvent)
-        {
-            var aggregateEventType = aggregateEvent.GetType();
-            Action<TEventApplier, IAggregateEvent> applier;
-
-            if (!ApplyMethods.TryGetValue(aggregateEventType, out applier))
-            {
-                return false;
-            }
-
-            applier((TEventApplier)(object)this, aggregateEvent);
-            return true;
-        }
     }
 }
