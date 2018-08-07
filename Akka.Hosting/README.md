@@ -1,4 +1,4 @@
-#Akka Hosting Example
+# Akka Hosting Example
 
 Using the new 2.1 [generic host](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-2.1) abstrations
 
