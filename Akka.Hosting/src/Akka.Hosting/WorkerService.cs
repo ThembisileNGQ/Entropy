@@ -26,7 +26,7 @@ namespace Akka.Hosting
             ActorSystem = ActorSystem.Create("hosted-actorsystem");
             GreetingActor = ActorSystem.ActorOf(Props.Create(() => new GreetingActor()));
 
-            return Task.CompletedTask;
+            return base.StartAsync(cancellationToken);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
