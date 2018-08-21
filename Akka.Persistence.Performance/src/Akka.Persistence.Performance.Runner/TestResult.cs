@@ -27,7 +27,7 @@ namespace Akka.Persistence.Performance.Runner
         public override string ToString()
         {
             return
-                $"{ActorCount} actors stored {MessagesPerActor} events each in {ElapsedSeconds} sec. Average: {Throughput} events/sec";
+                $"{ActorCount} actors stored {MessagesPerActor} events each in {ElapsedSeconds} seconds. Average: {Throughput} events/sec.";
         }
     }
 }
