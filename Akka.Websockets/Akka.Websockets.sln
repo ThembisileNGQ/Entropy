@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1BDF8613-DFCF-44DC-BC6B-205E5349E953}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Websockets.Manager", "src\Akka.Websockets.Manager\Akka.Websockets.Manager.csproj", "{B5ECE545-0122-450E-9093-5D89096DBC2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Websockets.Manager.Client", "src\Akka.Websockets.Manager.Client\Akka.Websockets.Manager.Client.csproj", "{6D1EDC3F-EEB1-4707-91C1-95E808469E53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Websockets.Manager.Common", "src\Akka.Websockets.Manager.Common\Akka.Websockets.Manager.Common.csproj", "{09964A31-F443-4A65-BA2B-099FF8DE675C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Websockets.Manager.Actors", "src\Akka.Websockets.Manager.Actors\Akka.Websockets.Manager.Actors.csproj", "{A32F8A0C-C3A9-49F8-8578-E0057B845CC9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B5ECE545-0122-450E-9093-5D89096DBC2B} = {1BDF8613-DFCF-44DC-BC6B-205E5349E953}
+		{6D1EDC3F-EEB1-4707-91C1-95E808469E53} = {1BDF8613-DFCF-44DC-BC6B-205E5349E953}
+		{09964A31-F443-4A65-BA2B-099FF8DE675C} = {1BDF8613-DFCF-44DC-BC6B-205E5349E953}
+		{A32F8A0C-C3A9-49F8-8578-E0057B845CC9} = {1BDF8613-DFCF-44DC-BC6B-205E5349E953}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B5ECE545-0122-450E-9093-5D89096DBC2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5ECE545-0122-450E-9093-5D89096DBC2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5ECE545-0122-450E-9093-5D89096DBC2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5ECE545-0122-450E-9093-5D89096DBC2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D1EDC3F-EEB1-4707-91C1-95E808469E53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D1EDC3F-EEB1-4707-91C1-95E808469E53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D1EDC3F-EEB1-4707-91C1-95E808469E53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D1EDC3F-EEB1-4707-91C1-95E808469E53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09964A31-F443-4A65-BA2B-099FF8DE675C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09964A31-F443-4A65-BA2B-099FF8DE675C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09964A31-F443-4A65-BA2B-099FF8DE675C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09964A31-F443-4A65-BA2B-099FF8DE675C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A32F8A0C-C3A9-49F8-8578-E0057B845CC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A32F8A0C-C3A9-49F8-8578-E0057B845CC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A32F8A0C-C3A9-49F8-8578-E0057B845CC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A32F8A0C-C3A9-49F8-8578-E0057B845CC9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
