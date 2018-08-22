@@ -7,9 +7,12 @@ Edit the configuration in the `Akka.Persistence.Performance.Runner` Program.cs M
 ## Experiment
 The experiment brute forces through the akka persistence engine by making actors add 1 to their internal state since we are using `EventSourced.Persist` to persist our events, we guarantee the processing of the next command only one persist has been completed. Feel free to change the `TestCriteria`values that can influence the significance and length of your tests.
 
-Plugins used
+### Plugins used
+
 [In-Memory](https://github.com/akkadotnet/akka.net/blob/dev/src/core/Akka.Persistence/Journal/MemoryJournal.cs)
+
 [Redis](https://github.com/AkkaNetContrib/Akka.Persistence.Redis)
+
 [PostgreSql](https://github.com/AkkaNetContrib/Akka.Persistence.PostgreSql)
 
 ## Results
