@@ -32,7 +32,16 @@ POSTGRES JSONB
 1000 actors stored 100 events each in 195.04 sec. Average: 512.715340442986 events/sec
 ```
 
-I cant not really explain the difference between BYTEA and JSONB serialization but for now ill leave this here for discussion 🤷
+I cant not really explain why MSGPACK is "faster" than PROTOBUF in redis but for now ill leave this here for discussion 🤷, may be just implementation detail.
+
+## Conclusion
+
+Inmemory is an order of magnitude faster than redis,
+Redis is an order of magnitude faster than postgres
+
+But you knew that already.
+
+## Test Rig
 
 Tests run on
 ```
