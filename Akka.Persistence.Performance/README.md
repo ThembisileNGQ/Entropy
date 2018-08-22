@@ -7,6 +7,11 @@ Edit the configuration in the `Akka.Persistence.Performance.Runner` Program.cs M
 ## Experiment
 The experiment brute forces through the akka persistence engine by making actors add 1 to their internal state since we are using `EventSourced.Persist` to persist our events, we guarantee the processing of the next command only one persist has been completed. Feel free to change the `TestCriteria`values that can influence the significance and length of your tests.
 
+Plugins used
+[In-Memory](https://github.com/akkadotnet/akka.net/blob/dev/src/core/Akka.Persistence/Journal/MemoryJournal.cs)
+[Redis](https://github.com/AkkaNetContrib/Akka.Persistence.Redis)
+[PostgreSql](https://github.com/AkkaNetContrib/Akka.Persistence.PostgreSql)
+
 ## Results
 Keep in mind these results are using the latest persistence plugins for the backing stores mentioned. Another thing that can influence the persistence plugin is the serializer which ends up dictating how the bits get pushed down the wire (and how long it takes to serialize/deserialize the messaes). In memory plugin is expected to be the fastest since it doesnt have to serialize in proc and the IO is all done on the same machine.
 
