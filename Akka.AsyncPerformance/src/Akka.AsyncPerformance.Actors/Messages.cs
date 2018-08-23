@@ -18,9 +18,9 @@
         }
     }
 
-    public class GetResultsQuery
+    public class GetFinalResultsQuery
     {
-        public GetResultsQuery()
+        public GetFinalResultsQuery()
         {
             
         }
@@ -29,6 +29,7 @@
     public class StateResult
     {
         public int Value { get; }
+        
         public StateResult(int value)
         {
             Value = value;

@@ -9,18 +9,19 @@ namespace Akka.AsyncPerformance.Actors
     {
         private readonly ILoggingAdapter _logger;
         private readonly int _delay;
+        private readonly int _maxStore;
         public int Store { get; private set; }
-        public int MaxStore { get; private set; }
-
+        
         public PipeToActor(int maxStore)
         {
-            Store = 0;
-            MaxStore = maxStore;
+            _maxStore = maxStore;
             _delay = Context.System.Settings.Config.GetInt("test.delay");
             _logger = Context.GetLogger();
             
+            Store = 0;
+            
             Receive<AddOneCommand>(Handle);
-            Receive<GetResultsQuery>(Handle);
+            Receive<GetFinalResultsQuery>(Handle);
             Receive<PipeAddOneCommand>(Handle);
         }
 
@@ -41,16 +42,15 @@ namespace Akka.AsyncPerformance.Actors
         
         public bool Handle(PipeAddOneCommand command)
         {
-            _logger.Info($"pipe to actor finished [{command.MessageId}]");
             Store++;
             
-            
+            //_logger.Info($"pipe to actor finished [{command.MessageId}]");
             return true;
         }
 
-        public bool Handle(GetResultsQuery query)
+        public bool Handle(GetFinalResultsQuery query)
         {
-            if (Store < MaxStore)
+            if (Store < _maxStore)
             {
                 Self.Tell(query,Sender);
             }

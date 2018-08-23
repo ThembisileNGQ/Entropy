@@ -11,4 +11,7 @@ This is a silly thing that ive written to test out persistence plugins and how t
 [go here to find out more...](https://github.com/Lutando/Entropy/tree/master/Akka.Persistence.Performance)
 
 ## Akka.Websockets
-WIP on best practices for AspNet Core Websockets and ActorSystem integration with Akka.net
+Currently a WIP on best practices for AspNetCore Websockets and ActorSystem integration with Akka.net
+
+## Akka.AsyncPerformance
+A little bit of code that shows how two actors doing the same thing result in different throughputs. async/await vs PipeTo with some astonishing test results that you can reproduce. [go here to find out more...](https://github.com/Lutando/Entropy/tree/master/Akka.AsyncPerformance)

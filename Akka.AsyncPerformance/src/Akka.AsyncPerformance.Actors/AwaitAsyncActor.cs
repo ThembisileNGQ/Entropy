@@ -18,7 +18,7 @@ namespace Akka.AsyncPerformance.Actors
             _logger = Context.GetLogger();
             _delay = Context.System.Settings.Config.GetInt("test.delay");
             ReceiveAsync<AddOneCommand>(Handle);
-            Receive<GetResultsQuery>(Handle);
+            Receive<GetFinalResultsQuery>(Handle);
         }
 
         public async Task Handle(AddOneCommand command)
@@ -33,7 +33,7 @@ namespace Akka.AsyncPerformance.Actors
             
         }
 
-        public bool Handle(GetResultsQuery query)
+        public bool Handle(GetFinalResultsQuery query)
         {
             var result = new StateResult(Store);
             Sender.Tell(result);

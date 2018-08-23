@@ -12,8 +12,8 @@ namespace Akka.AsyncPerformance.Application
     {
         public static async Task Main(string[] args)
         {
-            var numberOfMessages = 1000;
-            var delay = 1000;
+            var numberOfMessages = 10;
+            var delay = 10;
             var configString = $@"test.delay = {delay}";
             var config = ConfigurationFactory.ParseString(configString);
             
@@ -32,7 +32,6 @@ namespace Akka.AsyncPerformance.Application
             Console.WriteLine("\n");
             Console.WriteLine("PipeToActor");
             Console.WriteLine(pipeToResult);
-            //Console.ReadLine();
         }
 
         public static async Task<TrialResult> Trial(IActorRef actor, int numberOfMessages)
@@ -46,7 +45,7 @@ namespace Akka.AsyncPerformance.Application
                 actor.Tell(command);
             }
             
-            var result = new GetResultsQuery();
+            var result = new GetFinalResultsQuery();
             var state = await actor.Ask<StateResult>(result);
             asyncWatch.Stop();
             
