@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F36DA52F-9152-46A7-9F6B-BDF1F3633570}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.AsyncPerformance.Application", "src\Akka.AsyncPerformance.Application\Akka.AsyncPerformance.Application.csproj", "{EB8EDE88-6211-43EA-8BA0-33C77F01D2AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.AsyncPerformance.Actors", "src\Akka.AsyncPerformance.Actors\Akka.AsyncPerformance.Actors.csproj", "{4C4FBEF3-B6AD-47B4-8B59-A042904B92CE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EB8EDE88-6211-43EA-8BA0-33C77F01D2AD} = {F36DA52F-9152-46A7-9F6B-BDF1F3633570}
+		{4C4FBEF3-B6AD-47B4-8B59-A042904B92CE} = {F36DA52F-9152-46A7-9F6B-BDF1F3633570}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB8EDE88-6211-43EA-8BA0-33C77F01D2AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB8EDE88-6211-43EA-8BA0-33C77F01D2AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB8EDE88-6211-43EA-8BA0-33C77F01D2AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB8EDE88-6211-43EA-8BA0-33C77F01D2AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C4FBEF3-B6AD-47B4-8B59-A042904B92CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C4FBEF3-B6AD-47B4-8B59-A042904B92CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C4FBEF3-B6AD-47B4-8B59-A042904B92CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C4FBEF3-B6AD-47B4-8B59-A042904B92CE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
