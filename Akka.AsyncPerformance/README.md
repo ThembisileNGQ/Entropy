@@ -7,11 +7,11 @@ Testing out the real difference between async await in actors and pipeto by simu
 
 ## Results
 
-| Delay      | 10 ms  | 50 ms  | 10 ms   | 100 ms  | 100 ms   | 1000 ms    |
-|------------|--------|--------|---------|---------|----------|------------|
-| Messages   | 10     | 10     | 100     | 10      | 100      | 1000       |
-| AsyncAwait | 155 ms | 572 ms | 1209 ms | 1074 ms | 10324 ms | 1003028 ms |
-| PipeTo     | 15 ms  | 57     | 13 ms   | 107ms   | 107 ms   | 1010 ms    |
+| Delay        | 10 ms  | 50 ms  | 10 ms   | 100 ms  | 100 ms   | 1000 ms    |
+|--------------|--------|--------|---------|---------|----------|------------|
+| **Messages** | **10** | **10** | **100** | **10**  | **100**  | **1000**   |
+| AsyncAwait   | 155 ms | 572 ms | 1209 ms | 1074 ms | 10324 ms | 1003028 ms |
+| PipeTo       | 15 ms  | 57     | 13 ms   | 107ms   | 107 ms   | 1010 ms    |
 
 # Conclusion
 
