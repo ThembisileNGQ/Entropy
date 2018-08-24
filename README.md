@@ -1,5 +1,5 @@
 # Entropy
-Brain Dump of Silly Ideas
+Brain Dump of silly ideas.
 
 
 ## Akka.Hosting
@@ -11,7 +11,8 @@ This is a silly thing that ive written to test out persistence plugins and how t
 [go here to find out more...](https://github.com/Lutando/Entropy/tree/master/Akka.Persistence.Performance)
 
 ## Akka.Websockets
-Currently a WIP on best practices for AspNetCore Websockets and ActorSystem integration with Akka.net
+Currently a WIP on best practices for AspNetCore Websockets and ActorSystem integration with Akka.net.
+[go here to find out more...](https://github.com/Lutando/Entropy/tree/master/Akka.Websockets)
 
 ## Akka.AsyncPerformance
 A little bit of code that shows how two actors doing the same thing result in different throughputs. async/await vs PipeTo with some astonishing test results that you can reproduce. [go here to find out more...](https://github.com/Lutando/Entropy/tree/master/Akka.AsyncPerformance)
