@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.AsyncPerformance.Actors;
@@ -13,7 +12,7 @@ namespace Akka.AsyncPerformance.Application
         public static async Task Main(string[] args)
         {
             var numberOfMessages = 10;
-            var delay = 10;
+            var delay = 100;
             var configString = $@"test.delay = {delay}";
             var config = ConfigurationFactory.ParseString(configString);
             

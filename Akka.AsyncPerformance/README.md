@@ -1,5 +1,5 @@
 # Akka.AsyncPerformance
-Testing out the real difference between async await in actors and pipeto
+Testing out the real difference between async await in actors and pipeto by simulating asynchronous delay using Task.Delay().
 
 # Setup
 2 Actors were implemented, each were delayed using `Task.Delay(n)` to simiulate an asynchronous task.
@@ -7,99 +7,22 @@ Testing out the real difference between async await in actors and pipeto
 
 ## Results
 
-```
-Test Scenario 1
-Async Delay = 10ms
-Number Of Messages = 10
--
-asyncAwaitActor
-Time : 155 ms.
-Test Pass : True
-
-PipeToActor
-Time : 14 ms.
-Test Pass : True
-
-----------------------------------
-
-Test Scenario 1
-Async Delay = 50ms
-Number Of Messages = 10
--
-asyncAwaitActor
-Time : 572 ms.
-Test Pass : True
-
-PipeToActor
-Time : 57 ms.
-Test Pass : True
-
-----------------------------------
-
-Test Scenario 2
-Async Delay = 50ms
-Number Of Messages = 10
--
-asyncAwaitActor
-Time : 1209 ms.
-Test Pass : True
-
-PipeToActor
-Time : 13 ms.
-Test Pass : True
-
-----------------------------------
-
-Test Scenario 3
-Async Delay = 10ms
-Number Of Messages = 100
--
-asyncAwaitActor
-Time : 1074 ms.
-Test Pass : True
-
-PipeToActor
-Time : 107 ms.
-Test Pass : True
-
-----------------------------------
-
-Test Scenario 4
-Async Delay = 100ms
-Number Of Messages = 100
--
-asyncAwaitActor
-Time : 10324 ms.
-Test Pass : True
-
-PipeToActor
-Time : 107 ms.
-Test Pass : True
-
-----------------------------------
-
-Test Scenario 4
-Async Delay = 1000ms
-Number Of Messages = 1000
--
-asyncAwaitActor
-Time : 1003028 ms.
-Test Pass : True
-
-PipeToActor
-Time : 1010 ms.
-Test Pass : True
-```
+| Delay        | 10 ms  | 50 ms  | 10 ms   | 100 ms  | 100 ms   | 1000 ms    |
+|--------------|--------|--------|---------|---------|----------|------------|
+| **Messages** | **10** | **10** | **100** | **10**  | **100**  | **1000**   |
+| AsyncAwait   | 155 ms | 572 ms | 1209 ms | 1074 ms | 10324 ms | 1003028 ms |
+| PipeTo       | 15 ms  | 57     | 13 ms   | 107ms   | 107 ms   | 1010 ms    |
 
 # Conclusion
-I would say always use pipeto unless you are lazy.
+
+The results are quite conclusive showing that the amount of time it takes to process `N` messages that expirience `D` delay per processing for PipeTo is `~ D ms` (the best we can hope for), and the amount of time it takes for AsyncAwait to process N messages that expirience D delay is `~ N x D ms` (the worst we could wish for).
 
 ## Test Rig
 
 Tests run on
 ```
 OSX
-i7 7th Generation Intel Processor
+i7 MacBook Pro (2015)
 16GB ram
 500GB MAC FLASH
 Akka 1.3.8
