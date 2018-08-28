@@ -22,7 +22,11 @@ namespace Akka.Websockets.Manager.Actors
             _userId = userId;
             _connection = connection;
             _connectionAggregate = connectionAggregate;
-
+            
+            var command = new AddUserConnection(
+                new UserConnection(connectionId,userId,Self));
+            
+            _connectionAggregate.Tell(command);
             Receive<SendWebsocketMessage>(Handle);
         }
 
