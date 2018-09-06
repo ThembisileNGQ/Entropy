@@ -17,7 +17,9 @@ namespace Transcoding.Transcoder.Actors
         public ConversionOptions ConversionOptions { get; set; }
         private readonly string _ffmpegPath;  
         public Process TranscodingProcess { get; private set; }
+        List<string> ReceivedMessagesLog = new List<string>();
         private readonly ILoggingAdapter _logger;
+        public EngineParameters EngineParameters { get; }
 
         public TranscodingActor(
             MediaFile input,
@@ -30,20 +32,21 @@ namespace Transcoding.Transcoder.Actors
             ConversionOptions = options;
             _ffmpegPath = ffmpegPath;
             _logger = Context.GetLogger();
-            Receive<Start>(Handle);
-        }
-
-        public bool Handle(Start command)
-        {
-            EngineParameters engineParams = new EngineParameters
+            EngineParameters  = new EngineParameters
             {
                 InputFile = Input,
                 OutputFile = Output,
                 ConversionOptions = ConversionOptions,
                 Task = FFmpegTask.Convert
             };
+            
+            Receive<Start>(Handle);
+        }
 
-            StartProcess(engineParams);
+        public bool Handle(Start command)
+        {
+
+            StartProcess(EngineParameters);
             return true;
         }
 
@@ -61,7 +64,36 @@ namespace Transcoding.Transcoder.Actors
         {
             using (TranscodingProcess = Process.Start(processStartInfo))
             {
+                TranscodingProcess.ErrorDataReceived += Handle;
+            }
+        }
 
+        private void Handle(object sender, DataReceivedEventArgs e)
+        {
+            if (e.Data == null) return;
+            Console.WriteLine(e.Data);
+
+            try
+            {
+                ReceivedMessagesLog.Insert(0, e.Data);
+                
+                if (engineParameters.InputFile != null)
+                {
+                    RegexEngine.TestVideo(received.Data, engineParameters);
+                    RegexEngine.TestAudio(received.Data, engineParameters);
+
+                    Match matchDuration = RegexEngine.Index[RegexEngine.Find.Duration].Match(received.Data);
+                    if (matchDuration.Success)
+                    {
+                        if (engineParameters.InputFile.Metadata == null)
+                        {
+                            engineParameters.InputFile.Metadata = new Metadata();
+                        }
+
+                        TimeSpan.TryParse(matchDuration.Groups[1].Value, out totalMediaDuration);
+                        engineParameters.InputFile.Metadata.Duration = totalMediaDuration;
+                    }
+                }
             }
         }
 
