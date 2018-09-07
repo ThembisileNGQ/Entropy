@@ -5,7 +5,7 @@ namespace Transcoding.Transcoder
 {
     /// -------------------------------------------------------------------------------------------------
     /// <summary>   Configures the engine to perform the correct task. </summary>
-    internal class EngineParameters
+    public class EngineParameters
     {
         internal bool HasCustomArguments
         {

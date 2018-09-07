@@ -7,4 +7,9 @@ namespace Transcoding.Transcoder.Actors
     public class Start
     {
     }
+
+    public class Done
+    {
+
+    }
 }

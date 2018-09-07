@@ -3,29 +3,33 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using Akka.Actor;
 using Akka.Event;
 using Transcoding.Transcoder.Model;
 using Transcoding.Transcoder.Options;
+using Transcoding.Transcoder.Util;
 
 namespace Transcoding.Transcoder.Actors
 {
     public class TranscodingActor : ReceiveActor
     {
+        private readonly string _ffmpegPath;
+        private readonly ILoggingAdapter _logger;
         public MediaFile Input { get; set; }
         public MediaFile Output { get; set; }
-        public ConversionOptions ConversionOptions { get; set; }
-        private readonly string _ffmpegPath;  
         public Process TranscodingProcess { get; private set; }
+        public ConversionOptions ConversionOptions { get; set; }
+        public EngineParameters EngineParameters { get; set; }
+        public TimeSpan TotalMediaDuration { get; private set; }
+        public Exception PossibleException { get; private set; }
         List<string> ReceivedMessagesLog = new List<string>();
-        private readonly ILoggingAdapter _logger;
-        public EngineParameters EngineParameters { get; }
 
         public TranscodingActor(
             MediaFile input,
             MediaFile output,
-            string ffmpegPath,
-            ConversionOptions options)
+            ConversionOptions options,
+            string ffmpegPath = @"C:\Workspace\FFMPEG\bin\ffmpeg.exe")
         {
             Input = input;
             Output = output;
@@ -47,17 +51,18 @@ namespace Transcoding.Transcoder.Actors
         {
 
             StartProcess(EngineParameters);
+            Sender.Tell(new Done());
             return true;
         }
 
         private void StartProcess(EngineParameters engineParameters)
         {
-            List<string> receivedMessagesLog = new List<string>();
-            TimeSpan totalMediaDuration = new TimeSpan();
 
-            ProcessStartInfo processStartInfo = engineParameters.HasCustomArguments
+            var processStartInfo = engineParameters.HasCustomArguments
                 ? this.GenerateStartInfo(engineParameters.CustomArguments)
                 : this.GenerateStartInfo(engineParameters);
+
+            RunProcess(processStartInfo);
         }
 
         private void RunProcess(ProcessStartInfo processStartInfo)
@@ -65,36 +70,84 @@ namespace Transcoding.Transcoder.Actors
             using (TranscodingProcess = Process.Start(processStartInfo))
             {
                 TranscodingProcess.ErrorDataReceived += Handle;
+
+                TranscodingProcess.BeginErrorReadLine();
+                TranscodingProcess.WaitForExit();
+
+                if ((TranscodingProcess.ExitCode != 0 && TranscodingProcess.ExitCode != 1) || PossibleException != null)
+                {
+                    throw new Exception(
+                        TranscodingProcess.ExitCode + ": " + ReceivedMessagesLog[1] + ReceivedMessagesLog[0],
+                        PossibleException);
+                }
             }
         }
 
-        private void Handle(object sender, DataReceivedEventArgs e)
+        public void Handle(object sender, DataReceivedEventArgs e)
         {
-            if (e.Data == null) return;
+            if (e.Data == null)
+                return;
+
+
             Console.WriteLine(e.Data);
 
             try
             {
                 ReceivedMessagesLog.Insert(0, e.Data);
                 
-                if (engineParameters.InputFile != null)
+                if (EngineParameters.InputFile != null)
                 {
-                    RegexEngine.TestVideo(received.Data, engineParameters);
-                    RegexEngine.TestAudio(received.Data, engineParameters);
+                    RegexEngine.TestVideo(e.Data, EngineParameters);
+                    RegexEngine.TestAudio(e.Data, EngineParameters);
 
-                    Match matchDuration = RegexEngine.Index[RegexEngine.Find.Duration].Match(received.Data);
+                    Match matchDuration = RegexEngine.Index[RegexEngine.Find.Duration].Match(e.Data);
                     if (matchDuration.Success)
                     {
-                        if (engineParameters.InputFile.Metadata == null)
+                        if (EngineParameters.InputFile.Metadata == null)
                         {
-                            engineParameters.InputFile.Metadata = new Metadata();
+                            EngineParameters.InputFile.Metadata = new Metadata();
                         }
-
+                        var totalMediaDuration = new TimeSpan();
                         TimeSpan.TryParse(matchDuration.Groups[1].Value, out totalMediaDuration);
-                        engineParameters.InputFile.Metadata.Duration = totalMediaDuration;
+                        TotalMediaDuration = totalMediaDuration;
+                        EngineParameters.InputFile.Metadata.Duration = TotalMediaDuration;
                     }
                 }
+                ConversionCompleteEventArgs convertCompleteEvent;
+                ConvertProgressEventArgs progressEvent;
+
+                if (RegexEngine.IsProgressData(e.Data, out progressEvent))
+                {
+                    //progress calculated here
+                    progressEvent.TotalDuration = TotalMediaDuration;
+                    var progress = (double)progressEvent.ProcessedDuration.Ticks / (double)TotalMediaDuration.Ticks;
+                    _logger.Info($"Progress: {progress} %" );
+                    //this.OnProgressChanged(progressEvent);
+                }
+                else if (RegexEngine.IsConvertCompleteData(e.Data, out convertCompleteEvent))
+                {
+                    convertCompleteEvent.TotalDuration = TotalMediaDuration;
+                    _logger.Info($"Progress: Done!");
+                    //this.OnConversionComplete(convertCompleteEvent);
+                }
+
             }
+            catch (Exception ex)
+            {
+                // catch the exception and kill the process since we're in a faulted state
+                PossibleException = ex;
+
+                try
+                {
+                    TranscodingProcess.Kill();
+                }
+                catch (InvalidOperationException)
+                {
+                    // swallow exceptions that are thrown when killing the process, 
+                    // one possible candidate is the application ending naturally before we get a chance to kill it
+                }
+            }
+            
         }
 
         private void EnsureFFmpegFileExists(string path)
