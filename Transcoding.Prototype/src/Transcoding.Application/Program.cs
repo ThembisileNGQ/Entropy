@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Akka.Actor;
-using Transcoding.Transcoder;
 using Transcoding.Transcoder.Actors;
 using Transcoding.Transcoder.Model;
 using Transcoding.Transcoder.Options;
@@ -16,12 +17,16 @@ namespace Transcoding.Application
         {
             
             var input = Path.Combine(Environment.CurrentDirectory, "0.wav");
-            var output = Path.Combine(Environment.CurrentDirectory, $"{Guid.NewGuid()}.mp3");
 
-            await TranscodeAudio(input, output);
+            var outputs = Enumerable
+                .Range(1, 4)
+                .Select(x => Path.Combine(Environment.CurrentDirectory, $"{Guid.NewGuid()}.mp3"))
+                .ToArray();
+
+            await TranscodeAudio(input, outputs);
         }
         
-        public static async Task TranscodeAudio(string sourceFilePath, string destinationFilePath)
+        public static async Task TranscodeAudio(string sourceFilePath,  params string[] destinationPaths)
         {
             var actorSystem = ActorSystem.Create("transcoding-system");
 
@@ -31,19 +36,25 @@ namespace Transcoding.Application
             };
     
             
-           // var ffmpegPath = Path.Combine("/usr/local/bin/ffmpeg");
             var ffmpegPath = Path.Combine(@"C:\Workspace\FFMPEG\bin\ffmpeg.exe");
 
             var inputFile = new MediaFile(sourceFilePath);
-            var outputFile = new MediaFile(destinationFilePath);
-            var stopWatch = Stopwatch.StartNew();
-            var transcoder = actorSystem.ActorOf(Props.Create(() => new TranscodingActor(inputFile,outputFile,options,ffmpegPath)), "transcododer-1");
-            var a = await  transcoder.Ask<Done>(new Start(),TimeSpan.FromMinutes(1));
+            var tasks = new List<Task<Done>>();
+
             
-            /*using (var engine = new Engine(ffmpegPath, true))
+            var i = 0;
+            foreach (var path in destinationPaths)
             {
-                engine.Convert(inputFile, outputFile, options);
-            }*/
+                i++;
+                var outputFile = new MediaFile(path);
+                var transcoder = actorSystem.ActorOf(Props.Create(() => new TranscodingActor(inputFile, outputFile, options, ffmpegPath)), $"transcododer-{i}");
+                tasks.Add(transcoder.Ask<Done>(new Start(), TimeSpan.FromMinutes(1)));
+            }
+
+            var stopWatch = Stopwatch.StartNew();
+
+            var b = await Task.WhenAll(tasks);
+            
             stopWatch.Stop();
             
         }

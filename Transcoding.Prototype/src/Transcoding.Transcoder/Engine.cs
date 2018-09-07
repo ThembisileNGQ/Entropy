@@ -16,7 +16,7 @@ namespace Transcoding.Transcoder
         /// <summary>
         ///     Event queue for all listeners interested in conversionComplete events.
         /// </summary>
-        public event EventHandler<ConversionCompleteEventArgs> ConversionCompleteEvent;
+        public event EventHandler<ConversionCompleted> ConversionCompleteEvent;
 
         public Engine()
         {
@@ -80,7 +80,7 @@ namespace Transcoding.Transcoder
         }
 
         /// <summary>   Event queue for all listeners interested in convertProgress events. </summary>
-        public event EventHandler<ConvertProgressEventArgs> ConvertProgressEvent;
+        public event EventHandler<ConvertProgressEmitted> ConvertProgressEvent;
 
         public void CustomCommand(string ffmpegCommand)
         {
@@ -212,9 +212,9 @@ namespace Transcoding.Transcoder
         /// -------------------------------------------------------------------------------------------------
         /// <summary>   Raises the conversion complete event. </summary>
         /// <param name="e">    Event information to send to registered event handlers. </param>
-        private void OnConversionComplete(ConversionCompleteEventArgs e)
+        private void OnConversionComplete(ConversionCompleted e)
         {
-            EventHandler<ConversionCompleteEventArgs> handler = this.ConversionCompleteEvent;
+            EventHandler<ConversionCompleted> handler = this.ConversionCompleteEvent;
             if (handler != null)
             {
                 handler(this, e);
@@ -224,9 +224,9 @@ namespace Transcoding.Transcoder
         /// -------------------------------------------------------------------------------------------------
         /// <summary>   Raises the convert progress event. </summary>
         /// <param name="e">    Event information to send to registered event handlers. </param>
-        private void OnProgressChanged(ConvertProgressEventArgs e)
+        private void OnProgressChanged(ConvertProgressEmitted e)
         {
-            EventHandler<ConvertProgressEventArgs> handler = this.ConvertProgressEvent;
+            EventHandler<ConvertProgressEmitted> handler = this.ConvertProgressEvent;
             if (handler != null)
             {
                 handler(this, e);
@@ -288,8 +288,8 @@ namespace Transcoding.Transcoder
                                 engineParameters.InputFile.Metadata.Duration = totalMediaDuration;
                             }
                         }
-                        ConversionCompleteEventArgs convertCompleteEvent;
-                        ConvertProgressEventArgs progressEvent;
+                        ConversionCompleted convertCompleted;
+                        ConvertProgressEmitted progressEvent;
 
                         if (RegexEngine.IsProgressData(received.Data, out progressEvent))
                         {
@@ -298,10 +298,10 @@ namespace Transcoding.Transcoder
                             var progress = (double)progressEvent.ProcessedDuration.Ticks / (double)totalMediaDuration.Ticks;
                             this.OnProgressChanged(progressEvent);
                         }
-                        else if (RegexEngine.IsConvertCompleteData(received.Data, out convertCompleteEvent))
+                        else if (RegexEngine.IsConvertCompleteData(received.Data, out convertCompleted))
                         {
-                            convertCompleteEvent.TotalDuration = totalMediaDuration;
-                            this.OnConversionComplete(convertCompleteEvent);
+                            convertCompleted.TotalDuration = totalMediaDuration;
+                            this.OnConversionComplete(convertCompleted);
                         }
                     }
                     catch (Exception ex)

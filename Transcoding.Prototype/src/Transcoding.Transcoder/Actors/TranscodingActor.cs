@@ -16,6 +16,7 @@ namespace Transcoding.Transcoder.Actors
     {
         private readonly string _ffmpegPath;
         private readonly ILoggingAdapter _logger;
+        private readonly string _name;
         public MediaFile Input { get; set; }
         public MediaFile Output { get; set; }
         public Process TranscodingProcess { get; private set; }
@@ -24,7 +25,7 @@ namespace Transcoding.Transcoder.Actors
         public TimeSpan TotalMediaDuration { get; private set; }
         public Exception PossibleException { get; private set; }
         List<string> ReceivedMessagesLog = new List<string>();
-
+        
         public TranscodingActor(
             MediaFile input,
             MediaFile output,
@@ -36,6 +37,7 @@ namespace Transcoding.Transcoder.Actors
             ConversionOptions = options;
             _ffmpegPath = ffmpegPath;
             _logger = Context.GetLogger();
+            _name = Context.Self.Path.Name;
             EngineParameters  = new EngineParameters
             {
                 InputFile = Input,
@@ -89,7 +91,7 @@ namespace Transcoding.Transcoder.Actors
                 return;
 
 
-            Console.WriteLine(e.Data);
+            //Console.WriteLine(e.Data);
 
             try
             {
@@ -113,20 +115,20 @@ namespace Transcoding.Transcoder.Actors
                         EngineParameters.InputFile.Metadata.Duration = TotalMediaDuration;
                     }
                 }
-                ConversionCompleteEventArgs convertCompleteEvent;
-                ConvertProgressEventArgs progressEvent;
+                ConversionCompleted convertCompleted;
+                ConvertProgressEmitted progressEvent;
 
                 if (RegexEngine.IsProgressData(e.Data, out progressEvent))
                 {
                     //progress calculated here
                     progressEvent.TotalDuration = TotalMediaDuration;
                     var progress = (double)progressEvent.ProcessedDuration.Ticks / (double)TotalMediaDuration.Ticks;
-                    _logger.Info($"Progress: {progress} %" );
+                    _logger.Info($"{_name}: Progress: {progress} %" );
                     //this.OnProgressChanged(progressEvent);
                 }
-                else if (RegexEngine.IsConvertCompleteData(e.Data, out convertCompleteEvent))
+                else if (RegexEngine.IsConvertCompleteData(e.Data, out convertCompleted))
                 {
-                    convertCompleteEvent.TotalDuration = TotalMediaDuration;
+                    convertCompleted.TotalDuration = TotalMediaDuration;
                     _logger.Info($"Progress: Done!");
                     //this.OnConversionComplete(convertCompleteEvent);
                 }

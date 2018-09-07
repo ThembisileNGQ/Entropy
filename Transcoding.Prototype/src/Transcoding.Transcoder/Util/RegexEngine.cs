@@ -39,13 +39,13 @@ namespace Transcoding.Transcoder.Util
         ///     <para>Establishes whether the data contains progress information.</para>
         /// </summary>
         /// <param name="data">Event data from the FFmpeg console.</param>
-        /// <param name="progressEventArgs">
-        ///     <para>If successful, outputs a <see cref="ConvertProgressEventArgs"/> which is </para>
+        /// <param name="progressEmitted">
+        ///     <para>If successful, outputs a <see cref="ConvertProgressEmitted"/> which is </para>
         ///     <para>generated from the data. </para>
         /// </param>
-        internal static bool IsProgressData(string data, out ConvertProgressEventArgs progressEventArgs)
+        internal static bool IsProgressData(string data, out ConvertProgressEmitted progressEmitted)
         {
-            progressEventArgs = null;
+            progressEmitted = null;
 
             Match matchFrame = Index[Find.ConvertProgressFrame].Match(data);
             Match matchFps = Index[Find.ConvertProgressFps].Match(data);
@@ -64,8 +64,8 @@ namespace Transcoding.Transcoder.Util
             int? sizeKb = GetIntValue(matchSize);
             double? bitrate = GetDoubleValue(matchBitrate);
 
-            progressEventArgs =
-                new ConvertProgressEventArgs(processedDuration, TimeSpan.Zero, frame, fps, sizeKb, bitrate);
+            progressEmitted =
+                new ConvertProgressEmitted(processedDuration, TimeSpan.Zero, frame, fps, sizeKb, bitrate);
 
             return true;
         }
@@ -112,13 +112,13 @@ namespace Transcoding.Transcoder.Util
         ///     <para>Establishes whether the data indicates the conversion is complete</para>
         /// </summary>
         /// <param name="data">Event data from the FFmpeg console.</param>
-        /// <param name="conversionCompleteEvent">
-        ///     <para>If successful, outputs a <see cref="ConversionCompleteEventArgs"/> which is </para>
+        /// <param name="conversionCompleted">
+        ///     <para>If successful, outputs a <see cref="ConversionCompleted"/> which is </para>
         ///     <para>generated from the data. </para>
         /// </param>
-        internal static bool IsConvertCompleteData(string data, out ConversionCompleteEventArgs conversionCompleteEvent)
+        internal static bool IsConvertCompleteData(string data, out ConversionCompleted conversionCompleted)
         {
-            conversionCompleteEvent = null;
+            conversionCompleted = null;
 
             Match matchFrame = Index[Find.ConvertProgressFrame].Match(data);
             Match matchFps = Index[Find.ConvertProgressFps].Match(data);
@@ -137,8 +137,8 @@ namespace Transcoding.Transcoder.Util
             int sizeKb = Convert.ToInt32(matchFinished.Groups[1].Value, CultureInfo.InvariantCulture);
             double bitrate = Convert.ToDouble(matchBitrate.Groups[1].Value, CultureInfo.InvariantCulture);
 
-            conversionCompleteEvent =
-                new ConversionCompleteEventArgs(processedDuration, TimeSpan.Zero, frame, fps, sizeKb, bitrate);
+            conversionCompleted =
+                new ConversionCompleted(processedDuration, TimeSpan.Zero, frame, fps, sizeKb, bitrate);
 
             return true;
         }
