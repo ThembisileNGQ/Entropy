@@ -4,7 +4,22 @@ using System.Text;
 
 namespace Transcoding.Transcoder.Actors
 {
-    class Events
+    public class TranscodingProgressReported
+    {
+        
+    }
+
+    public class TranscodingCompleted
+    {
+        
+    }
+
+    public class TranscodingFailed
+    {
+        
+    }
+    
+    public class Events
     {
     }
 }
