@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.SymbolStore;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Akka.Actor;
@@ -13,7 +11,7 @@ using Transcoding.Transcoder.Model;
 using Transcoding.Transcoder.Options;
 using Transcoding.Transcoder.Util;
 
-namespace Transcoding.Transcoder.Actors
+namespace Transcoding.Transcoder.Actors.Transcoding
 {
     public class TranscodingActor : ReceiveActor
     {
@@ -58,6 +56,7 @@ namespace Transcoding.Transcoder.Actors
             };
             
             Receive<Start>(Handle);
+            Receive<Begin>(Handle);
             Receive<ReportTranscodingProgress>(Handle);
             Receive<ReportTranscodingCompletion>(Handle);
             Receive<ReportTranscodingFailure>(Handle);
@@ -68,17 +67,30 @@ namespace Transcoding.Transcoder.Actors
         {
             Invoker = Sender;
             var sender = Sender;
+            var self = Self;
+            Task.Run(() =>
+            {
 
-
+            }).ContinueWith(task =>
+            {
+                self.Tell(new Begin());
+                //StartProcess(EngineParameters);
+            });
             //StartProcess(EngineParameters);
-            Task.Run(() => StartProcess(EngineParameters))
+            /*Task.Run(() => StartProcess(EngineParameters))
                 .ContinueWith(task =>
                 {
                     //stuff
-                },TaskContinuationOptions.ExecuteSynchronously).PipeTo(Self);
+                },TaskContinuationOptions.AttachedToParent).PipeTo(Self);*/
             
             
             sender.Tell(new Done());
+            return true;
+        }
+
+        public bool Handle(Begin command)
+        {
+            StartProcess(EngineParameters);
             return true;
         }
 
@@ -161,13 +173,13 @@ namespace Transcoding.Transcoder.Actors
                                 Input,
                                 Output);
                             
-                            //eventStream.Publish(command);
+                            eventStream.Publish(command);
                             self.Tell(command);
                             //Self.Tell();
                             //progress calculated here
                             //progressEvent.TotalDuration = TotalMediaDuration;
                             var progress = (double)progressEvent.ProcessedDuration.Ticks / (double)TotalMediaDuration.Ticks;
-                            logger.Info($"{_name}: Progress: {progress} %" );
+                            //logger.Info($"{_name}: Progress: {progress} %" );
                             //this.OnProgressChanged(progressEvent);
                         }
                         else if (RegexEngine.IsConvertCompleteData(e.Data, out convertCompleted))

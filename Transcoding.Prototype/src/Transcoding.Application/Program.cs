@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Akka.Actor;
-using Transcoding.Transcoder.Actors;
+using Transcoding.Transcoder.Actors.Transcoding;
 using Transcoding.Transcoder.Model;
 using Transcoding.Transcoder.Options;
 
@@ -15,7 +15,7 @@ namespace Transcoding.Application
     {
         public static async Task Main(string[] args)
         {
-            if (Environment.OSVersion.Platform == PlatformID.Win32Windows)
+            if (true) //windoze
             {
                 var ffmpegPath = Path.Combine(@"C:\Workspace\FFMPEG\bin\ffmpeg.exe");
                 var input = Path.Combine(Environment.CurrentDirectory, "0.wav");
@@ -27,7 +27,7 @@ namespace Transcoding.Application
 
                 await TranscodeAudio(ffmpegPath,input, outputs);
             } 
-            else //if (Environment.OSVersion.Platform == PlatformID.MacOSX)
+            else if (false) //mac
             {
                 var ffmpegPath = Path.Combine(@"/usr/local/bin/ffmpeg");
                 var input = Path.Combine(Environment.CurrentDirectory, "../../media/0.wav");
