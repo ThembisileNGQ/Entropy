@@ -9,7 +9,8 @@ namespace Transcoding.Transcoder.Actors.Transcoding.Commands
         public double Progress { get; }
         public TimeSpan TotalMediaDuration { get; }
         public TimeSpan ProcessedMediaDuration { get; }
-        public TimeSpan Elapsed { get; }
+        public TimeSpan CurrentProcessDuration { get; }
+        public DateTime StartedAt { get; }
         public MediaFile From { get; }
         public MediaFile To { get; }
 
@@ -17,15 +18,17 @@ namespace Transcoding.Transcoder.Actors.Transcoding.Commands
             Guid transcodingId,
             TimeSpan totalMediaDuration,
             TimeSpan processedMediaDuration,
-            TimeSpan elapsed,
+            TimeSpan currentProcessDuration,
+            DateTime startedAt,
             MediaFile from,
             MediaFile to)
         {
             TranscodingId = transcodingId;
             TotalMediaDuration = totalMediaDuration;
             ProcessedMediaDuration = processedMediaDuration;
+            StartedAt = startedAt;
             From = from;
-            Elapsed = elapsed;
+            CurrentProcessDuration = currentProcessDuration;
             To = to;
             Progress = ProcessedMediaDuration.Ticks / (double)TotalMediaDuration.Ticks;
         }

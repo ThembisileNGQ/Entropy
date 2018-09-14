@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -19,22 +21,24 @@ namespace Transcoding.Transcoder.Actors.Transcoding
     {
         private readonly string _ffmpegPath;
         private readonly ILoggingAdapter _logger;
-        private readonly string _name;
-        public Guid TranscodingId { get; }
         public IActorRef Invoker { get; private set; }
+        public Status Status { get; private set; }
+        public Guid TranscodingId { get; }
         public MediaFile Input { get; }
         public MediaFile Output { get; }
         public Process TranscodingProcess { get; private set; }
         public ConversionOptions ConversionOptions { get; set; }
         public EngineParameters EngineParameters { get; set; }
         public TimeSpan TotalMediaDuration { get; private set; }
-        public TimeSpan TimeElapsedSinceStart { get; private set; }
+        public TimeSpan ProcessedMediaDuration { get; private set; }
+        public TimeSpan TotalProcessDuration { get; private set; }
         public DateTime StartedAt { get; private set; }
         public DateTime EndedAt { get; private set; }
         public Stopwatch Stopwatch { get; private set; }
-        public Exception PossibleException { get; private set; }
-        List<string> ReceivedMessagesLog = new List<string>();
-        
+        public List<string> ReceivedMessagesLog { get; private set; }
+        public List<Exception> Exceptions { get; private set; }
+
+
         public TranscodingActor(
             Guid transcodingId,
             MediaFile input,
@@ -48,7 +52,9 @@ namespace Transcoding.Transcoder.Actors.Transcoding
             ConversionOptions = options;
             _ffmpegPath = ffmpegPath;
             _logger = Context.GetLogger();
-            _name = Context.Self.Path.Name;
+            ReceivedMessagesLog = new List<string>();
+            Exceptions = new List<Exception>();
+            Status = Status.NotStarted;
             EngineParameters  = new EngineParameters
             {
                 InputFile = Input,
@@ -87,8 +93,9 @@ namespace Transcoding.Transcoder.Actors.Transcoding
             {
                 StartedAt = DateTime.UtcNow;
                 Stopwatch = Stopwatch.StartNew();
+                Status = Status.InProgress;
                 var invoker = Invoker;
-                var logger = _logger;
+
                 TranscodingProcess.ErrorDataReceived += (sender, e) =>
                 {
                     if (e.Data == null)
@@ -122,12 +129,14 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                         if (RegexEngine.IsProgressData(e.Data, out progressEvent))
                         {
                             var elapsed = Stopwatch.Elapsed;
+                            ProcessedMediaDuration = progressEvent.ProcessedDuration;
                             
                             var command = new ReportTranscodingProgress(
                                 TranscodingId,
                                 TotalMediaDuration,
-                                progressEvent.ProcessedDuration,
+                                ProcessedMediaDuration,
                                 elapsed,
+                                StartedAt,
                                 Input,
                                 Output);
                             
@@ -135,22 +144,8 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                         }
                         else if (RegexEngine.IsConvertCompleteData(e.Data, out convertCompleted))
                         {
-                            var elapsed = Stopwatch.Elapsed;
-                            
-                            
-                            var command2 = new ReportTranscodingCompletion(
-                                TranscodingId,
-                                TotalMediaDuration,
-                                convertCompleted.ProcessedDuration,
-                                elapsed,
-                                elapsed,
-                                Input,
-                                Output);
-                            
-                            invoker.Tell(command2);
-                            
-                            convertCompleted.TotalDuration = TotalMediaDuration;
-                            
+                            //does this even work?
+                            var a = Stopwatch.Elapsed;
                             //_logger.Info($"Progress: Done!");
                         }
         
@@ -158,30 +153,16 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                     catch (Exception ex)
                     {
                         // catch the exception and kill the process since we're in a faulted state
-                        PossibleException = ex;
-                        var elapsed = Stopwatch.Elapsed;
-                        Stopwatch.Stop();
-                        
-                        
-                        var command3 = new ReportTranscodingFailure(
-                            TranscodingId,
-                            TotalMediaDuration,
-                            elapsed,
-                            e.Data,
-                            ex,
-                            elapsed,
-                            Input,
-                            Output);
-                        
-                        invoker.Tell(command3);
+                        Exceptions.Add(ex);
                         
                         try
                         {
-                            
+                            Status = Status.Failed;
                             TranscodingProcess.Kill();
                         }
-                        catch (InvalidOperationException)
+                        catch (InvalidOperationException invalidOperationException)
                         {
+                            Exceptions.Add(invalidOperationException);
                             // swallow exceptions that are thrown when killing the process, 
                             // one possible candidate is the application ending naturally before we get a chance to kill it
                         }
@@ -191,21 +172,69 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                         }
                     }
                 };
-                //TranscodingProcess.ErrorDataReceived += Handle;
-                EndedAt = DateTime.UtcNow;
+                
+
                 TranscodingProcess.BeginErrorReadLine();
                 TranscodingProcess.WaitForExit();
                 
                 
 
-                if ((TranscodingProcess.ExitCode != 0 && TranscodingProcess.ExitCode != 1) || PossibleException != null)
+                if ((TranscodingProcess.ExitCode != 0 && TranscodingProcess.ExitCode != 1) || Exceptions.Count > 0)
                 {
+                    Status = Status.Failed;
                     throw new Exception(
-                        TranscodingProcess.ExitCode + ": " + ReceivedMessagesLog[1] + ReceivedMessagesLog[0],
-                        PossibleException);
+                        TranscodingProcess.ExitCode + ": " + ReceivedMessagesLog[1] + ReceivedMessagesLog[0]);
                 }
+                else
+                {
+                    Status = Status.Completed;
+
+                }
+
+                EndedAt = DateTime.UtcNow;
+                TotalProcessDuration = Stopwatch.Elapsed;
+                Stopwatch.Stop();
+
+
+                switch (Status)
+                {
+
+                    case Status.Completed:
+                    {
+                        var command = new ReportTranscodingCompletion(
+                            TranscodingId,
+                            TotalMediaDuration,
+                            ProcessedMediaDuration,
+                            TotalProcessDuration,
+                            StartedAt,
+                            EndedAt,
+                            Input,
+                            Output,
+                            ReceivedMessagesLog);
+
+                        invoker.Tell(command);
+                    }
+                        break;
+                    case Status.Failed:
+                    {
+                        var command = new ReportTranscodingFailure(
+                            TranscodingId,
+                            TotalMediaDuration,
+                            TotalProcessDuration,
+                            StartedAt,
+                            EndedAt,
+                            Input,
+                            Output,
+                            Exceptions,
+                            ReceivedMessagesLog);
+
+                        invoker.Tell(command);
+                        }
+                        break;
+                }
+
                 
-                //Context.Stop(Self);
+                Context.Stop(Self);
             }
         }
 
@@ -262,5 +291,14 @@ namespace Transcoding.Transcoder.Actors.Transcoding
 
             return this.GenerateStartInfo(arguments);
         }
+    }
+
+    public enum Status
+    {
+        Unkown,
+        NotStarted,
+        InProgress,
+        Completed,
+        Failed,
     }
 }

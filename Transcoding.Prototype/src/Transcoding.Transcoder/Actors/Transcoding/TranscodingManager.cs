@@ -46,7 +46,7 @@ namespace Transcoding.Transcoder.Actors.Transcoding
         
         public bool Handle(ReportTranscodingCompletion command)
         {
-            _logger.Info($"{command.TranscodingId}: Completed Sucessfully Elapsed: {command.Elapsed.Seconds}s %" );
+            _logger.Info($"{command.TranscodingId}: Completed Sucessfully Elapsed: {command.TotalProcessDuration.Seconds}s %" );
             Completed++;
             InProgress--;
             return true;
@@ -54,7 +54,7 @@ namespace Transcoding.Transcoder.Actors.Transcoding
 
         public bool Handle(ReportTranscodingFailure command)
         {
-            _logger.Warning($"{command.TranscodingId}: Completed UnSucessfully Elapsed: {command.Elapsed.Seconds}s %" );
+            _logger.Warning($"{command.TranscodingId}: Completed UnSucessfully Elapsed: {command.TotalProcessDuration.Seconds}s %" );
             Failed++;
             InProgress--;
             return true;

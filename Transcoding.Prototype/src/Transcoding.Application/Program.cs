@@ -18,19 +18,19 @@ namespace Transcoding.Application
     {
         public static async Task Main(string[] args)
         {
-            if (false) //windoze
+            if (true) //windoze
             {
                 var ffmpegPath = Path.Combine(@"C:\Workspace\FFMPEG\bin\ffmpeg.exe");
                 var input = Path.Combine(Environment.CurrentDirectory, "0.wav");
 
                 var outputs = Enumerable
-                    .Range(1, 4)
+                    .Range(1, 6)
                     .Select(x => Path.Combine(Environment.CurrentDirectory, $"{Guid.NewGuid()}.mp3"))
                     .ToArray();
 
                 await TranscodeAudio(ffmpegPath,input, outputs);
             } 
-            else if (true) //mac
+            else if (false) //mac
             {
                 var ffmpegPath = Path.Combine(@"/usr/local/bin/ffmpeg");
                 var input = Path.Combine(Environment.CurrentDirectory, "../../media/0.wav");
@@ -68,7 +68,7 @@ namespace Transcoding.Application
             foreach (var path in destinationPaths)
             {
                 var outputFile = new MediaFile(path);
-                
+                await Task.Delay(1000);
                 var command = new StartTranscoding(Guid.NewGuid(),inputFile,outputFile,options,ffmpegPath);
                 transcoderManager.Tell(command);
             }

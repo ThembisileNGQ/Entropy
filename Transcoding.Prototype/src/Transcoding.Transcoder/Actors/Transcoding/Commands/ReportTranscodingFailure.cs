@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Transcoding.Transcoder.Model;
 
 namespace Transcoding.Transcoder.Actors.Transcoding.Commands
@@ -8,30 +9,33 @@ namespace Transcoding.Transcoder.Actors.Transcoding.Commands
         public Guid TranscodingId { get; }
         public TimeSpan TotalMediaDuration { get; }
         public TimeSpan TotalProcessDuration { get; }
-        public string Data { get; }
-        public Exception Exception { get; }
-        public TimeSpan Elapsed { get; }
+        public DateTime StartedAt { get; }
+        public DateTime EndedAt { get; }
         public MediaFile From { get; }
         public MediaFile To { get; }
+        public IReadOnlyCollection<Exception> Exceptions { get; }
+        public IReadOnlyCollection<string> Log { get; }
 
         public ReportTranscodingFailure(
             Guid transcodingId,
             TimeSpan totalMediaDuration,
             TimeSpan totalProcessDuration,
-            string data,
-            Exception exception,
-            TimeSpan elapsed,
+            DateTime startedAt,
+            DateTime endedAt,
             MediaFile from,
-            MediaFile to)
+            MediaFile to,
+            IReadOnlyCollection<Exception> exceptions,
+            IReadOnlyCollection<string> log)
         {
             TranscodingId = transcodingId;
             TotalMediaDuration = totalMediaDuration;
             TotalProcessDuration = totalProcessDuration;
-            Data = data;
-            Exception = exception;
-            Elapsed = elapsed;
+            StartedAt = startedAt;
+            EndedAt = endedAt;
             From = from;
             To = to;
+            Exceptions = exceptions;
+            Log = log;
         }
     }
 }
