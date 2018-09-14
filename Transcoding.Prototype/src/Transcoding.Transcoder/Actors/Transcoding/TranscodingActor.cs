@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Timers;
 using Akka.Actor;
 using Akka.Event;
 using Transcoding.Transcoder.Actors.Transcoding.Commands;
@@ -56,62 +58,18 @@ namespace Transcoding.Transcoder.Actors.Transcoding
             };
             
             Receive<Start>(Handle);
-            Receive<Begin>(Handle);
-            Receive<ReportTranscodingProgress>(Handle);
-            Receive<ReportTranscodingCompletion>(Handle);
-            Receive<ReportTranscodingFailure>(Handle);
             
         }
 
         public bool Handle(Start command)
         {
             Invoker = Sender;
-            var sender = Sender;
-            var self = Self;
-            Task.Run(() =>
-            {
-
-            }).ContinueWith(task =>
-            {
-                self.Tell(new Begin());
-                //StartProcess(EngineParameters);
-            });
-            //StartProcess(EngineParameters);
-            /*Task.Run(() => StartProcess(EngineParameters))
-                .ContinueWith(task =>
-                {
-                    //stuff
-                },TaskContinuationOptions.AttachedToParent).PipeTo(Self);*/
-            
-            
-            sender.Tell(new Done());
-            return true;
-        }
-
-        public bool Handle(Begin command)
-        {
             StartProcess(EngineParameters);
-            return true;
-        }
-
-        public bool Handle(ReportTranscodingProgress command)
-        {
-            _logger.Info($"{_name}: Progress: {command.Progress} %" );
+            
             return true;
         }
         
-        public bool Handle(ReportTranscodingCompletion command)
-        {
-            _logger.Info($"{_name}: Completed Sucessfully Elapsed: {command.Elapsed.Seconds}s %" );
-            return true;
-        }
-
-        public bool Handle(ReportTranscodingFailure command)
-        {
-            _logger.Info($"{_name}: Completed UnSucessfully Elapsed: {command.Elapsed.Seconds}s %" );
-            return true;
-        }
-
+        
         private void StartProcess(EngineParameters engineParameters)
         {
 
@@ -124,13 +82,13 @@ namespace Transcoding.Transcoder.Actors.Transcoding
 
         private void RunProcess(ProcessStartInfo processStartInfo)
         {
-            var self = Self;
+            
             using (TranscodingProcess = Process.Start(processStartInfo))
             {
                 StartedAt = DateTime.UtcNow;
                 Stopwatch = Stopwatch.StartNew();
+                var invoker = Invoker;
                 var logger = _logger;
-                var eventStream = Context.System.EventStream;
                 TranscodingProcess.ErrorDataReceived += (sender, e) =>
                 {
                     if (e.Data == null)
@@ -166,28 +124,34 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                             var elapsed = Stopwatch.Elapsed;
                             
                             var command = new ReportTranscodingProgress(
-                               TranscodingId,
-                               TotalMediaDuration,
+                                TranscodingId,
+                                TotalMediaDuration,
                                 progressEvent.ProcessedDuration,
                                 elapsed,
                                 Input,
                                 Output);
                             
-                            eventStream.Publish(command);
-                            self.Tell(command);
-                            //Self.Tell();
-                            //progress calculated here
-                            //progressEvent.TotalDuration = TotalMediaDuration;
-                            var progress = (double)progressEvent.ProcessedDuration.Ticks / (double)TotalMediaDuration.Ticks;
-                            //logger.Info($"{_name}: Progress: {progress} %" );
-                            //this.OnProgressChanged(progressEvent);
+                            invoker.Tell(command);
                         }
                         else if (RegexEngine.IsConvertCompleteData(e.Data, out convertCompleted))
                         {
+                            var elapsed = Stopwatch.Elapsed;
+                            
+                            
+                            var command2 = new ReportTranscodingCompletion(
+                                TranscodingId,
+                                TotalMediaDuration,
+                                convertCompleted.ProcessedDuration,
+                                elapsed,
+                                elapsed,
+                                Input,
+                                Output);
+                            
+                            invoker.Tell(command2);
+                            
                             convertCompleted.TotalDuration = TotalMediaDuration;
                             
-                            _logger.Info($"Progress: Done!");
-                            //this.OnConversionComplete(convertCompleteEvent);
+                            //_logger.Info($"Progress: Done!");
                         }
         
                     }
@@ -195,9 +159,25 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                     {
                         // catch the exception and kill the process since we're in a faulted state
                         PossibleException = ex;
-        
+                        var elapsed = Stopwatch.Elapsed;
+                        Stopwatch.Stop();
+                        
+                        
+                        var command3 = new ReportTranscodingFailure(
+                            TranscodingId,
+                            TotalMediaDuration,
+                            elapsed,
+                            e.Data,
+                            ex,
+                            elapsed,
+                            Input,
+                            Output);
+                        
+                        invoker.Tell(command3);
+                        
                         try
                         {
+                            
                             TranscodingProcess.Kill();
                         }
                         catch (InvalidOperationException)
@@ -205,12 +185,18 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                             // swallow exceptions that are thrown when killing the process, 
                             // one possible candidate is the application ending naturally before we get a chance to kill it
                         }
+                        finally
+                        {
+                            
+                        }
                     }
                 };
                 //TranscodingProcess.ErrorDataReceived += Handle;
                 EndedAt = DateTime.UtcNow;
                 TranscodingProcess.BeginErrorReadLine();
                 TranscodingProcess.WaitForExit();
+                
+                
 
                 if ((TranscodingProcess.ExitCode != 0 && TranscodingProcess.ExitCode != 1) || PossibleException != null)
                 {
@@ -218,6 +204,8 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                         TranscodingProcess.ExitCode + ": " + ReceivedMessagesLog[1] + ReceivedMessagesLog[0],
                         PossibleException);
                 }
+                
+                //Context.Stop(Self);
             }
         }
 

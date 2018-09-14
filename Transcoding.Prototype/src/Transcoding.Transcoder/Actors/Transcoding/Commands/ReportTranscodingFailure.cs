@@ -7,8 +7,9 @@ namespace Transcoding.Transcoder.Actors.Transcoding.Commands
     {
         public Guid TranscodingId { get; }
         public TimeSpan TotalMediaDuration { get; }
-        public TimeSpan ProcessedMediaDuration { get; }
         public TimeSpan TotalProcessDuration { get; }
+        public string Data { get; }
+        public Exception Exception { get; }
         public TimeSpan Elapsed { get; }
         public MediaFile From { get; }
         public MediaFile To { get; }
@@ -16,16 +17,18 @@ namespace Transcoding.Transcoder.Actors.Transcoding.Commands
         public ReportTranscodingFailure(
             Guid transcodingId,
             TimeSpan totalMediaDuration,
-            TimeSpan processedMediaDuration,
             TimeSpan totalProcessDuration,
+            string data,
+            Exception exception,
             TimeSpan elapsed,
             MediaFile from,
             MediaFile to)
         {
             TranscodingId = transcodingId;
             TotalMediaDuration = totalMediaDuration;
-            ProcessedMediaDuration = processedMediaDuration;
             TotalProcessDuration = totalProcessDuration;
+            Data = data;
+            Exception = exception;
             Elapsed = elapsed;
             From = from;
             To = to;

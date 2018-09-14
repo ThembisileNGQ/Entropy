@@ -15,4 +15,16 @@
     {
 
     }
+    
+    public class Accepted
+    {
+
+    }
+
+    public class StatusPls
+    {
+        
+    }
+    
+    
 }

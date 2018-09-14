@@ -6,7 +6,7 @@ namespace Transcoding.Transcoder.Actors.Transcoding.Commands
 {
     public class StartTranscoding
     {
-        private readonly string _ffmpegPath;
+        public readonly string _ffmpegPath;
         public Guid TranscodingId { get; }
         public MediaFile Input { get; }
         public MediaFile Output { get; }
