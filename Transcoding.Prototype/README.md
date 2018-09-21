@@ -1,7 +1,7 @@
 # Transcoding.Prototype
 Transcode Audio and produce the associated wavform for it.
 
-Currently a WIP, nothing to see here..
+Currently a WIP, nothing to see here.. currently testing the feasability of ffmpeg transcoding with wavform production.
 
 TODO -> ping when ffmpeg is done to manager
 
