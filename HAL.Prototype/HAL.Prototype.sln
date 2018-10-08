@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E6D9EDBF-2559-4977-B580-9F5A8F7E6864}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HAL.Prototype.Api", "src\HAL.Prototype.Api\HAL.Prototype.Api.csproj", "{1DA442B6-7FDF-4753-B98F-EB634ADFC1DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1DA442B6-7FDF-4753-B98F-EB634ADFC1DA} = {E6D9EDBF-2559-4977-B580-9F5A8F7E6864}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1DA442B6-7FDF-4753-B98F-EB634ADFC1DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DA442B6-7FDF-4753-B98F-EB634ADFC1DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DA442B6-7FDF-4753-B98F-EB634ADFC1DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DA442B6-7FDF-4753-B98F-EB634ADFC1DA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
