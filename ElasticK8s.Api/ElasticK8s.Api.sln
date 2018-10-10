@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F2AC4B9E-5CEC-44D8-96BF-3BB94AFE0A12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticK8s.Api", "src\ElasticK8s.Api\ElasticK8s.Api.csproj", "{B47A8AC8-5675-47DD-B0B4-CE60F80D951A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_k8s", "_k8s", "{D9A7AA26-2956-488B-8325-02BF8D75A5FE}"
+ProjectSection(SolutionItems) = preProject
+	deployment.yaml = deployment.yaml
+	Dockerfile = Dockerfile
+EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B47A8AC8-5675-47DD-B0B4-CE60F80D951A} = {F2AC4B9E-5CEC-44D8-96BF-3BB94AFE0A12}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B47A8AC8-5675-47DD-B0B4-CE60F80D951A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B47A8AC8-5675-47DD-B0B4-CE60F80D951A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B47A8AC8-5675-47DD-B0B4-CE60F80D951A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B47A8AC8-5675-47DD-B0B4-CE60F80D951A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
