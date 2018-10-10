@@ -1,15 +1,17 @@
+
 kind: Service
 apiVersion: v1
 metadata:
   name: nodejs-service
 spec:
-  selector:
-    app: nodejs
-  ports:
-  - name: http
-    port: 3050
-    targetPort: 8080
-  type: NodePort
+    selector:
+      app: nodejs-api
+    ports:
+      - name: http
+        port: 80
+        targetPort: 8080
+        nodePort: 30100
+    type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
