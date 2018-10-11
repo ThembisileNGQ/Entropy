@@ -27,3 +27,6 @@ COPY --from=build /app/aspnetapp/src/ElasticK8s.Api/out ./
 EXPOSE 5001
 ENV ASPNETCORE_ENVIRONMENT="Docker"
 ENTRYPOINT ["dotnet", "ElasticK8s.Api.dll"]
+
+# docker build -t lutando/simple-api:latest .
+# docker push lutando/simple-api:latest
