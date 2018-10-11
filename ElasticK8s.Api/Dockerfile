@@ -25,4 +25,5 @@ FROM microsoft/dotnet:2.1-aspnetcore-runtime AS runtime
 WORKDIR /app
 COPY --from=build /app/aspnetapp/src/ElasticK8s.Api/out ./
 EXPOSE 5001
+ENV ASPNETCORE_ENVIRONMENT="Docker"
 ENTRYPOINT ["dotnet", "ElasticK8s.Api.dll"]

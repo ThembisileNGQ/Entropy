@@ -8,17 +8,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ElasticK8s.Api.Controllers
 {
-    public class ScaleController : Controller 
+    public class ScaleController : Controller
     {
-
-
+        private readonly KubernetesClientConfiguration _k8sConfiguration;
+        public ScaleController(KubernetesClientConfiguration k8sConfiguration)
+        {
+            _k8sConfiguration = k8sConfiguration;
+        }
         [HttpPost("scale")]
         public async Task<IActionResult> Scale([FromBody] ScaleInputModel model)
         {
             try
             {
-                var config = KubernetesClientConfiguration.BuildConfigFromConfigFile();
-                IKubernetes client = new Kubernetes(config);
+                
+                IKubernetes client = new Kubernetes(_k8sConfiguration);
                 var a = await  client.ReadNamespacedDeploymentScaleAsync(model.Deployment,model.Namespace);
 
                 var patch = new JsonPatchDocument<V1Scale>();
