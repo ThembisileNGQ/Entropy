@@ -1,0 +1,77 @@
+{
+	"info": {
+		"_postman_id": "197ce096-f96a-4556-96ff-90d99e80bcf2",
+		"name": "ElasticK8s Api Example",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Scale to 8",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Deployment\" : \"simpleapi-deployment\",\n    \"Namespace\" : \"default\",\n    \"Scale\" : 8\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100:30700/api/scale",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"port": "30700",
+					"path": [
+						"api",
+						"scale"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Scale to 1",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Deployment\" : \"simpleapi-deployment\",\n    \"Namespace\" : \"default\",\n    \"Scale\" : 1\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100:30700/api/scale",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"port": "30700",
+					"path": [
+						"api",
+						"scale"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

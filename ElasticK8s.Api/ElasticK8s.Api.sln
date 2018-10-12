@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_k8s", "_k8s", "{D9A7AA26-2
 ProjectSection(SolutionItems) = preProject
 	deployment.yaml = deployment.yaml
 	Dockerfile = Dockerfile
+	README.md = README.md
 EndProjectSection
 EndProject
 Global
