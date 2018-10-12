@@ -5,7 +5,10 @@ This is a lil POC that shows how to scale K8s from within your application.
 
 Look at the reactive manifesto 👉
 
-<a href="https://www.reactivemanifesto.org/images/reactive-traits.svg"><img src="https://www.reactivemanifesto.org/images/reactive-traits.svg" width="100%" height="200"></a>
+
+
+<a href="https://www.reactivemanifesto.org/images/reactive-traits.svg"><img src="https://www.reactivemanifesto.org/images/reactive-traits.svg" width="50%" height="100"></a>
+
 
 
 ☝️ Can you truly say that you are reactive if your deployments are not elastic? No! Stop manually scaling your deployments using kubectl, and let your application scale itself.
