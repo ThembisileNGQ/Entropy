@@ -7,13 +7,13 @@ Look at the reactive manifesto 👉
 
 
 
-<a href="https://www.reactivemanifesto.org/images/reactive-traits.svg"><img src="https://www.reactivemanifesto.org/images/reactive-traits.svg" width="50%" height="100"></a>
+<a href="https://www.reactivemanifesto.org/images/reactive-traits.svg"><img src="https://www.reactivemanifesto.org/images/reactive-traits.svg" width="70%" height="150"></a>
 
 
 
 ☝️ Can you truly say that you are reactive if your deployments are not elastic? No! Stop manually scaling your deployments using kubectl, and let your application scale itself.
 
-## Deploy 🏎️
+### Deploy 🏎️
 
 I have only tested this on minikube so using the deployment yaml in this repo do one of these numbers:
 
@@ -79,7 +79,7 @@ RESPONSE
 
 Then you will see the deployment scale to 8 replicas from 3.
 
-## Motivations 🤔
+### Motivations 🤔
 
 I will use this POC sometime to scale akka deployments (on dotnet core) from within the cluster. The idea is to have a singleton or process that monitors the cluster and can (within domain rules) scale the deployment to meet demand, based on an arbitrary threshhold algorithm. This is an api project and has nothing to do with akka but I wanted a deterministic way to hit my k8s service to scale up the deployments
 
