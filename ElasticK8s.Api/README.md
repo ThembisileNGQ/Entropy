@@ -67,10 +67,10 @@ RESPONSE
         "uid": "95cec2ea-cd6d-11e8-a33f-080027de7c06"
     },
     "spec": {
-        "replicas": 8
+        "replicas": 8 <---- Will scale To this.
     },
     "status": {
-        "replicas": 3,
+        "replicas": 3, <---- Is currently this.
         "selector": "app=simple-api"
     }
 }
