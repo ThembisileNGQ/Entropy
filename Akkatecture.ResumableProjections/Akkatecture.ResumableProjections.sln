@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8F45543B-8189-42AF-87D5-60A6811C8289}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WriteApi", "src\WriteApi\WriteApi.csproj", "{5195591F-5213-4407-A7AB-7374D411CB74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadApi", "src\ReadApi\ReadApi.csproj", "{DF2D4A32-DDD3-4087-B07D-B27271A2FF3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{E49AB3BA-D26E-4689-9E9E-41780EF75EAB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5195591F-5213-4407-A7AB-7374D411CB74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5195591F-5213-4407-A7AB-7374D411CB74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5195591F-5213-4407-A7AB-7374D411CB74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5195591F-5213-4407-A7AB-7374D411CB74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF2D4A32-DDD3-4087-B07D-B27271A2FF3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF2D4A32-DDD3-4087-B07D-B27271A2FF3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF2D4A32-DDD3-4087-B07D-B27271A2FF3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF2D4A32-DDD3-4087-B07D-B27271A2FF3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E49AB3BA-D26E-4689-9E9E-41780EF75EAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E49AB3BA-D26E-4689-9E9E-41780EF75EAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E49AB3BA-D26E-4689-9E9E-41780EF75EAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E49AB3BA-D26E-4689-9E9E-41780EF75EAB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5195591F-5213-4407-A7AB-7374D411CB74} = {8F45543B-8189-42AF-87D5-60A6811C8289}
+		{DF2D4A32-DDD3-4087-B07D-B27271A2FF3F} = {8F45543B-8189-42AF-87D5-60A6811C8289}
+		{E49AB3BA-D26E-4689-9E9E-41780EF75EAB} = {8F45543B-8189-42AF-87D5-60A6811C8289}
+	EndGlobalSection
+EndGlobal
