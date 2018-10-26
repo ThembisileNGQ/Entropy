@@ -13,10 +13,10 @@ RUN dotnet publish -c Release -o out
 
 FROM microsoft/dotnet:2.1-aspnetcore-runtime AS runtime
 WORKDIR /app
-COPY --from=build /app/aspnetapp/src/ElasticK8s.Api/out ./
+COPY --from=build /app/aspnetapp/src/WriteApi/out ./
 EXPOSE 5001
 ENV ASPNETCORE_ENVIRONMENT="Docker"
-ENTRYPOINT ["dotnet", "ElasticK8s.Api.dll"]
+ENTRYPOINT ["dotnet", "WriteApi.dll"]
 
-# docker build -t lutando/simple-api:latest .
-# docker push lutando/simple-api:latest
+# docker build -t lutando/write-api:latest .
+# docker push lutando/write-api:latest
