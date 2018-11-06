@@ -1,0 +1,13 @@
+kind: Service  
+apiVersion: v1  
+metadata:  
+  name: "eventstore"
+spec:  
+  selector:
+    app: "eventstore"
+  ports:
+    - protocol: "TCP"
+      port: 1112
+      targetPort: 1112
+      nodePort: 30405
+  type: NodePort

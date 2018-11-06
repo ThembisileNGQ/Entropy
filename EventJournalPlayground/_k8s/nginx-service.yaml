@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: "frontend-eventstore"
+spec:
+  selector:
+    app: "frontend-eventstore"
+  ports:
+    - protocol: "TCP"
+      port: 2113
+      targetPort: 2113
+      nodePort: 30404
+  type: LoadBalancer

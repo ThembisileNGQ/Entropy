@@ -16,6 +16,10 @@ This is a silly thing that ive written to test out persistence plugins and how t
 Currently a WIP on best practices for AspNetCore Websockets and ActorSystem integration with Akka.net.
 [go here to find out more...](https://github.com/Lutando/Entropy/tree/master/Akka.Websockets)
 
+## Akkatecture.ResumableProjections
+WIP/PoC, trying to figure out how to make resumable durable projections work for a truly schemaless CQRS/ES future. To Demonstrate this, it will be a by the book write side and read side API in k8s.
+[go here to find out more...](https://github.com/Lutando/Entropy/tree/master/Akkatecture.ResumableProjections
+
 ## ElasticK8s.Api
 A small thing that shows how one can deploy to k8s and scale your deployment from within the cluster. Follow the readme from within the project to see how this is possible. Only tested from a minikube cluster.
 [go here to find out more...](https://github.com/Lutando/Entropy/tree/master/ElasticK8s.Api)
