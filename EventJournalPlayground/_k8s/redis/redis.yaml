@@ -1,0 +1,36 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+  - protocol: TCP
+    port: 6379
+    targetPort: 6379
+    nodePort: 30401
+  type: NodePort
+---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: redis-deployment
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: redis
+    template:
+      metadata:
+        labels:
+          app: redis
+      spec:
+        containers:
+        - name: redis
+          image: lutando/redis-entropy #password lutando
+          ports:
+          - name: redis
+            containerPort: 6379
+        restartPolicy: Always

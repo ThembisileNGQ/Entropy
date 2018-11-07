@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: lutando/postgres-entropy
+        image: lutando/postgres-entropy #user:lutando; password:lutando
         imagePullPolicy: Always
         ports:
         - name: postgresql

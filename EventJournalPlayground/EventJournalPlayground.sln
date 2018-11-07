@@ -4,20 +4,37 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{16FEFD95-688
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_k8s", "_k8s", "{074D76AB-1347-4758-8030-AA18A28BC87D}"
 ProjectSection(SolutionItems) = preProject
-	_k8s\eventstore-service.yaml = _k8s\eventstore-service.yaml
-	_k8s\eventstore-statefulset.yaml = _k8s\eventstore-statefulset.yaml
-	_k8s\LICENSE = _k8s\LICENSE
-	_k8s\nginx-configmap.conf = _k8s\nginx-configmap.conf
-	_k8s\nginx-deployment.yaml = _k8s\nginx-deployment.yaml
-	_k8s\nginx-service.yaml = _k8s\nginx-service.yaml
 	_k8s\README.md = _k8s\README.md
-	_k8s\volume-claim.yaml = _k8s\volume-claim.yaml
-	_k8s\volume-deployment.yaml = _k8s\volume-deployment.yaml
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleApplication", "src\SimpleApplication\SimpleApplication.csproj", "{E871D4F0-E6CF-44E5-8844-72C2BB5B1B2D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDomain", "src\SimpleDomain\SimpleDomain.csproj", "{7C019CF2-03D7-48A6-8074-F9176C5E905B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eventstore", "eventstore", "{FE7D78CD-8E20-479B-A5FD-9D0771A3E889}"
+ProjectSection(SolutionItems) = preProject
+	_k8s\eventstore\eventstore-service.yaml = _k8s\eventstore\eventstore-service.yaml
+	_k8s\eventstore\eventstore-statefulset.yaml = _k8s\eventstore\eventstore-statefulset.yaml
+	_k8s\eventstore\LICENSE = _k8s\eventstore\LICENSE
+	_k8s\eventstore\nginx-configmap.conf = _k8s\eventstore\nginx-configmap.conf
+	_k8s\eventstore\nginx-deployment.yaml = _k8s\eventstore\nginx-deployment.yaml
+	_k8s\eventstore\nginx-service.yaml = _k8s\eventstore\nginx-service.yaml
+	_k8s\eventstore\README.md = _k8s\eventstore\README.md
+	_k8s\eventstore\volume-claim.yaml = _k8s\eventstore\volume-claim.yaml
+	_k8s\eventstore\volume-deployment.yaml = _k8s\eventstore\volume-deployment.yaml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "redis", "redis", "{5C0770ED-3BA5-4ACF-94A1-18A27D33BC81}"
+ProjectSection(SolutionItems) = preProject
+	_k8s\redis\redis.yaml = _k8s\redis\redis.yaml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postgres", "postgres", "{D2DB115F-4418-4FA0-982A-A0A79D0D012D}"
+ProjectSection(SolutionItems) = preProject
+	_k8s\postgres\postgres.yaml = _k8s\postgres\postgres.yaml
+EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akkatecture", "..\..\Akkatecture\Akkatecture\src\Akkatecture\Akkatecture.csproj", "{FEF6F1D2-ECED-497A-A205-6980DF659655}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +50,16 @@ Global
 		{7C019CF2-03D7-48A6-8074-F9176C5E905B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C019CF2-03D7-48A6-8074-F9176C5E905B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C019CF2-03D7-48A6-8074-F9176C5E905B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEF6F1D2-ECED-497A-A205-6980DF659655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEF6F1D2-ECED-497A-A205-6980DF659655}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEF6F1D2-ECED-497A-A205-6980DF659655}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEF6F1D2-ECED-497A-A205-6980DF659655}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E871D4F0-E6CF-44E5-8844-72C2BB5B1B2D} = {16FEFD95-6888-41F6-8F91-E37082D3912F}
 		{7C019CF2-03D7-48A6-8074-F9176C5E905B} = {16FEFD95-6888-41F6-8F91-E37082D3912F}
+		{FE7D78CD-8E20-479B-A5FD-9D0771A3E889} = {074D76AB-1347-4758-8030-AA18A28BC87D}
+		{5C0770ED-3BA5-4ACF-94A1-18A27D33BC81} = {074D76AB-1347-4758-8030-AA18A28BC87D}
+		{D2DB115F-4418-4FA0-982A-A0A79D0D012D} = {074D76AB-1347-4758-8030-AA18A28BC87D}
 	EndGlobalSection
 EndGlobal
