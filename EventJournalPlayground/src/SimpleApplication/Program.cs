@@ -13,25 +13,12 @@ namespace SimpleApplication
 {
     public class Program
     {
-        public static string EventStoreConfig =
-            @"
-akka.persistence {
-    journal {
-        plugin = ""akka.persistence.journal.eventstore""
-        eventstore {
-            class = ""Akka.Persistence.EventStore.Journal.EventStoreJournal, Akka.Persistence.EventStore""
-            connection-string = ""ConnectTo=tcp://admin:changeit@192.168.99.100:30405; HeartBeatTimeout=500""
-            connection-name = ""Akka""
-            read-batch-size = 500
-        }
-    }
-}
-";
+        
         public static void Main(string[] args)
         {
             
             //Create actor system
-            var system = ActorSystem.Create("useraccount-example",EventStoreConfig);
+            var system = ActorSystem.Create("useraccount-example",Config.Postgres);
 
             //Create supervising aggregate manager for UserAccount aggregate root actors
             var aggregateManager = system.ActorOf(Props.Create(() => new UserAccountAggregateManager()));

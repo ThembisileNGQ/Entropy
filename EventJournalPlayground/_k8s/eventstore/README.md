@@ -1,4 +1,6 @@
 # EventStore-Kubernetes
+This is an amended version from https://github.com/riccardone/EventStore-Kubernetes
+
 Example of yaml manifest files to set up EventStore Cluster with persistent data on Kubernetes and AWS
   
 Eventstore  
