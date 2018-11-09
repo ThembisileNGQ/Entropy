@@ -3,11 +3,16 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Akka.Persistence.EventStore;
 using Akka.Persistence.Journal;
+using Akkatecture.Aggregates;
+using Akkatecture.Extensions;
 using EventStore.ClientAPI;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SimpleDomain.Model.UserAccount;
 using SimpleDomain.Model.UserAccount.Commands;
+using SimpleDomain.Model.UserAccount.Events;
 
 namespace SimpleApplication
 {
@@ -22,11 +27,11 @@ namespace SimpleApplication
             var aggregateManager = system.ActorOf(Props.Create(() => new UserAccountAggregateManager()));
 
             //Build create user account aggregate command
-            var aggregateId = UserAccountId.With("useraccount-b1e48522-0c58-4051-a4ba-01d9665ad35f");
-            //var createUserAccountCommand = new CreateUserAccountCommand(aggregateId, "foo bar");
+            var aggregateId = UserAccountId.New;
+            var createUserAccountCommand = new CreateUserAccountCommand(aggregateId, "foo bar");
             
             //Send command, this is equivalent to command.publish() in other cqrs frameworks
-            //aggregateManager.Tell(createUserAccountCommand);
+            aggregateManager.Tell(createUserAccountCommand);
 
             while (true)
             {
