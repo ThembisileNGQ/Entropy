@@ -15,7 +15,6 @@ using SimpleDomain.Model.UserAccount.Events;
 
 namespace SimpleDomain
 {
-
     public class UserAccountAggregateEventUpcaster : AggregateEventUpcaster<UserAccountAggregate, UserAccountId>,
         IUpcast<UserAccountNameChangedEventV2, UserAccountNameChangedEvent>
     {
@@ -55,12 +54,8 @@ namespace SimpleDomain
     {
         private static ConcurrentDictionary<Type, bool> DecisionCache = new ConcurrentDictionary<Type, bool>();
 
-        public static readonly IReadOnlyDictionary<Type, Func<TEventUpcaster, IAggregateEvent, IAggregateEvent>> UpcastFunctions;
+        public readonly IReadOnlyDictionary<Type, Func<TEventUpcaster, IAggregateEvent, IAggregateEvent>> UpcastFunctions;
 
-        static AggregateEventUpcaster()
-        {
-            UpcastFunctions  = typeof(TEventUpcaster).GetAggregateEventUpcastMethods<TAggregate, TIdentity, TEventUpcaster>();
-        }
         
         public AggregateEventUpcaster()
         {
@@ -74,8 +69,7 @@ namespace SimpleDomain
                 throw new InvalidOperationException(
                     $"Event applier of type '{GetType().PrettyPrint()}' has a wrong generic argument '{typeof(TEventUpcaster).PrettyPrint()}'");
             }
-            
-            var oldevt = new UserAccountNameChangedEvent("test");
+            UpcastFunctions  = GetType().GetAggregateEventUpcastMethods<TAggregate, TIdentity, TEventUpcaster>();
           
         }
         
@@ -85,7 +79,7 @@ namespace SimpleDomain
             
             if (potentialUpcast is ICommittedEvent<TAggregate,TIdentity> comittedEvent)
             {
-                var eventType = type.GetType().GenericTypeArguments[2];
+                var eventType = type.GenericTypeArguments[2];
 
                 if (DecisionCache.ContainsKey(eventType))
                 {
@@ -129,6 +123,12 @@ namespace SimpleDomain
                 var comittedEvent = evt as dynamic;
                     
                 var upcastedEvent = Upcast(comittedEvent.AggregateEvent);
+                
+                var genericType = typeof(CommittedEvent<,,>)
+                    .MakeGenericType(typeof(TAggregate), typeof(TIdentity), upcastedEvent.GetType());
+                var up = Activator.CreateInstance(genericType,comittedEvent.AggregateIdentity,upcastedEvent,comittedEvent.Metadata);
+
+                return EventSequence.Single(up);
             }
 
             return EventSequence.Single(evt);
@@ -161,32 +161,19 @@ namespace SimpleDomain
             where TIdentity : IIdentity
         {
             var aggregateEventType = typeof(IAggregateEvent<TAggregate, TIdentity>);
-            //throw new NotImplementedException();
-            foreach (var thing in type
-                .GetTypeInfo()
-                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(mi =>
-                {
-                    if(mi.Name != "Upcast") return false;
-                    var parameters = mi.GetParameters();
-                    return
-                        parameters.Length == 1 &&
-                        aggregateEventType.GetTypeInfo().IsAssignableFrom(parameters[0].ParameterType);  
-                }))
-            {
-                Console.WriteLine(thing);
-            }
             
             return type
                 .GetTypeInfo()
                 .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(mi =>
                 {
-                    if (mi.Name != "Upcast") return false;
+                    if (mi.Name != "Upcast") 
+                        return false;
                     var parameters = mi.GetParameters();
                     return
                         parameters.Length == 1 &&
                         aggregateEventType.GetTypeInfo().IsAssignableFrom(parameters[0].ParameterType);
+                    
                 })
                 .ToDictionary(
                     //problem might be here

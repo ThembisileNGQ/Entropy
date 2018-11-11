@@ -1,4 +1,5 @@
-﻿using Akkatecture.Aggregates;
+﻿using System.Runtime.InteropServices.ComTypes;
+using Akkatecture.Aggregates;
 using SimpleDomain.Model.UserAccount.Events;
 
 namespace SimpleDomain.Model.UserAccount
@@ -22,7 +23,7 @@ namespace SimpleDomain.Model.UserAccount
         
         public void Apply(UserAccountNameChangedEventV2 aggregateEvent)
         {
-            Name = aggregateEvent.Name;
+            Name = aggregateEvent.Name + "new apply";
         }
 
     }

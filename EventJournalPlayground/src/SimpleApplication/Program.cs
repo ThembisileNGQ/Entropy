@@ -21,11 +21,12 @@ namespace SimpleApplication
     {
         public static async Task Main(string[] args)
         {
-            var upcaster = new UserAccountAggregateEventUpcaster();
+            //var upcaster = new UserAccountAggregateEventUpcaster();
 
-            var oldevt = new UserAccountNameChangedEvent("test");
-            //var evt1 = UserAccountAggregateEventUpcaster.UpcastFunctions[typeof(IAggregateEvent<UserAccountAggregate,UserAccountId>)]
-              //  .Invoke(upcaster,oldevt);
+            //var oldevt = new CommittedEvent<UserAccountAggregate,UserAccountId,UserAccountNameChangedEvent>(UserAccountId.New,new UserAccountNameChangedEvent("test"),null); 
+            //var 
+            //var evt1 = upcaster.FromJournal(oldevt, String.Empty);
+            //Console.WriteLine("Ok");
             //var evt = upcaster.Upcast(oldevt);
             //Console.WriteLine(evt);
             
@@ -36,12 +37,12 @@ namespace SimpleApplication
             var aggregateManager = system.ActorOf(Props.Create(() => new UserAccountAggregateManager()));
 
             //Build create user account aggregate command
-            var aggregateId = UserAccountId.New;
-            var createUserAccountCommand = new CreateUserAccountCommand(aggregateId, "foo bar");
+            //var aggregateId = UserAccountId.New;
+            //var createUserAccountCommand = new CreateUserAccountCommand(aggregateId, "foo bar");
             
             //Send command, this is equivalent to command.publish() in other cqrs frameworks
-            aggregateManager.Tell(createUserAccountCommand);
-
+            //aggregateManager.Tell(createUserAccountCommand);
+            var aggregateId = UserAccountId.With("useraccount-a40e3a87-6ebf-4900-884d-7c17477ea20b");
             while (true)
             {
                 var newName = GetRandomString();
@@ -50,7 +51,6 @@ namespace SimpleApplication
                 await Task.Delay(1000);
             }
             
-                        
             //block end of program
             Console.WriteLine("done");
             Console.ReadLine(); 

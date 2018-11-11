@@ -12,6 +12,17 @@ akka.persistence {
             connection-string = ""ConnectTo=tcp://admin:changeit@192.168.99.100:30405; HeartBeatTimeout=500""
             connection-name = ""Akka""
             read-batch-size = 500
+			event-adapters {
+        
+				aggregate-event-tagger  = ""SimpleDomain.UserAccountAggregateEventUpcaster, SimpleDomain""
+    
+			}
+    
+			event-adapter-bindings = {
+    
+				""Akkatecture.Aggregates.ICommittedEvent, Akkatecture"" = aggregate-event-tagger
+    
+			}
         }
     }
 }
