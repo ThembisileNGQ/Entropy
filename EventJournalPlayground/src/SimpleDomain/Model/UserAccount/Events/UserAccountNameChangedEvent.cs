@@ -12,4 +12,14 @@ namespace SimpleDomain.Model.UserAccount.Events
             Name = name;
         }
     }
+    
+    [EventVersion("UserAccountNameChanged", 2)]
+    public class UserAccountNameChangedEventV2 : AggregateEvent<UserAccountAggregate, UserAccountId>
+    {
+        public string Name { get; }
+        public UserAccountNameChangedEventV2(string name)
+        {
+            Name = name + "but v2 tho";
+        }
+    }
 }

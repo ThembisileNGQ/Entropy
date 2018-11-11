@@ -12,4 +12,5 @@ namespace SimpleDomain.Model.UserAccount.Events
             Name = name;
         }
     }
+    
 }

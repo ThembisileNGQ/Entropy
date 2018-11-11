@@ -10,6 +10,7 @@ using Akkatecture.Extensions;
 using EventStore.ClientAPI;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SimpleDomain;
 using SimpleDomain.Model.UserAccount;
 using SimpleDomain.Model.UserAccount.Commands;
 using SimpleDomain.Model.UserAccount.Events;
@@ -20,6 +21,14 @@ namespace SimpleApplication
     {
         public static async Task Main(string[] args)
         {
+            var upcaster = new UserAccountAggregateEventUpcaster();
+
+            var oldevt = new UserAccountNameChangedEvent("test");
+            //var evt1 = UserAccountAggregateEventUpcaster.UpcastFunctions[typeof(IAggregateEvent<UserAccountAggregate,UserAccountId>)]
+              //  .Invoke(upcaster,oldevt);
+            //var evt = upcaster.Upcast(oldevt);
+            //Console.WriteLine(evt);
+            
             //Create actor system
             var system = ActorSystem.Create("useraccount-example",Config.EventStore);
 
@@ -44,7 +53,7 @@ namespace SimpleApplication
                         
             //block end of program
             Console.WriteLine("done");
-            Console.ReadLine();
+            Console.ReadLine(); 
         }
 
         public static string GetRandomString()

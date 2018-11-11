@@ -5,7 +5,8 @@ namespace SimpleDomain.Model.UserAccount
 {
     public class UserAccountState : AggregateState<UserAccountAggregate,UserAccountId>,
         IApply<UserAccountCreatedEvent>,
-        IApply<UserAccountNameChangedEvent>
+        IApply<UserAccountNameChangedEvent>,
+        IApply<UserAccountNameChangedEventV2>
     {
         public string Name { get; private set; }
 
@@ -15,6 +16,11 @@ namespace SimpleDomain.Model.UserAccount
         }
 
         public void Apply(UserAccountNameChangedEvent aggregateEvent)
+        {
+            Name = aggregateEvent.Name;
+        }
+        
+        public void Apply(UserAccountNameChangedEventV2 aggregateEvent)
         {
             Name = aggregateEvent.Name;
         }
