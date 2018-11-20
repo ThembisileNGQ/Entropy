@@ -2,9 +2,9 @@ using Akkatecture.Aggregates;
 
 namespace Domain.Model.Car.Events
 {
-    public class CarCreated : AggregateEvent<CarAggregate, CarId>
+    public class CarCreatedEvent : AggregateEvent<CarAggregate, CarId>
     {
-        public CarCreated()
+        public CarCreatedEvent()
         {
         }
     }
