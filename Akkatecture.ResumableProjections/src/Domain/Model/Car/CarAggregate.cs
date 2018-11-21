@@ -32,9 +32,10 @@ namespace Domain.Model.Car
         
         private bool Handle(ChangeCarNameCommand command)
         {
-            if (IsNew)
+            if (!IsNew)
             {
                 Emit(new CarNameChangedEvent(command.Name));
+                Sender.Tell(new SuccessExecutionResult(),Self);
             }
             else
             {

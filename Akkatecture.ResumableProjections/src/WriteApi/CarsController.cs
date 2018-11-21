@@ -27,7 +27,7 @@ namespace WriteApi
             var executionResult = await _aggregateManager.Ask<ExecutionResult>(command);
             
             if(executionResult.IsSuccess)
-                return Accepted(new {Id = aggregateId});
+                return Accepted(new {Id = aggregateId.GetGuid()});
 
             return BadRequest(executionResult.ToString());
         }
@@ -42,7 +42,7 @@ namespace WriteApi
             var executionResult = await _aggregateManager.Ask<ExecutionResult>(command);
             
             if(executionResult.IsSuccess)
-                return Accepted(new {Id = aggregateId});
+                return Accepted(new {Id = aggregateId.GetGuid()});
 
             return BadRequest(executionResult.ToString());
         }
