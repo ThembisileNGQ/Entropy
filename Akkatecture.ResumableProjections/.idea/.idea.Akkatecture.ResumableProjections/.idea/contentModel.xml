@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/Library/Caches/Rider2018.2/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/Library/Caches/Rider2018.2/resharper-host/local/Transient/ReSharperHost/v182/SolutionCaches/_Akkatecture.ResumableProjections.1280257039.00" t="ExcludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/consoles/db" t="IncludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/extensions" t="IncludeRecursive" />
+    <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
+    <e p="$PROJECT_DIR$/../../Akkatecture/Akkatecture/src/Akkatecture" t="IncludeRecursive">
+      <e p="Aggregates" t="Include">
+        <e p="AggregateEvent.cs" t="Include" />
+        <e p="AggregateManager.cs" t="Include" />
+        <e p="AggregateManagerSettings.cs" t="Include" />
+        <e p="AggregateName.cs" t="Include" />
+        <e p="AggregateNameAttribute.cs" t="Include" />
+        <e p="AggregateRoot.cs" t="Include" />
+        <e p="AggregateRootSettings.cs" t="Include" />
+        <e p="AggregateState.cs" t="Include" />
+        <e p="CommittedEvent.cs" t="Include" />
+        <e p="DomainEvent.cs" t="Include" />
+        <e p="EventId.cs" t="Include" />
+        <e p="ExecutionResults" t="Include">
+          <e p="ExecutionResult.cs" t="Include" />
+          <e p="FailedExecutionResult.cs" t="Include" />
+          <e p="IExecutionResult.cs" t="Include" />
+          <e p="SuccessExecutionResult.cs" t="Include" />
+        </e>
+        <e p="IAggregateEvent.cs" t="Include" />
+        <e p="IAggregateManager.cs" t="Include" />
+        <e p="IAggregateName.cs" t="Include" />
+        <e p="IAggregateRoot.cs" t="Include" />
+        <e p="IApply.cs" t="Include" />
+        <e p="ICommittedEvent.cs" t="Include" />
+        <e p="IDomainEvent.cs" t="Include" />
+        <e p="IEmit.cs" t="Include" />
+        <e p="IEventApplier.cs" t="Include" />
+        <e p="IEventId.cs" t="Include" />
+        <e p="IMetadata.cs" t="Include" />
+        <e p="Metadata.cs" t="Include" />
+        <e p="MetadataKeys.cs" t="Include" />
+      </e>
+      <e p="Akka" t="Include">
+        <e p="ActorRefProvider.cs" t="Include" />
+      </e>
+      <e p="Akkatecture.csproj" t="IncludeRecursive" />
+      <e p="Bin" t="ExcludeRecursive" />
+      <e p="Commands" t="Include">
+        <e p="Command.cs" t="Include" />
+        <e p="CommandHandler.cs" t="Include" />
+        <e p="CommandId.cs" t="Include" />
+        <e p="CommandVersionAttribute.cs" t="Include" />
+        <e p="DistinctCommand.cs" t="Include" />
+        <e p="ICommand.cs" t="Include" />
+        <e p="ICommandHandler.cs" t="Include" />
+        <e p="ICommandId.cs" t="Include" />
+      </e>
+      <e p="Configuration" t="Include">
+        <e p="AkkatectureDefaultSettings.cs" t="Include" />
+        <e p="defaults.conf" t="Include" />
+        <e p="DependancyInjection" t="Include">
+          <e p="AkkatectureBuilder.cs" t="Include" />
+          <e p="AkkatectureServiceCollectionExtensions.cs" t="Include" />
+          <e p="IAkkatectureBuilder.cs" t="Include" />
+        </e>
+        <e p="reference.conf" t="Include" />
+      </e>
+      <e p="Core" t="Include">
+        <e p="CircularBuffer.cs" t="Include" />
+        <e p="GuidFactories.cs" t="Include" />
+        <e p="Identity.cs" t="Include" />
+        <e p="IIdentity.cs" t="Include" />
+        <e p="IMetadataContainer.cs" t="Include" />
+        <e p="ISourceId.cs" t="Include" />
+        <e p="MetadataContainer.cs" t="Include" />
+        <e p="Quid.cs" t="Include" />
+        <e p="ReflectionHelper.cs" t="Include" />
+        <e p="SourceId.cs" t="Include" />
+        <e p="VersionedTypes" t="Include">
+          <e p="IVersionedType.cs" t="Include" />
+          <e p="IVersionedTypeDefinitionService.cs" t="Include" />
+          <e p="VersionedTypeAttribute.cs" t="Include" />
+          <e p="VersionedTypeDefinition.cs" t="Include" />
+          <e p="VersionedTypeDefinitionService.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Entities" t="Include">
+        <e p="Entity.cs" t="Include" />
+        <e p="IEntity.cs" t="Include" />
+      </e>
+      <e p="Events" t="Include">
+        <e p="AggregateEventTagger.cs" t="Include" />
+        <e p="EventDefinition.cs" t="Include" />
+        <e p="EventDefinitionService.cs" t="Include" />
+        <e p="EventVersionAttribute.cs" t="Include" />
+        <e p="IEventDefinitionService.cs" t="Include" />
+      </e>
+      <e p="Exceptions" t="Include">
+        <e p="MetadataKeyNotFoundException.cs" t="Include" />
+        <e p="MetadataParseException.cs" t="Include" />
+      </e>
+      <e p="extensions" t="Include">
+        <e p="ActionExtensions.cs" t="Include" />
+        <e p="ActorContextExtensions.cs" t="Include" />
+        <e p="DateTimeOffsetExtensions.cs" t="Include" />
+        <e p="IdentityExtensions.cs" t="Include" />
+        <e p="SourceIdExtensions.cs" t="Include" />
+        <e p="SpecificationExtensions.cs" t="Include" />
+        <e p="TypeExtensions.cs" t="Include" />
+      </e>
+      <e p="Messaging" t="Include">
+        <e p="Envelope.cs" t="Include" />
+        <e p="IEnvelope.cs" t="Include" />
+      </e>
+      <e p="obj" t="ExcludeRecursive">
+        <e p="Debug" t="Include">
+          <e p="netstandard2.0" t="Include">
+            <e p="Akkatecture.AssemblyInfo.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="Sagas" t="Include">
+        <e p="AggregateSaga" t="Include">
+          <e p="AggregateSaga.cs" t="Include" />
+          <e p="AggregateSagaManager.cs" t="Include" />
+          <e p="AggregateSagaManagerSettings.cs" t="Include" />
+          <e p="AggregateSagaSettings.cs" t="Include" />
+          <e p="IAggregateSaga.cs" t="Include" />
+          <e p="IAggregateSagaManager.cs" t="Include" />
+        </e>
+        <e p="ISaga.cs" t="Include" />
+        <e p="ISagaHandles.cs" t="Include" />
+        <e p="ISagaId.cs" t="Include" />
+        <e p="ISagaIsStartedBy.cs" t="Include" />
+        <e p="ISagaLocator.cs" t="Include" />
+        <e p="ISagaName.cs" t="Include" />
+        <e p="ISagaState.cs" t="Include" />
+        <e p="Saga.cs" t="Include" />
+        <e p="SagaId.cs" t="Include" />
+        <e p="SagaName.cs" t="Include" />
+        <e p="SagaNameAttribute.cs" t="Include" />
+        <e p="SagaState.cs" t="Include" />
+        <e p="SagaStatus.cs" t="Include" />
+      </e>
+      <e p="Specifications" t="Include">
+        <e p="ISpecification.cs" t="Include" />
+        <e p="Provided" t="Include">
+          <e p="AggregateIsNewSpecification.cs" t="Include" />
+          <e p="AllSpecification.cs" t="Include" />
+          <e p="AndSpecification.cs" t="Include" />
+          <e p="AtLeastSpecification.cs" t="Include" />
+          <e p="ExpressionSpecification.cs" t="Include" />
+          <e p="NotSpecification.cs" t="Include" />
+          <e p="OrSpecification.cs" t="Include" />
+        </e>
+        <e p="Specification.cs" t="Include" />
+      </e>
+      <e p="Subscribers" t="Include">
+        <e p="DomainEventSubscriber.cs" t="Include" />
+        <e p="DomainEventSubscriberSettings.cs" t="Include" />
+        <e p="ISubscribeTo.cs" t="Include" />
+      </e>
+      <e p="ValueObjects" t="Include">
+        <e p="ISingleValueObject.cs" t="Include" />
+        <e p="SingleValueObject.cs" t="Include" />
+        <e p="SingleValueObjectConverter.cs" t="Include" />
+        <e p="ValueObject.cs" t="Include" />
+      </e>
+    </e>
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p="_k8s" t="Include">
+        <e p="Deploy.yaml" t="Include" />
+      </e>
+      <e p="Akkatecture.ResumableProjections.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="src" t="Include">
+        <e p="Domain" t="IncludeRecursive">
+          <e p="Bin" t="ExcludeRecursive" />
+          <e p="Domain.csproj" t="IncludeRecursive" />
+          <e p="Model" t="Include">
+            <e p="Car" t="Include">
+              <e p="CarAggregate.cs" t="Include" />
+              <e p="CarAggregateManager.cs" t="Include" />
+              <e p="CarId.cs" t="Include" />
+              <e p="CarState.cs" t="Include" />
+              <e p="Commands" t="Include">
+                <e p="ChangeCarNameCommand.cs" t="Include" />
+                <e p="CreateCarCommand.cs" t="Include" />
+              </e>
+              <e p="Events" t="Include">
+                <e p="CarCreatedEvent.cs" t="Include" />
+                <e p="CarNameChangedEvent.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="obj" t="ExcludeRecursive">
+            <e p="Debug" t="Include">
+              <e p="netcoreapp2.1" t="Include">
+                <e p="Domain.AssemblyInfo.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="ReadApi" t="IncludeRecursive">
+          <e p="Bin" t="ExcludeRecursive" />
+          <e p="CarsController.cs" t="Include" />
+          <e p="Dockerfile" t="Include" />
+          <e p="obj" t="ExcludeRecursive">
+            <e p="Debug" t="Include">
+              <e p="netcoreapp2.1" t="Include">
+                <e p="ReadApi.AssemblyInfo.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Program.cs" t="Include" />
+          <e p="Properties" t="Include">
+            <e p="launchSettings.json" t="Include" />
+          </e>
+          <e p="ReadApi.csproj" t="IncludeRecursive" />
+          <e p="Startup.cs" t="Include" />
+          <e p="wwwroot" t="Include" />
+        </e>
+        <e p="WriteApi" t="IncludeRecursive">
+          <e p="Bin" t="ExcludeRecursive" />
+          <e p="CarInputModel.cs" t="Include" />
+          <e p="CarsController.cs" t="Include" />
+          <e p="Dockerfile" t="Include" />
+          <e p="obj" t="ExcludeRecursive">
+            <e p="Debug" t="Include">
+              <e p="netcoreapp2.1" t="Include">
+                <e p="WriteApi.AssemblyInfo.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Program.cs" t="Include" />
+          <e p="Properties" t="Include">
+            <e p="launchSettings.json" t="Include" />
+          </e>
+          <e p="Startup.cs" t="Include" />
+          <e p="WriteApi.csproj" t="IncludeRecursive" />
+          <e p="wwwroot" t="Include" />
+        </e>
+      </e>
+    </e>
+  </component>
+</project>

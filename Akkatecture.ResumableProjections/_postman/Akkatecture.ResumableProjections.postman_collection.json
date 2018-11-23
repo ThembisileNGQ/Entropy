@@ -1,0 +1,83 @@
+{
+	"info": {
+		"_postman_id": "2cd7ceee-fcca-4889-9ec4-7639632435a4",
+		"name": "Akkatecture.ResumableProjections",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Car",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f85049ea-e658-4918-9522-1e281e3170cf",
+						"exec": [
+							"var data = pm.response.json()",
+							"",
+							"pm.test(\"result is accepted\", function () {",
+							"    pm.environment.set(\"CarId\", data.id)",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:5100/api/cars",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5100",
+					"path": [
+						"api",
+						"cars"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change Car Name",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"foo\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5100/api/cars/{{CarId}}/name",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5100",
+					"path": [
+						"api",
+						"cars",
+						"{{CarId}}",
+						"name"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
