@@ -12,13 +12,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain.csproj", "{7E672CFB-9D4C-4EB2-A140-ED1F9523A966}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_k8s", "_k8s", "{DF736ACC-1ADD-4F49-A7E5-1B6A8241D78A}"
-ProjectSection(SolutionItems) = preProject
-	_k8s\Deploy.yaml = _k8s\Deploy.yaml
-EndProjectSection
+	ProjectSection(SolutionItems) = preProject
+		_k8s\deployment.yaml = _k8s\deployment.yaml
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture", "..\..\Akkatecture\Akkatecture\src\Akkatecture\Akkatecture.csproj", "{2201D7ED-927D-4B31-9F23-F12A1BF2548E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projections.Prototype", "src\Projections.Prototype\Projections.Prototype.csproj", "{5369692F-CCB8-40F3-ACDA-CC23C8AEA609}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projections.Prototype", "src\Projections.Prototype\Projections.Prototype.csproj", "{5369692F-CCB8-40F3-ACDA-CC23C8AEA609}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
