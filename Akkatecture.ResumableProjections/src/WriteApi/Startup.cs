@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Akka.Configuration;
 using Domain.Model.Car;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,7 +24,7 @@ namespace WriteApi
             HostingEnvironment = env;
 
             LoggerFactory = loggerFactory;
-            var logger = loggerFactory.CreateLogger<Startup>();
+            var logger = LoggerFactory.CreateLogger<Startup>();
             logger.LogInformation("WriteApi application is starting.");
         } 
         
@@ -33,7 +34,8 @@ namespace WriteApi
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            var actorSystem = ActorSystem.Create("write-system");
+            var config = ConfigurationFactory.ParseString(Config.Postgres);
+            var actorSystem = ActorSystem.Create("write-system", config);
             var aggregateManager = actorSystem.ActorOf(Props.Create(() => new CarAggregateManager()), "car-aggregatemanager");
 
             services
@@ -52,6 +54,9 @@ namespace WriteApi
                         template: "{controller}/{action}");
                 });
             });
+
+            var logger = LoggerFactory.CreateLogger<Startup>();
+            logger.LogInformation("WriteApi application is starting.");
         }
     }
 }

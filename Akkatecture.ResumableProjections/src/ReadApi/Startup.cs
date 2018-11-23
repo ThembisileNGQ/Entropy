@@ -23,7 +23,7 @@ namespace ReadApi
             HostingEnvironment = env;
 
             LoggerFactory = loggerFactory;
-            var logger = loggerFactory.CreateLogger<Startup>();
+            var logger = LoggerFactory.CreateLogger<Startup>();
             logger.LogInformation("ReadApi application is starting.");
         } 
         
@@ -46,6 +46,9 @@ namespace ReadApi
                         template: "{controller}/{action}");
                 });
             });
+
+            var logger = LoggerFactory.CreateLogger<Startup>();
+            logger.LogInformation("ReadApi application has started.");
         }
     }
 }
