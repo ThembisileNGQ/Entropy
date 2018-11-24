@@ -89,10 +89,14 @@
       </e>
       <e p="Events" t="Include">
         <e p="AggregateEventTagger.cs" t="Include" />
+        <e p="AggregateEventUpcaster.cs" t="Include" />
+        <e p="DomainEventMapper.cs" t="Include" />
         <e p="EventDefinition.cs" t="Include" />
         <e p="EventDefinitionService.cs" t="Include" />
         <e p="EventVersionAttribute.cs" t="Include" />
         <e p="IEventDefinitionService.cs" t="Include" />
+        <e p="IEventUpcaster.cs" t="Include" />
+        <e p="IUpcast.cs" t="Include" />
       </e>
       <e p="Exceptions" t="Include">
         <e p="MetadataKeyNotFoundException.cs" t="Include" />
@@ -168,7 +172,7 @@
     </e>
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="_k8s" t="Include">
-        <e p="Deploy.yaml" t="Include" />
+        <e p="deployment.yaml" t="Include" />
       </e>
       <e p="Akkatecture.ResumableProjections.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />
@@ -200,9 +204,24 @@
             </e>
           </e>
         </e>
+        <e p="Projections.Prototype" t="IncludeRecursive">
+          <e p="Bin" t="ExcludeRecursive" />
+          <e p="IAmProjectionFor.cs" t="Include" />
+          <e p="IProjection.cs" t="Include" />
+          <e p="IProjectionContext.cs" t="Include" />
+          <e p="obj" t="ExcludeRecursive">
+            <e p="Debug" t="Include">
+              <e p="netcoreapp2.1" t="Include">
+                <e p="Projections.Prototype.AssemblyInfo.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Projections.Prototype.csproj" t="IncludeRecursive" />
+        </e>
         <e p="ReadApi" t="IncludeRecursive">
           <e p="Bin" t="ExcludeRecursive" />
           <e p="CarsController.cs" t="Include" />
+          <e p="Config.cs" t="Include" />
           <e p="Dockerfile" t="Include" />
           <e p="obj" t="ExcludeRecursive">
             <e p="Debug" t="Include">
@@ -223,6 +242,7 @@
           <e p="Bin" t="ExcludeRecursive" />
           <e p="CarInputModel.cs" t="Include" />
           <e p="CarsController.cs" t="Include" />
+          <e p="Config.cs" t="Include" />
           <e p="Dockerfile" t="Include" />
           <e p="obj" t="ExcludeRecursive">
             <e p="Debug" t="Include">

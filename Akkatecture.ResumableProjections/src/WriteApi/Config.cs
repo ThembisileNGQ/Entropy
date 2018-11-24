@@ -43,6 +43,18 @@ akka.persistence{
 
 			# defines column db type used to store payload. Available option: BYTEA (default), JSON, JSONB
 			stored-as = JSONB
+
+			event-adapters {
+        
+				aggregate-event-tagger  = ""Akkatecture.Events.AggregateEventTagger, Akkatecture""
+    
+			}
+    
+			event-adapter-bindings = {
+    
+				""Akkatecture.Aggregates.ICommittedEvent, Akkatecture"" = aggregate-event-tagger
+    
+			}
 		}
 	}
 

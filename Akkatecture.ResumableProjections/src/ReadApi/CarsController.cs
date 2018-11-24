@@ -29,31 +29,29 @@ namespace ReadApi
         }
 
         [HttpGet("rebuild")]
-        public async Task<IActionResult> Rebuild()
+        public IActionResult Rebuild()
         {
-            throw new NotImplementedException();
+            Test();
+            return Ok();
         }
 
 
         private void Test()
-        {
-            
+        {   
             var bidProjection = new MyResumableProjection("bid");
 
-            var writerProps = Props.Create(typeof(TheOneWhoWritesToQueryJournal), "bid");
-            var writer = _actorSystem.ActorOf(writerProps, "bid-projection-writer");
             var mat = ActorMaterializer.Create(_actorSystem);
 
             var readJournal =
-                PersistenceQuery.Get(_actorSystem).ReadJournalFor<SqlReadJournal>("");
+                PersistenceQuery.Get(_actorSystem)
+                    .ReadJournalFor<SqlReadJournal>(SqlReadJournal.Identifier);
 
             readJournal
-                .EventsByTag("bid", Sequence.Sequence(0L))
+                .EventsByTag("CarAggregate", Sequence.Sequence(0L))
                 .Select(e => e.Event)
-                .Select()
-                //.SelectAsync(8, envelope => writer.Ask(envelope.Event).ContinueWith(t => envelope.Offset,TaskContinuationOptions.OnlyOnRanToCompletion))
-                //.SelectAsync(1, offset => bidProjection.SaveProgress(offset))
-                //.RunWith(Sink.Ignore<object>(), mat);
+                .Select(bidProjection.Save)
+                .RunForeach(o => bidProjection.Save(o), mat)
+                .Wait();
         }
 
         public class TheOneWhoWritesToQueryJournal : ActorBase
@@ -76,13 +74,21 @@ namespace ReadApi
             public int LatestOffset { get; }
             public string Id { get; }
             public Offset Offset { get; }
-            public IList<object> 
+            public IList<object> Events { get; }
 
 
             public MyResumableProjection(string id)
             {
                 Id = id;
+                Events = new List<object>();
                 Offset = Offset.NoOffset();
+            }
+
+            public object Save(object o)
+            {
+                Console.WriteLine(o.ToString());
+                Events.Add(o);
+                return o;
             }
 
             public Task SaveProgress(Offset offset)

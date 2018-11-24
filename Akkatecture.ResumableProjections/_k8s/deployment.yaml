@@ -5,7 +5,7 @@ metadata:
   name: postgres-journal-service
 spec:
   selector:
-    app: postgres
+    app: postgres-journal
   ports:
   - protocol: TCP
     port: 5432
@@ -21,11 +21,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: postgres-journal
   template:
     metadata:
       labels:
-        app: postgres
+        app: postgres-journal
     spec:
       containers:
       - name: postgres
@@ -45,7 +45,7 @@ metadata:
   name: postgres-projection-service
 spec:
   selector:
-    app: postgres
+    app: postgres-projection
   ports:
   - protocol: TCP
     port: 5432
@@ -61,11 +61,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: postgres-projection
   template:
     metadata:
       labels:
-        app: postgres
+        app: postgres-projection
     spec:
       containers:
       - name: postgres

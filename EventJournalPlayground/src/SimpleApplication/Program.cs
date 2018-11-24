@@ -31,7 +31,7 @@ namespace SimpleApplication
             //Console.WriteLine(evt);
             
             //Create actor system
-            var system = ActorSystem.Create("useraccount-example",Config.EventStore);
+            var system = ActorSystem.Create("useraccount-example",Config.Postgres);
 
             //Create supervising aggregate manager for UserAccount aggregate root actors
             var aggregateManager = system.ActorOf(Props.Create(() => new UserAccountAggregateManager()));

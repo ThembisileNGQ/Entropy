@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Akka.Configuration;
 using Domain.Model.Car;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +33,12 @@ namespace ReadApi
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            
+            var config = ConfigurationFactory.ParseString(Config.Postgres);
+            var actorSystem = ActorSystem.Create("read-system", config);
+
+            services
+                .AddAkkatecture(actorSystem);
         }
 
         
