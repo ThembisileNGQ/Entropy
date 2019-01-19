@@ -16,8 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_k8s", "_k8s", "{DF736ACC-1
 		_k8s\deployment.yaml = _k8s\deployment.yaml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akkatecture", "..\..\Akkatecture\Akkatecture\src\Akkatecture\Akkatecture.csproj", "{2201D7ED-927D-4B31-9F23-F12A1BF2548E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projections.Prototype", "src\Projections.Prototype\Projections.Prototype.csproj", "{5369692F-CCB8-40F3-ACDA-CC23C8AEA609}"
 EndProject
 Global
@@ -38,10 +36,6 @@ Global
 		{7E672CFB-9D4C-4EB2-A140-ED1F9523A966}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E672CFB-9D4C-4EB2-A140-ED1F9523A966}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E672CFB-9D4C-4EB2-A140-ED1F9523A966}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2201D7ED-927D-4B31-9F23-F12A1BF2548E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2201D7ED-927D-4B31-9F23-F12A1BF2548E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2201D7ED-927D-4B31-9F23-F12A1BF2548E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2201D7ED-927D-4B31-9F23-F12A1BF2548E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5369692F-CCB8-40F3-ACDA-CC23C8AEA609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5369692F-CCB8-40F3-ACDA-CC23C8AEA609}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5369692F-CCB8-40F3-ACDA-CC23C8AEA609}.Release|Any CPU.ActiveCfg = Release|Any CPU
