@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3f339f94-e6e0-4b99-92d7-847b7bf5638e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Akkatecture.ResumableProjections/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Akkatecture.ResumableProjections/.idea/contentModel.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Akkatecture.ResumableProjections/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Akkatecture.ResumableProjections/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Akkatecture.ResumableProjections/riderModule.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Akkatecture.ResumableProjections/riderModule.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Akkatecture.ResumableProjections.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Akkatecture.ResumableProjections.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Domain/Domain.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Domain/Domain.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Projections.Prototype/Projections.Prototype.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Projections.Prototype/Projections.Prototype.csproj" afterDir="false" />
-    </list>
+    <list default="true" id="3f339f94-e6e0-4b99-92d7-847b7bf5638e" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,11 +10,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ReadApi/CarsController.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="30" column="28" lean-forward="true" selection-start-line="30" selection-start-column="28" selection-end-line="30" selection-end-column="28" />
+            <state relative-caret-position="-263">
+              <caret line="50" column="12" lean-forward="true" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="12" />
               <folding>
                 <marker date="1543260949437" expanded="false" signature="6:316" ph="..." />
                 <marker date="1543260949437" expanded="true" signature="335:2597" ph="{...}" />
@@ -115,7 +108,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ReadApi/ReadApi.csproj">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
@@ -257,12 +250,6 @@
             </path>
             <path>
               <item name="Project" type="784c90a0:SolutionExplorerRootNode" />
-              <item name="Akkatecture.ResumableProjections" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="src" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="ReadApi" type="24d0babc:SolutionExplorerModelNode" />
-            </path>
-            <path>
-              <item name="Project" type="784c90a0:SolutionExplorerRootNode" />
               <item name="Scratches and Consoles" type="1a2a3e82:ScratchProjectViewPane$MyProjectNode" />
             </path>
           </expand>
@@ -376,12 +363,12 @@
       <workItem from="1543077794052" duration="196000" />
       <workItem from="1543078132886" duration="406000" />
       <workItem from="1543078594359" duration="365000" />
-      <workItem from="1547918488322" duration="324000" />
+      <workItem from="1547918488322" duration="503000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25400000" />
+    <option name="totallyTimeSpent" value="25579000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -394,7 +381,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="805" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Image Layers" />
       <window_info id="Capture Tool" />
@@ -415,14 +401,14 @@
       <window_info anchor="bottom" id="Terminal" order="12" weight="0.32871014" />
       <window_info anchor="bottom" id="Event Log" order="13" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="14" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Build" order="15" visible="true" weight="0.37868163" />
+      <window_info anchor="bottom" id="Build" order="15" visible="true" weight="0.37868163" />
       <window_info anchor="bottom" id="Errors In Solution" order="16" weight="0.32819074" />
       <window_info anchor="right" id="Capture Analysis" />
       <window_info anchor="right" id="Database" order="0" />
       <window_info anchor="right" id="Commander" order="1" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Project" order="4" visible="true" weight="0.43061516" />
+      <window_info active="true" anchor="right" content_ui="combo" id="Project" order="4" visible="true" weight="0.43061516" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -782,9 +768,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ReadApi/ReadApi.csproj">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Projections.Prototype/IAmProjectionFor.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
@@ -823,8 +806,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ReadApi/CarsController.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="30" column="28" lean-forward="true" selection-start-line="30" selection-start-column="28" selection-end-line="30" selection-end-column="28" />
+        <state relative-caret-position="-263">
+          <caret line="50" column="12" lean-forward="true" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="12" />
           <folding>
             <marker date="1543260949437" expanded="false" signature="6:316" ph="..." />
             <marker date="1543260949437" expanded="true" signature="335:2597" ph="{...}" />
@@ -843,6 +826,9 @@
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ReadApi/ReadApi.csproj">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
