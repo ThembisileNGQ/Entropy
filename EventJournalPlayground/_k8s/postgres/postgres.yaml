@@ -2,10 +2,10 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: postgres-entropy
+  name: postgres-entropy-ejp
 spec:
   selector:
-    app: postgres
+    app: postgres-entropy-ejp
   ports:
   - protocol: TCP
     port: 5432
@@ -16,16 +16,16 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-deployment
+  name: postgres-deployment-entropy-ejp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: postgres-entropy-ejp
   template:
     metadata:
       labels:
-        app: postgres
+        app: postgres-entropy-ejp
     spec:
       containers:
       - name: postgres
