@@ -34,8 +34,6 @@ ProjectSection(SolutionItems) = preProject
 	_k8s\postgres\postgres.yaml = _k8s\postgres\postgres.yaml
 EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akkatecture", "..\..\Akkatecture\Akkatecture\src\Akkatecture\Akkatecture.csproj", "{FEF6F1D2-ECED-497A-A205-6980DF659655}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,10 +48,6 @@ Global
 		{7C019CF2-03D7-48A6-8074-F9176C5E905B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C019CF2-03D7-48A6-8074-F9176C5E905B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C019CF2-03D7-48A6-8074-F9176C5E905B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FEF6F1D2-ECED-497A-A205-6980DF659655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FEF6F1D2-ECED-497A-A205-6980DF659655}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FEF6F1D2-ECED-497A-A205-6980DF659655}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FEF6F1D2-ECED-497A-A205-6980DF659655}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E871D4F0-E6CF-44E5-8844-72C2BB5B1B2D} = {16FEFD95-6888-41F6-8F91-E37082D3912F}

@@ -44,8 +44,11 @@ namespace ReadApi
 
             var readJournal =
                 PersistenceQuery.Get(_actorSystem)
+            
                     .ReadJournalFor<SqlReadJournal>(SqlReadJournal.Identifier);
 
+            //note - readmodels will use tags to locate aggregates
+            
             readJournal
                 .EventsByTag("CarAggregate", Sequence.Sequence(0L))
                 .Select(e => e.Event)
