@@ -4,8 +4,5 @@ namespace Domain.Model.Car.Events
 {
     public class CarCreatedEvent : AggregateEvent<CarAggregate, CarId>
     {
-        public CarCreatedEvent()
-        {
-        }
     }
 }

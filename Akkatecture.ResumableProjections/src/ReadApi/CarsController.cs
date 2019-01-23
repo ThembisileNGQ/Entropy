@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Persistence.Query;
 using Akka.Streams;
 using Akka.Streams.Dsl;
-using Domain.Model.Car;
-using Domain.Model.Car.Commands;
 using Akka.Persistence.Query.Sql;
 using Microsoft.AspNetCore.Mvc;
 
