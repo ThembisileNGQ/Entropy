@@ -5,7 +5,7 @@ Brain Dump of silly ideas. A bunch of POCs and code sketches & WIPS.
 A little bit of code that shows how two actors doing the same thing result in different throughputs. async/await vs PipeTo with some astonishing test results that you can reproduce. [go here to find out more...](https://github.com/Lutando/Entropy/tree/master/Akka.AsyncPerformance)
 
 ## Akka.Hosting
-This is a silly thing that shows how to host akka.net applications in the future.
+This is a silly thing that shows how to host akka.net applications in the aspnetCore 2.2 world.
 [go here to find out more...](https://github.com/Lutando/Entropy/tree/master/Akka.Hosting)
 
 ## Akka.Persistence.Performance
@@ -18,7 +18,7 @@ Currently a WIP on best practices for AspNetCore Websockets and ActorSystem inte
 
 ## Akkatecture.ResumableProjections
 WIP/PoC, trying to figure out how to make resumable durable projections work for a truly schemaless CQRS/ES future. To Demonstrate this, it will be a by the book write side and read side API in k8s.
-[go here to find out more...](https://github.com/Lutando/Entropy/tree/master/Akkatecture.ResumableProjections
+[go here to find out more...](https://github.com/Lutando/Entropy/tree/master/Akkatecture.ResumableProjections)
 
 ## ElasticK8s.Api
 A small thing that shows how one can deploy to k8s and scale your deployment from within the cluster. Follow the readme from within the project to see how this is possible. Only tested from a minikube cluster.
