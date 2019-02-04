@@ -22,7 +22,7 @@
 					"raw": "{\n    \"Deployment\" : \"simpleapi-deployment\",\n    \"Namespace\" : \"default\",\n    \"Scale\" : 8\n}"
 				},
 				"url": {
-					"raw": "http://192.168.99.100:30700/api/scale",
+					"raw": "http://192.168.99.100:30600/api/scale",
 					"protocol": "http",
 					"host": [
 						"192",
@@ -30,7 +30,7 @@
 						"99",
 						"100"
 					],
-					"port": "30700",
+					"port": "30600",
 					"path": [
 						"api",
 						"scale"
@@ -56,7 +56,7 @@
 					"raw": "{\n    \"Deployment\" : \"simpleapi-deployment\",\n    \"Namespace\" : \"default\",\n    \"Scale\" : 1\n}"
 				},
 				"url": {
-					"raw": "http://192.168.99.100:30700/api/scale",
+					"raw": "http://192.168.99.100:30600/api/scale",
 					"protocol": "http",
 					"host": [
 						"192",
@@ -64,7 +64,7 @@
 						"99",
 						"100"
 					],
-					"port": "30700",
+					"port": "30600",
 					"path": [
 						"api",
 						"scale"

@@ -1,5 +1,5 @@
 # Entropy
-Brain Dump of silly ideas. A bunch of POCs and code sketches & WIPS. 
+Brain Dump of silly ideas. A bunch of POCs and code sketches & WIPS. Use at your own risk. Submit an issue if something is broken
 
 ## Akka.AsyncPerformance
 A little bit of code that shows how two actors doing the same thing result in different throughputs. async/await vs PipeTo with some astonishing test results that you can reproduce. [go here to find out more...](https://github.com/Lutando/Entropy/tree/master/Akka.AsyncPerformance)

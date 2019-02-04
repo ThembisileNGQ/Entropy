@@ -3,6 +3,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: postgres-entropy-ejp
+  labels:
+    project: entropy
+    lab: event-journal-playground
 spec:
   selector:
     app: postgres-entropy-ejp
@@ -17,6 +20,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres-deployment-entropy-ejp
+  labels:
+    project: entropy
+    lab: event-journal-playground
 spec:
   replicas: 1
   selector:
@@ -26,6 +32,8 @@ spec:
     metadata:
       labels:
         app: postgres-entropy-ejp
+        project: entropy
+        lab: event-journal-playground
     spec:
       containers:
       - name: postgres

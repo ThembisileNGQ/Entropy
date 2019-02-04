@@ -2,6 +2,9 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: eventstore-pv-claim
+  labels:
+    project: entropy
+    lab: event-journal-playground
 spec:  
   accessModes:
     - ReadWriteOnce

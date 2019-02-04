@@ -4,6 +4,8 @@ metadata:
   name: eventstore-pv-volume
   labels:
     type: local
+    project: entropy
+    lab: event-journal-playground
 spec:  
   capacity:
     storage: 10Gi

@@ -45,13 +45,12 @@ namespace ReadApi
                     .ReadJournalFor<SqlReadJournal>(SqlReadJournal.Identifier);
 
             //note - readmodels will use tags to locate aggregates
-            
+
             readJournal
                 .EventsByTag("CarAggregate", Sequence.Sequence(0L))
                 .Select(e => e.Event)
                 .Select(bidProjection.Save)
-                .RunForeach(o => bidProjection.Save(o), mat)
-                .Wait();
+                .RunForeach(o => bidProjection.Save(o), mat).ContinueWith(x => { });
         }
 
         public class TheOneWhoWritesToQueryJournal : ActorBase

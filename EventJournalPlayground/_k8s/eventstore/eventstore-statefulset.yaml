@@ -1,7 +1,10 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: eventstore  
+  name: eventstore
+  labels:
+    project: entropy
+    lab: event-journal-playground
 spec:
   selector:
     matchLabels:
@@ -11,7 +14,9 @@ spec:
   template:
     metadata:
       labels:
-        app: eventstore  
+        app: eventstore
+        project: entropy
+        lab: event-journal-playground
     spec:      
       containers:
         - name: eventstore

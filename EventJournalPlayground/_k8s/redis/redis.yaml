@@ -2,10 +2,13 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: redis
+  name: redis-entropy-ejp
+  labels:
+    project: entropy
+    lab: event-journal-playground
 spec:
   selector:
-    app: redis
+    app: redis-entropy-ejp
   ports:
   - protocol: TCP
     port: 6379
@@ -13,24 +16,27 @@ spec:
     nodePort: 30401
   type: NodePort
 ---
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: redis-deployment
-  spec:
-    replicas: 1
-    selector:
-      matchLabels:
-        app: redis
-    template:
-      metadata:
-        labels:
-          app: redis
-      spec:
-        containers:
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+  labels:
+    project: entropy
+    lab: event-journal-playground
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-entropy-ejp
+  template:
+    metadata:
+      labels:
+        app: redis-entropy-ejp
+    spec:
+      containers:
+      - name: redis
+        image: lutando/redis-entropy #password lutando
+        ports:
         - name: redis
-          image: lutando/redis-entropy #password lutando
-          ports:
-          - name: redis
-            containerPort: 6379
-        restartPolicy: Always
+          containerPort: 6379
+      restartPolicy: Always

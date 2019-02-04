@@ -5,12 +5,15 @@ metadata:
 spec:
   selector:
     app: simple-api
+  labels:
+    project: entropy
+    lab: elastick8s-api
   ports:
   - name: http
     port: 80
     protocol: TCP
     targetPort: 5001
-    nodePort: 30700
+    nodePort: 30600
   type: NodePort
 ---
 apiVersion: apps/v1
@@ -19,6 +22,8 @@ metadata:
   name: simpleapi-deployment
   labels:
     app: simple-api
+    project: entropy
+    lab: elastick8s-api
 spec:
   replicas: 3
   selector:
@@ -28,6 +33,8 @@ spec:
     metadata:
       labels:
         app: simple-api
+        project: entropy
+        lab: elastick8s-api
     spec:
       containers:
       - name: simple-api

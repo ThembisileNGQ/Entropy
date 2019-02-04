@@ -1,12 +1,15 @@
 kind: Service  
 apiVersion: v1  
 metadata:  
-  name: "eventstore"
+  name: eventstore
+  labels:
+    project: entropy
+    lab: event-journal-playground
 spec:  
   selector:
-    app: "eventstore"
+    app: eventstore
   ports:
-    - protocol: "TCP"
+    - protocol: TCP
       port: 1112
       targetPort: 1112
       nodePort: 30405

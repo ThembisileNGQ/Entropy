@@ -3,6 +3,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: nodejs-service
+  labels:
+    project: entropy
+    lab: elastick8s-prototype
 spec:
     selector:
       app: nodejs-api
@@ -19,6 +22,8 @@ metadata:
   name: nodejs-deployment
   labels:
     app: nodejs
+    project: entropy
+    lab: elastick8s-prototype
 spec:
   replicas: 3
   selector:
@@ -28,6 +33,8 @@ spec:
     metadata:
       labels:
         app: nodejs
+        project: entropy
+        lab: elastick8s-prototype
     spec:
       containers:
       - name: nodejs-hello

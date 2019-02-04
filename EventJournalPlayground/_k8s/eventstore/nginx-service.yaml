@@ -1,12 +1,15 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: "frontend-eventstore"
+  name: frontend-eventstore
+  labels:
+    project: entropy
+    lab: event-journal-playground
 spec:
   selector:
-    app: "frontend-eventstore"
+    app: frontend-eventstore
   ports:
-    - protocol: "TCP"
+    - protocol: TCP
       port: 2113
       targetPort: 2113
       nodePort: 30404
