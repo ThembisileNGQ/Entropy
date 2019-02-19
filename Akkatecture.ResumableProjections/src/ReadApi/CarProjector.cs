@@ -12,7 +12,14 @@ namespace ReadApi
 
         public CarProjector(ProjectorSettings settings)
         {
-            Self.Tell(BeginStreaming.Instance);   
+            Self.Tell(BeginStreaming.Instance);
+
+            Receive<BeginStreaming>(Handle);
+        }
+
+        public bool Handle(BeginStreaming command)
+        {
+            return true;
         }
     }
 
