@@ -22,10 +22,10 @@ akka.persistence{
 			connection-timeout = 30s
 
 			# PostgreSql schema name to table corresponding with persistent journal
-			schema-name = public
+			schema-name = journal
 
 			# PostgreSql table corresponding with persistent journal
-			table-name = event_journal
+			table-name = aggregate_events
 
 			# should corresponding journal table be initialized automatically
 			auto-initialize = on
