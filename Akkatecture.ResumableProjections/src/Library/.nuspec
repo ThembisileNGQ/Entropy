@@ -1,0 +1,25 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>LiquidProjections</id>
+        <version>0.0.0.0</version>
+        <authors>Dennis Doomen</authors>
+        <owners>Dennis Doomen</owners>
+        <projectUrl>https://github.com/liquidprojections/LiquidProjections</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Provides basic building blocks for creating asynchronous projectors that subscribe to an event store.</description>
+        <tags>event-sourcing; projections; ddd</tags>
+        <frameworkAssemblies />
+        <releaseNotes/>
+      <dependencies>
+        <group>
+          <dependency id="LiquidProjections.Abstractions" version="[3.0, 4.0)"/>
+    		</group>
+      </dependencies>
+    </metadata>
+    <files>
+        <file src="bin\release\netstandard1.1\LiquidProjections.dll" target="lib\netstandard1.1" />
+        <file src="bin\release\netstandard1.1\LiquidProjections.pdb" target="lib\netstandard1.1" />
+        <file src="bin\release\netstandard1.1\LiquidProjections.xml" target="lib\netstandard1.1" />
+    </files>
+</package>
