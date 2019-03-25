@@ -1,7 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using Dapper;
 using LaundryBooker.Domain.Model.BookingMonth;
 using LaundryBooker.Domain.Repositories;
+using Newtonsoft.Json;
 using Npgsql;
 
 namespace LaundryBooker.Infrastructure.Repositories.BookingMonthAggregate
@@ -14,9 +16,8 @@ namespace LaundryBooker.Infrastructure.Repositories.BookingMonthAggregate
         {
             _options = options;
         }
-
         
-        public Task<BookingMonth> Find(BookingMonthId aggregateId)
+        public async Task<BookingMonth> Find(BookingMonthId aggregateId)
         {
             var query = $@"
                 SELECT
@@ -27,10 +28,35 @@ namespace LaundryBooker.Infrastructure.Repositories.BookingMonthAggregate
             
             using (var connection = new NpgsqlConnection(_options.ConnectionString))
             {
+                var dataModel = await connection.QuerySingleOrDefaultAsync<BookingMonthDataModel>(query, new {id = aggregateId.Value});
                 
+                if (dataModel == null)
+                    return null;
+
+                var aggregate = BookingMonthMapper.From(dataModel);
+                
+                return aggregate;
             }
             
-            throw new NotImplementedException();
+        }
+
+        public async Task Upsert(BookingMonth aggregate)
+        {
+            var upsertCommand = $@"
+                INSERT INTO laundry.bookings(
+                    id,
+                    bookings)
+                VALUES(
+                    @id,
+                    @booking::jsonb)
+                ON CONFLICT(id) DO UPDATE SET booking = excluded.booking;";
+            
+            var booking = JsonConvert.SerializeObject(aggregate);
+            
+            using (var connection = new NpgsqlConnection(_options.ConnectionString))
+            {
+                await connection.ExecuteAsync(upsertCommand, new BookingMonthPostgresDocument { Id = aggregate.Id.Value, Booking = booking });
+            }
         }
     }
 }

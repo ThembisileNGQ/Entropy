@@ -7,5 +7,6 @@ namespace LaundryBooker.Domain.Repositories
     public interface IBookingMonthRepository
     {
         Task<BookingMonth> Find(BookingMonthId aggregateId);
+        Task Upsert(BookingMonth aggregate);
     }
 }

@@ -22,15 +22,14 @@ CREATE SCHEMA IF NOT EXISTS laundry;
 
 CREATE TABLE IF NOT EXISTS laundry.users
 (
-   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-   name TEXT,
-   normalized_name TEXT,
-   location jsonb
+   id uuid primary key not null,
+   display_name TEXT,
+   normalized_name TEXT
 );
 
 CREATE TABLE IF NOT EXISTS laundry.bookings
 (
-	id uuid not null constraint bookings_pkey primary key,
+	id varchar(12) not null constraint bookings_pkey primary key,
 	booking jsonb not null
 );
 
@@ -38,9 +37,48 @@ CREATE TABLE IF NOT EXISTS laundry.bookings
 
 INSERT INTO laundry.users(
    id,
-   "name",
+   display_name,
    normalized_name)
-	VALUES(
-      gen_random_uuid(),
-      'mrblue',
-      'MRBLUE');
+VALUES(
+   gen_random_uuid(),
+   'mrblue',
+   'MRBLUE');
+
+INSERT INTO laundry.users(
+   id,
+   display_name,
+   normalized_name)
+VALUES(
+   gen_random_uuid(),
+   'mrred',
+   'MRRED');
+
+INSERT INTO laundry.users(
+   id,
+   display_name,
+   normalized_name)
+VALUES(
+   gen_random_uuid(),
+   'mrpurple',
+   'MRPURPLE');
+
+INSERT INTO laundry.users(
+   id,
+   display_name,
+   normalized_name)
+VALUES(
+   gen_random_uuid(),
+   'mrblack',
+   'MRBLACK');
+
+INSERT INTO laundry.users(
+   id,
+   display_name,
+   normalized_name)
+VALUES(
+   gen_random_uuid(),
+   'mrcyan',
+   'MRCYAN');
+
+
+

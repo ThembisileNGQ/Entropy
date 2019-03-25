@@ -7,7 +7,9 @@ namespace LaundryBooker.Infrastructure.Repositories.UsersAggregate
     {
         public static User From(UserDataModel dataModel)
         {
-            throw new NotImplementedException();
+            var aggregateId = UserId.With(dataModel.Id);
+            
+            return new User(aggregateId,dataModel.Name);
         }
 
     }

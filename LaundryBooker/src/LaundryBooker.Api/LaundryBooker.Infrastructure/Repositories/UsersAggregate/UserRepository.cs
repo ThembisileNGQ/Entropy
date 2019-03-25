@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Dapper;
 using LaundryBooker.Domain.Model.User;
 using LaundryBooker.Domain.Repositories;
 using Npgsql;
@@ -15,7 +16,7 @@ namespace LaundryBooker.Infrastructure.Repositories.UsersAggregate
             _options = options;
         }
         
-        public Task<User> Find(UserId aggregateId)
+        public async Task<User> Find(UserId aggregateId)
         {
             var query = $@"
                 SELECT
@@ -26,10 +27,16 @@ namespace LaundryBooker.Infrastructure.Repositories.UsersAggregate
             
             using (var connection = new NpgsqlConnection(_options.ConnectionString))
             {
+                var dataModel = await connection.QuerySingleOrDefaultAsync<UserDataModel>(query, new {id = aggregateId.Value});
+
+                if (dataModel == null)
+                    return null;
+
+                var aggregate = UserMapper.From(dataModel);
                 
+                return aggregate;
             }
             
-            throw new NotImplementedException();
         }
     }
 }
