@@ -1,0 +1,48 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: mrwhite-postgres
+  labels:
+    project: mrwhite
+    db: postgres
+spec:
+  selector:
+    app: mrwhite-postgres
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+    nodePort: 30500
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mrwhite-postgres-deployment
+  labels:
+    project: mrwhite
+    db: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mrwhite-postgres
+  template:
+    metadata:
+      labels:
+        app: mrwhite-postgres
+        project: mrwhite
+        db : postgres
+    spec:
+      containers:
+      - name: postgres
+        image: lutando/mrwhite-postgres #user:lutando; password:lutando
+        imagePullPolicy: Always
+        ports:
+        - name: postgresql
+          containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: mrwhite
+      restartPolicy: Always

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LaundryBooker.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class BookingsController : ControllerBase
     {

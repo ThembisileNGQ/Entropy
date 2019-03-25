@@ -11,9 +11,9 @@ WORKDIR /app/aspnetapp
 RUN dotnet publish -c Release -o out
 
 
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS runtime
+FROM microsoft/dotnet:2.2-aspnetcore-runtime AS runtime
 WORKDIR /app
-COPY --from=build /app/aspnetapp/src/ReadApi/out ./
+COPY --from=build /app/aspnetapp/out ./
 EXPOSE 5001
 ENV ASPNETCORE_ENVIRONMENT="Docker"
 ENTRYPOINT ["dotnet", "ReadApi.dll"]
