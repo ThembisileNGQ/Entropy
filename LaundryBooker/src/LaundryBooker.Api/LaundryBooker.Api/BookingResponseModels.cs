@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LaundryBooker.Api
 {
-    public class BookingResponseModels
+    public static class BookingRespo
+    public class BookingResponseModel
     {
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public Dictionary<int, BookingDayModel> BookingDays { get; set; }
+    }
 
+    public class BookingDayModel
+    {
+        public string Id { get; set; }
+        public Dictionary<int, Guid> Bookings { get; set; }
     }
 }
