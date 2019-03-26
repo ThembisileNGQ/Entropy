@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using LaundryBooker.Api.Models;
 
 namespace LaundryBooker.Api
 {
@@ -75,6 +76,7 @@ namespace LaundryBooker.Api
 
             services
                 .AddTransient<PostgresOptions>()
+                .AddTransient<BookingResponseModelFactory>()
                 .AddTransient<IBookingMonthRepository, BookingMonthRepository>()
                 .AddTransient<IUserRepository, UserRepository>();
         }
