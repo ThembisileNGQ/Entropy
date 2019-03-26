@@ -1,12 +1,14 @@
+using Microsoft.Extensions.Configuration;
+
 namespace LaundryBooker.Infrastructure
 {
     public class PostgresOptions
     {
         public string ConnectionString { get; }
 
-        public PostgresOptions(string connectionString)
+        public PostgresOptions(IConfiguration configuration)
         {
-            ConnectionString = connectionString;
+            ConnectionString = configuration["POSTGRES_CONNECTIONSTRING"];
         }
     }
 }
