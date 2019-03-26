@@ -1,0 +1,55 @@
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: laundry-api-config
+data:
+  POSTGRES_CONNECTIONSTRING: Host=192.168.99.100; Port=30500; Database=mrwhite; Username=lutando; Password=lutando
+  AUTHORIZATIONAUTHORITY_URL: http://192.168.99.100:30502
+  AUTHORIZATION_AUDIENCE: http://192.168.99.100:30502/resources
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: laundry-api-service
+  labels:
+    project: mrwhite
+    app: webapi
+spec:
+  selector:
+    app: laundry-api
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 5001
+    nodePort: 30501
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laundry-api-deployment
+  labels:
+    app: laundry-api
+    project: mrwhite
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: laundry-api
+  template:
+    metadata:
+      labels:
+        app: laundry-api
+        project: mrwhite
+    spec:
+      containers:
+      - name: laundry-api
+        image: lutando/laundry-api
+        ports:
+        - containerPort: 5001
+        envFrom:
+        - configMapRef:
+            name: laundry-api-config
