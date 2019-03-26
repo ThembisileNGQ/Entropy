@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using LaundryBooker.Domain.Base.AggregateRoot;
 
 namespace LaundryBooker.Domain.Model.User
@@ -17,5 +19,6 @@ namespace LaundryBooker.Domain.Model.User
 
             Name = name;
         }
+
     }
 }

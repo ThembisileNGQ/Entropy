@@ -28,11 +28,19 @@ namespace LaundryBooker.Sts
 
             LoggerFactory = loggerFactory;
             var logger = LoggerFactory.CreateLogger<Startup>();
-            logger.LogInformation("LaundryBooker.Api application is starting.");
+            logger.LogInformation("LaundryBooker.Sts application is starting.");
         } 
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services
+                .AddIdentityServer()
+                .AddInMemoryApiResources(Config.GetApiResources())
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                .AddInMemoryClients(Config.GetClients())
+                .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
+                .AddDeveloperSigningCredential();
+
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
@@ -41,18 +49,12 @@ namespace LaundryBooker.Sts
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.Map("/api", api =>
-            {
-                api.UseMvc(routes =>
-                {
-                    routes.MapRoute(
-                        name: "default",
-                        template: "{controller}/{action}");
-                });
-            });
+            app.UseIdentityServer();
+            app.UseStaticFiles();
+            app.UseMvcWithDefaultRoute();
 
             var logger = LoggerFactory.CreateLogger<Startup>();
-            logger.LogInformation("LaundryBooker.Api application has started.");
+            logger.LogInformation("LaundryBooker.Sts application has started.");
         }
     }
 }

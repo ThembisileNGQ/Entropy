@@ -38,5 +38,27 @@ namespace LaundryBooker.Infrastructure.Repositories.UsersAggregate
             }
             
         }
+
+        public async Task<User> Find(string username)
+        {
+            var query = $@"
+                SELECT
+                    id as Id,
+                    user_name as Name,
+                    normalized_name as NormalizedName
+                WHERE normalized_name = @normalizedName";
+
+            using (var connection = new NpgsqlConnection(_options.ConnectionString))
+            {
+                var dataModel = await connection.QuerySingleOrDefaultAsync<UserDataModel>(query, new { normalizedName = username.ToUpperInvariant()});
+
+                if (dataModel == null)
+                    return null;
+
+                var aggregate = UserMapper.From(dataModel);
+
+                return aggregate;
+            }
+        }
     }
 }
