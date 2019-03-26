@@ -25,6 +25,8 @@ namespace LaundryBooker.Infrastructure.Repositories.UsersAggregate
                     normalized_name as NormalizedName
                 FROM laundry.users
                 WHERE id = @id";
+
+            var guid = aggregateId.GetGuid();
             
             using (var connection = new NpgsqlConnection(_options.ConnectionString))
             {

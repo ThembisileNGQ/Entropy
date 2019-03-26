@@ -13,10 +13,11 @@ RUN dotnet publish -c Release -o out
 
 FROM microsoft/dotnet:2.2-aspnetcore-runtime AS runtime
 WORKDIR /app
-COPY --from=build /app/aspnetapp/out ./
+COPY --from=build /app/aspnetapp ./
 EXPOSE 5001
 ENV ASPNETCORE_ENVIRONMENT="Docker"
-ENTRYPOINT ["dotnet", "LaundryBooker.Api.dll"]
+ENTRYPOINT ["dotnet", "LaundryBooker.Api/out/LaundryBooker.Api.dll"]
 
-# docker build -t lutando/laundry-api:latest .
+# in *.sln c
+# docker build -t lutando/laundry-api:latest -f LaundryBooker.Api/Dockerfile .
 # docker push lutando/laundry-api:latest

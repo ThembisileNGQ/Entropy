@@ -1,0 +1,53 @@
+
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: laundry-sts-config
+data:
+  POSTGRES_CONNECTIONSTRING: Host=192.168.99.100; Port=30500; Database=mrwhite; Username=lutando; Password=lutando
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: laundry-sts-service
+  labels:
+    project: mrwhite
+    app: webapi
+spec:
+  selector:
+    app: laundry-sts
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 5002
+    nodePort: 30502
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laundry-sts-deployment
+  labels:
+    app: laundry-sts
+    project: mrwhite
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: laundry-sts
+  template:
+    metadata:
+      labels:
+        app: laundry-sts
+        project: mrwhite
+    spec:
+      containers:
+      - name: laundry-sts
+        image: lutando/laundry-sts
+        ports:
+        - containerPort: 5002
+        envFrom:
+        - configMapRef:
+            name: laundry-sts-config

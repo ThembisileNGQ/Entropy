@@ -46,6 +46,7 @@ namespace LaundryBooker.Api.Models
 
             foreach (var key in entities.Keys)
             {
+                var user = await _userRepository.Find(entities[key]);
                 dict[(int)key] = new UserResponseModel
                 {
                     Id = entities[key].Value,
