@@ -24,6 +24,7 @@ namespace LaundryBooker.Infrastructure.Repositories.BookingMonthAggregate
                     id as Id,
                     user_name as Name,
                     normalized_name as NormalizedName
+                FROM laundry.users
                 WHERE id = @id";
             
             using (var connection = new NpgsqlConnection(_options.ConnectionString))

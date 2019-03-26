@@ -21,8 +21,9 @@ namespace LaundryBooker.Infrastructure.Repositories.UsersAggregate
             var query = $@"
                 SELECT
                     id as Id,
-                    user_name as Name,
+                    display_name as Name,
                     normalized_name as NormalizedName
+                FROM laundry.users
                 WHERE id = @id";
             
             using (var connection = new NpgsqlConnection(_options.ConnectionString))
@@ -44,8 +45,9 @@ namespace LaundryBooker.Infrastructure.Repositories.UsersAggregate
             var query = $@"
                 SELECT
                     id as Id,
-                    user_name as Name,
+                    display_name as Name,
                     normalized_name as NormalizedName
+                FROM laundry.users
                 WHERE normalized_name = @normalizedName";
 
             using (var connection = new NpgsqlConnection(_options.ConnectionString))

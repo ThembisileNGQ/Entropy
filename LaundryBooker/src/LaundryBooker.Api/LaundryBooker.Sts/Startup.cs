@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LaundryBooker.Domain.Repositories;
+using LaundryBooker.Infrastructure;
+using LaundryBooker.Infrastructure.Repositories.UsersAggregate;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,6 +36,10 @@ namespace LaundryBooker.Sts
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services
+                .AddTransient<IUserRepository, UserRepository>()
+                .AddTransient<PostgresOptions>();
+
             services
                 .AddIdentityServer()
                 .AddInMemoryApiResources(Config.GetApiResources())
