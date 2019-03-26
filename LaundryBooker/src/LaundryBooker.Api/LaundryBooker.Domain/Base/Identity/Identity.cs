@@ -92,7 +92,7 @@ namespace LaundryBooker.Domain.Base.Identity
                 throw new ArgumentException($"Identity is invalid: {string.Join(", ", validationErrors)}");
             }
 
-            _lazyGuid = new Lazy<Guid>(() => Guid.Parse(ValueValidation.Match(Value).Groups["guid"].Value));
+            _lazyGuid = new Lazy<Guid>(() => Guid.Parse(Value));
         }
 
         private readonly Lazy<Guid> _lazyGuid;

@@ -28,7 +28,7 @@ namespace LaundryBooker.Infrastructure.Repositories.UsersAggregate
             
             using (var connection = new NpgsqlConnection(_options.ConnectionString))
             {
-                var dataModel = await connection.QuerySingleOrDefaultAsync<UserDataModel>(query, new {id = aggregateId.Value});
+                var dataModel = await connection.QuerySingleOrDefaultAsync<UserDataModel>(query, new {id = aggregateId.GetGuid()});
 
                 if (dataModel == null)
                     return null;
