@@ -15,34 +15,44 @@ namespace LaundryBooker.Sts
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment HostingEnvironment { get; }
+        public ILoggerFactory LoggerFactory { get;  }
+        public Startup(IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            var Configuration = new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .Build();
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+            HostingEnvironment = env;
+
+            LoggerFactory = loggerFactory;
+            var logger = LoggerFactory.CreateLogger<Startup>();
+            logger.LogInformation("LaundryBooker.Api application is starting.");
+        } 
+        
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Latest);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            app.Map("/api", api =>
             {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+                api.UseMvc(routes =>
+                {
+                    routes.MapRoute(
+                        name: "default",
+                        template: "{controller}/{action}");
+                });
+            });
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            var logger = LoggerFactory.CreateLogger<Startup>();
+            logger.LogInformation("LaundryBooker.Api application has started.");
         }
     }
 }
