@@ -22,15 +22,19 @@ namespace LaundryBooker.Infrastructure.Repositories.BookingMonthAggregate
             var query = $@"
                 SELECT
                     id as Id,
-                    user_name as Name,
-                    normalized_name as NormalizedName
-                FROM laundry.users
+                    booking as Booking
+                FROM laundry.bookings
                 WHERE id = @id";
             
             using (var connection = new NpgsqlConnection(_options.ConnectionString))
             {
-                var dataModel = await connection.QuerySingleOrDefaultAsync<BookingMonthDataModel>(query, new {id = aggregateId.Value});
-                
+                var pgDocument = await connection.QuerySingleOrDefaultAsync<BookingMonthPostgresDocument>(query, new {id = aggregateId.Value});
+
+                if (pgDocument == null)
+                    return null;
+
+                var dataModel = JsonConvert.DeserializeObject<BookingMonthDataModel>(pgDocument.Booking);
+
                 if (dataModel == null)
                     return null;
 
@@ -46,13 +50,15 @@ namespace LaundryBooker.Infrastructure.Repositories.BookingMonthAggregate
             var upsertCommand = $@"
                 INSERT INTO laundry.bookings(
                     id,
-                    bookings)
+                    booking)
                 VALUES(
                     @id,
                     @booking::jsonb)
                 ON CONFLICT(id) DO UPDATE SET booking = excluded.booking;";
-            
-            var booking = JsonConvert.SerializeObject(aggregate);
+
+            var dataModel = BookingMonthMapper.From(aggregate);
+
+            var booking = JsonConvert.SerializeObject(dataModel);
             
             using (var connection = new NpgsqlConnection(_options.ConnectionString))
             {

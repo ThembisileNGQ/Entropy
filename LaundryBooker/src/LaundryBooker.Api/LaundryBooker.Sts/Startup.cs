@@ -23,7 +23,7 @@ namespace LaundryBooker.Sts
         public ILoggerFactory LoggerFactory { get;  }
         public Startup(IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            var Configuration = new ConfigurationBuilder()
+            Configuration = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
                 .Build();
 

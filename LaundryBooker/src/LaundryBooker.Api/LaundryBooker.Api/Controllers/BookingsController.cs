@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using LaundryBooker.Domain.Model.BookingMonth;
+using LaundryBooker.Domain.Model.BookingMonth.Entities;
+using LaundryBooker.Domain.Model.User;
+using LaundryBooker.Domain.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LaundryBooker.Api.Controllers
@@ -10,36 +14,78 @@ namespace LaundryBooker.Api.Controllers
     [ApiController]
     public class BookingsController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        private IBookingMonthRepository _repository;
+
+        public BookingsController(
+            IBookingMonthRepository repository)
         {
-            return new string[] {"value1", "value2"};
+            _repository = repository;
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [HttpGet("{year:int}/{month:int}", Name = "GetBookings")]
+        [Authorize("bookings.read")]
+        public async Task<ActionResult<BookingMonth>> GetBookings(int year, int month)
         {
-            return "value";
+            var bookingMonthId = BookingMonthId.From(new DateTime(year, month,1));
+            var bookingMonth = await _repository.Find(bookingMonthId);
+
+            if (bookingMonth == null)
+                return NotFound();
+
+            return bookingMonth;
         }
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpGet("{year:int}/{month:int}/{day:int}/{slot:int}", Name = "GetBookingSlot")]
+        [Authorize("bookings.read")]
+        public async Task<ActionResult<object>> GetBookingSlot(int year, int month, int day, int slot)
         {
+            var bookingMonthId = BookingMonthId.From(new DateTime(year, month, day));
+            var bookingMonth = await _repository.Find(bookingMonthId);
+
+            if (bookingMonth == null)
+                return NotFound();
+
+            var slotEnum = (Slot)slot;
+
+            if (bookingMonth.BookingDays.ContainsKey(day) && bookingMonth.BookingDays[day].Bookings.ContainsKey(slotEnum))
+                return new { userId = bookingMonth.BookingDays[day].Bookings[slotEnum].Value };
+
+            return NotFound();
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPost("{year:int}/{month:int}/{day:int}", Name = "CreateBooking")]
+        [Authorize("bookings.write")]
+        public async Task<IActionResult> PostBooking(
+            [FromRoute]int year,
+            [FromRoute]int month,
+            [FromRoute]int day,
+            [FromBody]BookingsInputModel input)
         {
+            var bookingMonthId = BookingMonthId.From(new DateTime(year, month, day));
+            var bookingMonth = await _repository.Find(bookingMonthId);
+
+            if (bookingMonth == null)
+                bookingMonth = new BookingMonth(bookingMonthId, year, month, new Dictionary<int, BookingDay>());
+
+            var userId = UserId.With(HttpContext.GetUserId().Value);
+            var slot = (Slot)input.Slot;
+
+            bookingMonth.AddBooking(userId, day, slot);
+
+            await _repository.Upsert(bookingMonth);
+
+            return CreatedAtAction("GetBookingSlot", new { year = year, month = month, day = day, slot = input.Slot, }, new { userId = bookingMonth.BookingDays[day].Bookings[slot].Value });
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+
+        [HttpDelete("{year:int}/{month:int}/{day:int}/{slot:int}", Name = "DeleteBookingSlot")]
+        public void DeleteBooking(int id)
         {
         }
+    }
+
+    public class BookingsInputModel
+    {
+        public int Slot { get; set; }
     }
 }

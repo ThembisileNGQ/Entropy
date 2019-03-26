@@ -31,6 +31,7 @@ namespace LaundryBooker.Sts
                         "profile_picture_url",
                         "bookings.write",
                         "bookings.read",
+                        "bookings.delete"
                     }
                 }
             };
@@ -59,6 +60,10 @@ namespace LaundryBooker.Sts
                         new Scope
                         {
                             Name = "bookings.write"
+                        },
+                        new Scope
+                        {
+                            Name = "bookings.delete"
                         }
                     }
                 }

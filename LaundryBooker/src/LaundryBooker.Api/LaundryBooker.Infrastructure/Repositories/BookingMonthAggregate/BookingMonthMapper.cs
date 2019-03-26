@@ -9,6 +9,9 @@ namespace LaundryBooker.Infrastructure.Repositories.BookingMonthAggregate
     {
         public static BookingMonth From(BookingMonthDataModel dataModel)
         {
+            if (dataModel == null)
+                return null;
+
             var aggregateId = BookingMonthId.With(dataModel.Id);
             
             return new BookingMonth(
@@ -20,6 +23,9 @@ namespace LaundryBooker.Infrastructure.Repositories.BookingMonthAggregate
 
         private static Dictionary<int, BookingDay> From(Dictionary<int, BookingDayDataModel> dataModel)
         {
+            if (dataModel == null)
+                return null;
+
             var entries = new Dictionary<int, BookingDay>();
 
             foreach (var key in dataModel.Keys)
@@ -32,6 +38,9 @@ namespace LaundryBooker.Infrastructure.Repositories.BookingMonthAggregate
 
         private static BookingDay From(BookingDayDataModel dataModel)
         {
+            if (dataModel == null)
+                return null;
+
             var entityId = BookingDayId.With(dataModel.Id);
             
             var entity = new BookingDay(entityId,From(dataModel.Bookings));
@@ -41,6 +50,9 @@ namespace LaundryBooker.Infrastructure.Repositories.BookingMonthAggregate
 
         private static Dictionary<Slot, UserId> From(Dictionary<SlotEnumModel, string> dataModel)
         {
+            if (dataModel == null)
+                return null;
+
             var bookings = new Dictionary<Slot, UserId>();
             
             foreach (var key in dataModel.Keys)

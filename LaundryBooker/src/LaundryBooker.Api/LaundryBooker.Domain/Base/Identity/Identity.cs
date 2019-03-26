@@ -62,7 +62,7 @@ namespace LaundryBooker.Domain.Base.Identity
 
         public static T With(Guid guid)
         {
-            var value = $"{Name}-{guid:D}";
+            var value = $"{guid:D}";
             return With(value);
         }
 
@@ -81,10 +81,6 @@ namespace LaundryBooker.Domain.Base.Identity
 
             if (!string.Equals(value.Trim(), value, StringComparison.OrdinalIgnoreCase))
                 yield return $"Identity '{value}' of type '{typeof(T).PrettyPrint()}' contains leading and/or traling spaces";
-            if (!value.StartsWith(Name))
-                yield return $"Identity '{value}' of type '{typeof(T).PrettyPrint()}' does not start with '{Name}'";
-            if (!ValueValidation.IsMatch(value))
-                yield return $"Identity '{value}' of type '{typeof(T).PrettyPrint()}' does not follow the syntax '[NAME]-[GUID]' in lower case";
         }
 
         protected Identity(string value) 
