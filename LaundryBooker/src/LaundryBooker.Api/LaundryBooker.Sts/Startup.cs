@@ -33,10 +33,10 @@ namespace LaundryBooker.Sts
             if(env.IsEnvironment("Docker"))
             {
                 env.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "LaundryBooker.Sts/out/wwwroot");
+                env.WebRootFileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "LaundryBooker.Sts/out/wwwroot"));
             }
-            
+
             HostingEnvironment = env;
-            
 
             LoggerFactory = loggerFactory;
             var logger = LoggerFactory.CreateLogger<Startup>();
@@ -66,11 +66,6 @@ namespace LaundryBooker.Sts
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseStaticFiles();
-            app.UseDirectoryBrowser(new DirectoryBrowserOptions
-            {
-                FileProvider = HostingEnvironment.WebRootFileProvider,
-                RequestPath = "/Directory"
-            });
             app.UseIdentityServer();
             app.UseMvcWithDefaultRoute();
 

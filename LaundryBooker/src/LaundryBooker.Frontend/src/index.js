@@ -21,5 +21,4 @@ const App = () => (
   </div>
 );
 
-console.log("NODE ENV"+ process.env.NODE_ENV);
 render(<App />, document.getElementById("root"));

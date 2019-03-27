@@ -22,23 +22,9 @@
                             <input type="hidden" asp-for="ReturnUrl" />
 
                             <fieldset>
-                                <div class="form-group">
-                                    <label asp-for="Username"></label>
-                                    <input class="form-control" placeholder="Username" asp-for="Username" autofocus>
+                                <div>
+                                    <select asp-for="Username" asp-items="Model.Users"></select> 
                                 </div>
-                                <div class="form-group">
-                                    <label asp-for="Password"></label>
-                                    <input type="password" class="form-control" placeholder="Password" asp-for="Password" autocomplete="off">
-                                </div>
-                                @if (Model.AllowRememberLogin)
-                                {
-                                    <div class="form-group login-remember">
-                                        <label asp-for="RememberLogin">
-                                            <input asp-for="RememberLogin">
-                                            <strong>Remember My Login</strong>
-                                        </label>
-                                    </div>
-                                }
                                 <div class="form-group">
                                     <button class="btn btn-primary" name="button" value="login">Login</button>
                                     <button class="btn btn-default" name="button" value="cancel">Cancel</button>

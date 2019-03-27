@@ -2,13 +2,13 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: mrwhite-postgres
+  name: laundry-db-service
   labels:
     project: mrwhite
     db: postgres
 spec:
   selector:
-    app: mrwhite-postgres
+    app: laundry-db
   ports:
   - protocol: TCP
     port: 5432
@@ -19,7 +19,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mrwhite-postgres-deployment
+  name: laundry-db-deployment
   labels:
     project: mrwhite
     db: postgres
@@ -27,17 +27,17 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mrwhite-postgres
+      app: laundry-db
   template:
     metadata:
       labels:
-        app: mrwhite-postgres
+        app: laundry-db
         project: mrwhite
         db : postgres
     spec:
       containers:
       - name: postgres
-        image: lutando/mrwhite-postgres #user:lutando; password:lutando
+        image: lutando/laundry-db #user:lutando; password:lutando
         imagePullPolicy: Always
         ports:
         - name: postgresql

@@ -4,13 +4,13 @@ import { Link } from 'react-router-dom';
 
 const headerStyle = {
   display: 'flex',
-  backgroundColor: '#26c6da',
+  backgroundColor: '#222222',
   justifyContent: 'space-between',
   padding: 10,
 };
 
 const linkStyle = {
-  color: 'white',
+  color: '#D7DADB',
   textDecoration: 'underline',
 };
 
@@ -29,13 +29,8 @@ export default () => (
             {props.oidcUser || !props.isEnabled ? (
               <ul>
                 <li>
-                  <Link style={linkStyle} to="/dashboard">
-                    Dashboard
-                  </Link>
-                </li>
-                <li>
-                  <Link style={linkStyle} to="/admin">
-                    Admin
+                  <Link style={linkStyle} to="/bookings">
+                    Bookings
                   </Link>
                 </li>
                 <button onClick={props.logout}>logout</button>
