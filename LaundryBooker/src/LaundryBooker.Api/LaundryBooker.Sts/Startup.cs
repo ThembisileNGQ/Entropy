@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LaundryBooker.Domain.Repositories;
 using LaundryBooker.Infrastructure;
 using LaundryBooker.Infrastructure.Repositories.UsersAggregate;
+using LaundryBooker.Sts.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,8 +38,8 @@ namespace LaundryBooker.Sts
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddTransient<IUserRepository, UserRepository>()
-                .AddTransient<PostgresOptions>();
+                .AddTransient<PostgresOptions>()
+                .AddTransient<IUserRepository, UserRepository>();
 
             services
                 .AddIdentityServer()
@@ -46,6 +47,7 @@ namespace LaundryBooker.Sts
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryClients(Config.GetClients())
                 .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
+                .AddProfileService<ProfileService>()
                 .AddDeveloperSigningCredential();
 
             services
@@ -56,8 +58,8 @@ namespace LaundryBooker.Sts
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseIdentityServer();
             app.UseStaticFiles();
+            app.UseIdentityServer();
             app.UseMvcWithDefaultRoute();
 
             var logger = LoggerFactory.CreateLogger<Startup>();

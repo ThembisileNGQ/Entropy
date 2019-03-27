@@ -2,6 +2,7 @@
 using IdentityServer4.Validation;
 using LaundryBooker.Domain.Model.User;
 using LaundryBooker.Domain.Repositories;
+using LaundryBooker.Sts.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,20 +24,11 @@ namespace LaundryBooker.Sts
 
             if (user != null)
             {
-                var claims = GetClaims(user);
+                var claims = ProfileService.GetClaims(user);
                 context.Result = new GrantValidationResult(user.Id.ToString(), "password", claims);
             }
         }
 
-        public IReadOnlyList<Claim> GetClaims(User user)
-        {
-            return new List<Claim>
-            {
-                new Claim(JwtClaimTypes.Subject, user.Id.Value),
-                new Claim(JwtClaimTypes.PreferredUserName, user.Name),
-                new Claim(JwtClaimTypes.IdentityProvider, "idsvr"),
-            };
-            
-        }
+        
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LaundryBooker.Sts
 {
-    public static class AuthorizationOptionsExtensions
+    public static class Extensions
     {
         public static AuthorizationOptions AddScopePolicy(this AuthorizationOptions options, string name)
         {

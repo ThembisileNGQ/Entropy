@@ -1,4 +1,5 @@
 ﻿using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Models;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,8 @@ namespace LaundryBooker.Sts
             {
                 new Client
                 {
-                    ClientId = "laundrybooker-spa",
-                    ClientName = "MrWhite LaundryBooker SPA Client",
+                    ClientId = "laundrybooker-postman",
+                    ClientName = "MrWhite LaundryBooker Postman Client",
                     IncludeJwtId = true,
                     ClientClaimsPrefix = "client_",
                     AccessTokenType = AccessTokenType.Jwt,
@@ -25,13 +26,47 @@ namespace LaundryBooker.Sts
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     AllowedScopes = new List<string>
                     {
-                        "openid",
-                        "profile",
-                        "biography",
-                        "profile_picture_url",
                         "bookings.write",
                         "bookings.read",
-                        "bookings.delete"
+                        "bookings.delete",
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    }
+                },
+                new Client
+                {
+                    ClientId = "laundrybooker-spa",
+                    ClientName = "MrWhite LaundryBooker SPA Client",
+                    IncludeJwtId = true,
+                    ClientClaimsPrefix = "client_",
+                    AccessTokenType = AccessTokenType.Jwt,
+                    AlwaysSendClientClaims = true,
+                    RequireClientSecret = false,
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowAccessTokensViaBrowser = true,
+                    RequireConsent = false,
+                    AllowedCorsOrigins = new List<string>
+                    {
+                        "http://localhost:3000",
+                        "http://192.168.99.100:30505"
+                    },
+                    AllowedScopes = new List<string>
+                    {
+                        "bookings.write",
+                        "bookings.read",
+                        "bookings.delete",
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    },
+                    RedirectUris = new List<string>
+                    {
+                        "http://localhost:3000/authentication/callback",
+                        "http://192.168.99.100:30400/authentication/callback"
+                    },
+                    PostLogoutRedirectUris = new List<string>
+                    {
+                        "http://localhost:3000",
+                        "http://192.168.99.100:30505"
                     }
                 }
             };
