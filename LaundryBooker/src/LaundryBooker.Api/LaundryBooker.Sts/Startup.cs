@@ -33,8 +33,7 @@ namespace LaundryBooker.Sts
             LoggerFactory = loggerFactory;
             var logger = LoggerFactory.CreateLogger<Startup>();
             logger.LogInformation("LaundryBooker.Sts application is starting.");
-        } 
-        
+        }
         public void ConfigureServices(IServiceCollection services)
         {
             services
@@ -55,7 +54,6 @@ namespace LaundryBooker.Sts
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
         }
 
-        
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseStaticFiles();
