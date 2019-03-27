@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using LaundryBooker.Domain.Repositories;
@@ -28,7 +29,13 @@ namespace LaundryBooker.Sts
                 .AddEnvironmentVariables()
                 .Build();
 
+            if(env.IsEnvironment("Docker"))
+            {
+                env.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "LaundryBooker.Sts/out/wwwroot");
+            }
+            
             HostingEnvironment = env;
+            
 
             LoggerFactory = loggerFactory;
             var logger = LoggerFactory.CreateLogger<Startup>();
