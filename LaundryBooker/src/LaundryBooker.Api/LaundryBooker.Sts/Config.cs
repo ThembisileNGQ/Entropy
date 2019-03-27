@@ -61,7 +61,7 @@ namespace LaundryBooker.Sts
                     RedirectUris = new List<string>
                     {
                         "http://localhost:3000/authentication/callback",
-                        "http://192.168.99.100:30400/authentication/callback"
+                        "http://192.168.99.100:30505/authentication/callback"
                     },
                     PostLogoutRedirectUris = new List<string>
                     {
