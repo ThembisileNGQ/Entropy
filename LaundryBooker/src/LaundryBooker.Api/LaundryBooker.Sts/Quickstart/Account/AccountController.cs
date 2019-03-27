@@ -12,6 +12,7 @@ using IdentityServer4.Test;
 using LaundryBooker.Domain.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -30,6 +31,7 @@ namespace IdentityServer4.Quickstart.UI
     public class AccountController : Controller
     {
         private readonly IUserRepository _userRepository;
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
@@ -40,16 +42,27 @@ namespace IdentityServer4.Quickstart.UI
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
             IEventService events,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IHostingEnvironment hostingEnvironment)
         {
             // if the TestUserStore is not in DI, then we'll just use the global users collection
             // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
             _userRepository = userRepository;
+            _hostingEnvironment = hostingEnvironment;
 
             _interaction = interaction;
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
             _events = events;
+        }
+
+        /// <summary>
+        /// Entry point into the login workflow
+        /// </summary>
+        [HttpGet]
+        public IActionResult Test(string returnUrl)
+        {
+            return Ok(new { Web = _hostingEnvironment.WebRootPath, Content = _hostingEnvironment.ContentRootPath });
         }
 
         /// <summary>
