@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -44,6 +45,7 @@ namespace LaundryBooker.Sts
         public void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddDirectoryBrowser()
                 .AddTransient<PostgresOptions>()
                 .AddTransient<IUserRepository, UserRepository>();
 
@@ -64,6 +66,11 @@ namespace LaundryBooker.Sts
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseStaticFiles();
+            app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            {
+                FileProvider = HostingEnvironment.WebRootFileProvider,
+                RequestPath = "/Directory"
+            });
             app.UseIdentityServer();
             app.UseMvcWithDefaultRoute();
 
