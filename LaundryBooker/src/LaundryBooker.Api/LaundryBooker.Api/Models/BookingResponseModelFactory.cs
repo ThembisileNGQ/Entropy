@@ -33,6 +33,7 @@ namespace LaundryBooker.Api.Models
                 dict[key] = new BookingDayResponseModel
                 {
                     Id = entity[key].Id.Value,
+                    Day = key,
                     Bookings = await From(entity[key].Bookings)
                 };
             }
@@ -46,9 +47,11 @@ namespace LaundryBooker.Api.Models
 
             foreach (var key in entities.Keys)
             {
-                dict[(int)key] = new UserResponseModel
+                var slot = (int) key;
+                dict[slot] = new UserResponseModel
                 {
                     Id = entities[key].Value,
+                    Slot = slot,
                     Name = (await _userRepository.Find(entities[key])).Name
                 };
             }

@@ -18,11 +18,13 @@ namespace LaundryBooker.Api.Models
     public class BookingDayResponseModel
     {
         public string Id { get; set; }
+        public int Day {get;set;}
         public Dictionary<int, UserResponseModel> Bookings { get; set; }
     }
 
     public class UserResponseModel
     {
+        public int Slot { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
     }

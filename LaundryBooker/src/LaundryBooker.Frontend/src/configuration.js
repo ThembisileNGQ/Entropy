@@ -1,6 +1,7 @@
 var configuration = {}
 if(process.env.NODE_ENV === 'production'){
   configuration = {
+    api_url: 'http://192.168.99.100:30501',
     client_id: 'laundrybooker-spa',
     redirect_uri: 'http://192.168.99.100:30505/authentication/callback',
     response_type: 'id_token token',
@@ -15,6 +16,7 @@ if(process.env.NODE_ENV === 'production'){
   
 } else {
   configuration = {
+    api_url: 'http://localhost:5001',
     client_id: 'laundrybooker-spa',
     redirect_uri: 'http://localhost:3000/authentication/callback',
     response_type: 'id_token token',
