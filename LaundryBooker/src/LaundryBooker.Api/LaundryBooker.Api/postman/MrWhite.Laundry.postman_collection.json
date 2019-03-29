@@ -1,0 +1,233 @@
+{
+	"info": {
+		"_postman_id": "e0d0c3d3-a10d-4a0e-bc80-67f2751f8d3f",
+		"name": "MrWhite.Laundry",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Token [200] - Token for User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a3acf302-066e-4c5f-bbe9-6ae1d18d978c",
+						"exec": [
+							"tests[\"Is 200\"] = responseCode.code === 200;",
+							"",
+							"",
+							"if (tests[\"Is 200\"])",
+							"{",
+							"    var data = JSON.parse(responseBody);",
+							"    tests[\"Has access_token\"] = !!data.access_token;",
+							"    tests[\"Has expiry\"] = !!data.expires_in;",
+							"    tests[\"Has token_type\"] = !!data.token_type;",
+							"    ",
+							"    postman.setEnvironmentVariable(\"BearerToken\", data.access_token);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "laundrybooker-postman",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "secret",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "scope",
+							"value": "bookings.read bookings.write bookings.delete",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "mrblack",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "mrblack",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{StsUrl}}/connect/token",
+					"host": [
+						"{{StsUrl}}"
+					],
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bookings [200] - Get Bookings",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd3d964c-9d19-45e6-90ca-b392e61d42b0",
+						"exec": [
+							"tests[\"Is 200\"] = responseCode.code === 200;",
+							"",
+							"if (tests[\"Is 200\"])",
+							"{",
+							"    var data = JSON.parse(responseBody);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{BearerToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{ApiUrl}}/api/bookings/2019/3",
+					"host": [
+						"{{ApiUrl}}"
+					],
+					"path": [
+						"api",
+						"bookings",
+						"2019",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bookings [200] - Create Booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd3d964c-9d19-45e6-90ca-b392e61d42b0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{BearerToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"slot\": 3\n}"
+				},
+				"url": {
+					"raw": "{{ApiUrl}}/api/bookings/2019/3/13",
+					"host": [
+						"{{ApiUrl}}"
+					],
+					"path": [
+						"api",
+						"bookings",
+						"2019",
+						"3",
+						"13"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bookings [200] - Get Booking By Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd3d964c-9d19-45e6-90ca-b392e61d42b0",
+						"exec": [
+							"tests[\"Is 200\"] = responseCode.code === 200;",
+							"",
+							"if (tests[\"Is 200\"])",
+							"{",
+							"    var data = JSON.parse(responseBody);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{BearerToken}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{ApiUrl}}/api/bookings/2019/3/5/2",
+					"host": [
+						"{{ApiUrl}}"
+					],
+					"path": [
+						"api",
+						"bookings",
+						"2019",
+						"3",
+						"5",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

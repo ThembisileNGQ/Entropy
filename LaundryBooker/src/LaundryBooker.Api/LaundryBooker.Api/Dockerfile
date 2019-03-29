@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1-sdk AS build
+FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
@@ -13,10 +13,11 @@ RUN dotnet publish -c Release -o out
 
 FROM microsoft/dotnet:2.2-aspnetcore-runtime AS runtime
 WORKDIR /app
-COPY --from=build /app/aspnetapp/out ./
+COPY --from=build /app/aspnetapp ./
 EXPOSE 5001
 ENV ASPNETCORE_ENVIRONMENT="Docker"
-ENTRYPOINT ["dotnet", "ReadApi.dll"]
+ENTRYPOINT ["dotnet", "LaundryBooker.Api/out/LaundryBooker.Api.dll"]
 
-# docker build -t lutando/read-api:latest .
-# docker push lutando/read-api:latest
+# in *.sln c
+# docker build -t lutando/laundry-api:latest -f LaundryBooker.Api/Dockerfile .
+# docker push lutando/laundry-api:latest

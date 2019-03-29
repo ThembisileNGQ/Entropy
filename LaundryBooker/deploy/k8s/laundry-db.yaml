@@ -1,0 +1,48 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: laundry-db-service
+  labels:
+    project: mrwhite
+    db: postgres
+spec:
+  selector:
+    app: laundry-db
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+    nodePort: 30500
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laundry-db-deployment
+  labels:
+    project: mrwhite
+    db: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: laundry-db
+  template:
+    metadata:
+      labels:
+        app: laundry-db
+        project: mrwhite
+        db : postgres
+    spec:
+      containers:
+      - name: postgres
+        image: lutando/laundry-db #user:lutando; password:lutando
+        imagePullPolicy: Always
+        ports:
+        - name: postgresql
+          containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: mrwhite
+      restartPolicy: Always
