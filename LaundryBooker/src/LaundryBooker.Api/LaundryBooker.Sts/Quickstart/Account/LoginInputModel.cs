@@ -18,6 +18,8 @@ namespace IdentityServer4.Quickstart.UI
             new SelectListItem { Value = "mrblack", Text = "mrblack" },
             new SelectListItem { Value = "mrpurple", Text = "mrpurple" },
             new SelectListItem { Value = "mrcyan", Text = "mrcyan"  },
+            new SelectListItem { Value = "mrblue", Text = "mrblue"  },
+            new SelectListItem { Value = "mrred", Text = "mrred"  },
         };
     }
 }
