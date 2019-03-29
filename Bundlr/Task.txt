@@ -1,0 +1,53 @@
+
+
+Skip to content
+Using Ngqakaza Mail with screen readers
+Conversations
+Unread
+ 
+Woohoo! You've read all the messages in your inbox.
+Everything else
+ 
+1–50 of 7,560
+ 
+10.11 GB (33%) of 30 GB used
+Manage
+Program Policies
+Powered by Google
+Last account activity: 1 hour ago
+Details
+
+# Task - Design and Implement a Simple Binary Message Encoding Scheme
+
+Design and implement a simple binary message
+encoding scheme to be used in a signaling
+protocol. It will be used primarily for passing
+messages between peers in a real-time communication application.
+
+For the purpose of this task we assume a simple message model:
+
+- A message can contain a variable number of headers, and a binary payload.
+- The headers are name-value pairs, where both names and values are UTF-8 encoded strings.
+- Header names and values are limited to 1023 bytes (independently).
+- A message can have max 63 headers.
+- The message payload is limited to 256 kilobytes.
+
+
+- You are are expected to motive the design choices that goes into the
+  encoding scheme you choose to implement.
+
+- As an indicator of the scope and (non-)complexity of the encoding
+  scheme that is expected, think of it as that you are expected to be
+  able to describe the binary message structure on a high-level in a
+  matter of a couple of sentences.
+
+- You are expected to design a minimal (in terms of scope /
+  complexity, not necessarily message size) binary encoding scheme
+  that is tailored for this specific use case.
+
+If you find the task description ambiguous in any way or you believe
+some things have been left unconsidered, please state clearly any
+assumptions you make in your design and implementation.
+
+task_message_encoding.txt
+Displaying task_message_encoding.txt.
