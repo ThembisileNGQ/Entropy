@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using LaundryBooker.Domain.Base;
 using LaundryBooker.Domain.Base.AggregateRoot;
 using LaundryBooker.Domain.Model.BookingMonth.Entities;
 using LaundryBooker.Domain.Model.User;
@@ -42,6 +43,10 @@ namespace LaundryBooker.Domain.Model.BookingMonth
                     {
                         bookingDay.AddBooking(slot,userId);
                     }
+                    else
+                    {
+                        throw new SlotIsClosedException();
+                    }
                 }
                 else
                 {
@@ -52,6 +57,10 @@ namespace LaundryBooker.Domain.Model.BookingMonth
                     BookingDays.Add(day,bookingDay);
                     
                 }
+            }
+            else
+            {
+                throw new UserHasOverbookedException();
             }
             
         }

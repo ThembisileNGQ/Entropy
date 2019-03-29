@@ -43,7 +43,7 @@ namespace LaundryBooker.Api.Controllers
 
         [HttpGet("{year:int}/{month:int}/{day:int}/{slot:int}", Name = "GetBookingSlot")]
         [Authorize("bookings.read")]
-        public async Task<ActionResult<UserResponseModel>> GetBookingSlot(int year, int month, int day, int slot)
+        public async Task<ActionResult<UserBookingResponseModel>> GetBookingSlot(int year, int month, int day, int slot)
         {
             var bookingMonthId = BookingMonthId.From(new DateTime(year, month, day));
             var bookingMonth = await _repository.Find(bookingMonthId);
@@ -54,7 +54,7 @@ namespace LaundryBooker.Api.Controllers
             var slotEnum = (Slot)slot;
 
             if (bookingMonth.BookingDays.ContainsKey(day) && bookingMonth.BookingDays[day].Bookings.ContainsKey(slotEnum))
-                return await _factory.From(bookingMonth.BookingDays[day].Bookings[slotEnum]);
+                return await _factory.From(bookingMonth.BookingDays[day].Bookings[slotEnum],slot);
 
             return NotFound();
         }
@@ -79,7 +79,7 @@ namespace LaundryBooker.Api.Controllers
             bookingMonth.AddBooking(userId, day, slot);
 
             await _repository.Upsert(bookingMonth);
-            var responseModel = await _factory.From(bookingMonth.BookingDays[day].Bookings[slot]);
+            var responseModel = await _factory.From(bookingMonth.BookingDays[day].Bookings[slot],input.Slot);
 
             return CreatedAtAction("GetBookingSlot", new { year = year, month = month, day = day, slot = input.Slot, }, responseModel);
         }

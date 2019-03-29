@@ -40,7 +40,7 @@ INSERT INTO laundry.users(
    display_name,
    normalized_name)
 VALUES(
-   gen_random_uuid(),
+   '41983a34-2bc7-4d2c-bf28-206387e83693',
    'mrblue',
    'MRBLUE');
 
@@ -49,7 +49,7 @@ INSERT INTO laundry.users(
    display_name,
    normalized_name)
 VALUES(
-   gen_random_uuid(),
+   '169d4425-15b2-4c83-9174-6ba91f2625b2',
    'mrred',
    'MRRED');
 
@@ -58,7 +58,7 @@ INSERT INTO laundry.users(
    display_name,
    normalized_name)
 VALUES(
-   gen_random_uuid(),
+   'f1c791fe-a85a-475e-b221-c4581352f981',
    'mrpurple',
    'MRPURPLE');
 
@@ -67,7 +67,7 @@ INSERT INTO laundry.users(
    display_name,
    normalized_name)
 VALUES(
-   gen_random_uuid(),
+   'b91207cd-8f0f-402e-9c02-7dde37394837',
    'mrblack',
    'MRBLACK');
 
@@ -76,7 +76,7 @@ INSERT INTO laundry.users(
    display_name,
    normalized_name)
 VALUES(
-   gen_random_uuid(),
+   '45954e08-8795-4c33-ae20-1161e729ddd9',
    'mrcyan',
    'MRCYAN');
 

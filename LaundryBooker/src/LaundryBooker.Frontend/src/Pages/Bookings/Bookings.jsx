@@ -8,78 +8,138 @@ import configuration from "../../configuration";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
-
 const localizer = Calendar.momentLocalizer(moment);
 
 class Bookings extends Component {
   slots = {
+    1 : 9,
+    2 : 14,
+    3 : 19,
+    4 : 23
+  }
+
+  timeSlots = {
     9 : 1,
     14 : 2,
-    19 : 3
+    19 : 3,
   }
+
   constructor(props) {
     super(props);
 
-
-    //console.log(configuration)
-    //this.props.api_url = configuration.api_url
     this.state = {
-
       selectedDate: setHours(setMinutes(new Date(), 0), 9),
       startDate: setHours(setMinutes(new Date(), 0), 9),
-      events: [
-        {
-          start: setHours(setMinutes(new Date(), 0), 9),
-          end: setHours(setMinutes(new Date(), 0), 14),
-          title: "Some title 1"
-        },
-        {
-          start: setHours(setMinutes(new Date(), 0), 14),
-          end: setHours(setMinutes(new Date(), 0), 19),
-          title: "Some title 2"
-        }
-      ]
+      events: []
     };
 
   }
 
   handleChange = (date) => {
-    console.log(date.getHours())
+    this.setState({
+      selectedDate: date
+    })
 }
 
-  bookDate = (data) => {
-    console.log(this.state)
-  }
+  bookDate = async (data) => {
+    const date = this.state.selectedDate
+    const token = this.props.oidcUser.access_token
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    const slot = this.timeSlots[date.getHours()]
+    var uri = `${configuration.api_url}/api/bookings/${year}/${month}/${day}`
+    const response = await fetch(uri, {
+      method: "POST",
+      headers: {
+          "Authorization": "Bearer "+ token,
+          "Content-Type": "application/json"
+      },
+      body: JSON.stringify({slot:slot})
+    });
 
-  onView = (data) => {
-    if(data >= setHours(setMinutes(new Date(), 0), 0)) {
-      console.log(data)
+    if(response.status === 201) {
+      var apiResponse = await response.json()
+      this.addBooking(year,month,day,apiResponse)
+    }
+    if(response.status === 404) {
+
+    }
+    if(response.status === 400) {
+      var error = await response.json()
+
+      alert(`error: ${error.title} - ${error.detail}`)
     }
   }
 
+  addBooking = (year,month,day,booking) => {
+    const slotHour = this.slots[booking.slot]
+    const slotHourNext = this.slots[booking.slot+1]
+    const events = this.state.events
+    events.push({
+      userId : this.props.oidcUser.profile.sub,
+      start : setHours(setMinutes(new Date(year,month-1,day), 0), slotHour),
+      end : setHours(setMinutes(new Date(year,month-1,day), 0), slotHourNext),
+      title: `booking for ${booking.name}`
+    })
+
+    this.setState({
+      events:events
+    });
+  }
+
+  onView = (data) => {
+    var year = data.getFullYear()
+    var month = data.getMonth() + 1
+    this.getBookings(year,month)
+  }
+
+  getBookingDayEvents = (year,month,day,bookingDay) =>{
+    const newEvents = bookingDay.bookings.map(booking => {
+      var slotHour = this.slots[booking.slot]
+      var slotHourNext = this.slots[booking.slot+1]
+
+      return {
+        userId: booking.id,
+        start : setHours(setMinutes(new Date(year,month-1,day), 0), slotHour),
+        end : setHours(setMinutes(new Date(year,month-1,day), 0), slotHourNext),
+        title: `booking for ${booking.name}`
+      }
+    })
+
+    return newEvents;
+
+  }
+
   setBookingMonth = (apiResponse) => {
-    var bookingDays = apiResponse.bookingDays
+    const bookingDays = apiResponse.bookingDays
+    const year = apiResponse.year
+    const month = apiResponse.month
     var newEvents = []
     Object.keys(bookingDays).forEach(key => {
-      console.log(bookingDays[key]);
-      newEvents.push({
-        //start
-      })
+      var bookingDay = bookingDays[key]
+      var day = parseInt(key)
+      var dayEvents = this.getBookingDayEvents(year,month,day,bookingDay)
+      dayEvents.forEach(element => {
+        newEvents.push(element)
+      });
+
     });
+
+    this.setState({
+      events: newEvents
+    })
   }
 
   getBookings = async (year,month) => {
     var token = this.props.oidcUser.access_token
     var uri = `${configuration.api_url}/api/bookings/${year}/${month}`
     const response = await fetch(uri, {
-      method: "GET", 
+      method: "GET",
       headers: {
           "Authorization": "Bearer "+ token,
-          // "Content-Type": "application/x-www-form-urlencoded",
       }
   });
-
-    
 
     if(response.status === 200) {
       var apiResponse = await response.json()
@@ -95,12 +155,32 @@ class Bookings extends Component {
     this.getBookings(year,month)
   }
 
+  eventStyleGetter = (event, start, end, isSelected) => {
+    if(event.userId === this.props.oidcUser.profile.sub) {
+      var style = {
+        padding: '2px 5px',
+        backgroundColor: '#9b4dca',
+        borderRadius: '5px',
+        color: '#fff',
+        cursor: 'pointer'
+    };
+    return {
+        className: "",
+        style: style
+    };
+    }
+
+    return {
+      
+    }
+    
+  }
+
   render() {
-    console.log(this.props)
     return (
       <div className="Bookings">
         <DatePicker
-          selected={this.state.startDate}
+          selected={this.state.selectedDate}
           onChange={this.handleChange}
           minDate={new Date()}
           showTimeSelect
@@ -120,6 +200,7 @@ class Bookings extends Component {
           defaultView="month"
           views={['month', 'week']}
           events={this.state.events}
+          eventPropGetter={(this.eventStyleGetter)}
           onNavigate={this.onView}
           style={{ height: "100vh" }}
           selectable={true}

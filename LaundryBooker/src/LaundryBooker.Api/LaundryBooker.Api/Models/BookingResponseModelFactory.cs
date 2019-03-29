@@ -41,30 +41,33 @@ namespace LaundryBooker.Api.Models
             return dict;
         }
 
-        public async Task<Dictionary<int, UserResponseModel>> From(Dictionary<Slot, UserId> entities)
+        public async Task<List<UserBookingResponseModel>> From(Dictionary<Slot, UserId> entities)
         {
-            var dict = new Dictionary<int,UserResponseModel>();
+            var userBookings = new List<UserBookingResponseModel>();
 
             foreach (var key in entities.Keys)
             {
                 var slot = (int) key;
-                dict[slot] = new UserResponseModel
+                var userBooking = new UserBookingResponseModel
                 {
                     Id = entities[key].Value,
                     Slot = slot,
                     Name = (await _userRepository.Find(entities[key])).Name
                 };
+                
+                userBookings.Add(userBooking);
             }
-
-            return dict;
+    
+            return userBookings;
         } 
 
-        public async Task<UserResponseModel> From(UserId userId)
+        public async Task<UserBookingResponseModel> From(UserId userId,int slot)
         {
             var user = await _userRepository.Find(userId);
 
-            return new UserResponseModel
+            return new UserBookingResponseModel
             {
+                Slot = slot,
                 Id = user.Id.Value,
                 Name = user.Name
             };
