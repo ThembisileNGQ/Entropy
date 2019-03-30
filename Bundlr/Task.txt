@@ -1,22 +1,3 @@
-
-
-Skip to content
-Using Ngqakaza Mail with screen readers
-Conversations
-Unread
- 
-Woohoo! You've read all the messages in your inbox.
-Everything else
- 
-1–50 of 7,560
- 
-10.11 GB (33%) of 30 GB used
-Manage
-Program Policies
-Powered by Google
-Last account activity: 1 hour ago
-Details
-
 # Task - Design and Implement a Simple Binary Message Encoding Scheme
 
 Design and implement a simple binary message

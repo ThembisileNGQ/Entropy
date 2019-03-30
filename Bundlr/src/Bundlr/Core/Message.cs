@@ -1,17 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Bundlr.Core
 {
-    public class Message {
-        public Dictionary<String, String> Headers { get; }
-        public byte[] Payload { get; }
-    }
-
-    public class Constants
+    public class Message
     {
-        internal const ushort HEADER_SIZE_MAX = 63;
-        internal const ushort HEADER_ITEM_BYTE_LENGTH_MAX = 1023;
-        internal const uint PAYLOAD_SIZE_MAX = 256 * 1000;
+        public Dictionary<string, string> Headers { get; }
+        public byte[] Payload { get; }
+
+        public Message(
+            Dictionary<string, string> headers,
+            byte[] payload)
+        {
+            if(headers == null)
+                throw new ArgumentException(nameof(headers));
+            if(payload == null)
+                throw new ArgumentException(nameof(headers));
+
+            Payload = payload;
+            Headers = headers;
+        }
+        
+        public bool Equals(Message other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            
+            return other.Payload.SequenceEqual(Payload) &&
+                   Headers.Count == other.Headers.Count &&
+                   !Headers.Except(other.Headers).Any();
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Message) obj);
+        }
+        
+        public static bool operator ==(Message left, Message right)
+        {
+            return Equals(left, right);
+        }
+        
+        public static bool operator !=(Message left, Message right)
+        {
+            return !Equals(left, right);
+        }
     }
 }
