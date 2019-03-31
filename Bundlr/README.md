@@ -4,6 +4,11 @@ The simple binary message codec written for .NET Core applications.
 
 Bundlr is a binary message format that encodes a POCO that looks like this.
 
+It is made in a standard netcoreapp in order to access the Span<T> api which will be available in the next netstandard specification.
+
+# Run It
+It is a normal dotnet core 2.2 application. Run the unit tests in `test/Bundlr.Tests.csproj` to see it in action
+
 ```csharp
 public class Message
 {
