@@ -13,6 +13,9 @@ namespace Bundlr.Codecs
     {
         public byte[] Encode(Message message)
         {
+            if (message == null)
+                throw new EncodeException("argument is null for encoding.");
+            
             var payloadSize = (uint)message.Payload.Length;
             var headerSize = (byte)message.Headers.Count;
 
@@ -37,14 +40,14 @@ namespace Bundlr.Codecs
                 var keyInBytes = Encoding.UTF8.GetBytes(key);
                 var keyLengthInBytes = BitConverter.GetBytes(keyInBytes.Length);
                 
-                if(Specification.IsHeaderItemSizeLimited(keyLengthInBytes))
-                    throw new EncodeException("header key exceeds specification");
+                if(!Specification.IsHeaderItemSizeLimited(keyInBytes))
+                    throw new EncodeException("header key exceeds specification.");
                 
                 var valueInBytes = Encoding.UTF8.GetBytes(header[key]);
                 var valueLengthInBytes = BitConverter.GetBytes(valueInBytes.Length);
                 
-                if(Specification.IsHeaderItemSizeLimited(valueInBytes))
-                    throw new EncodeException("header value exceeds specification");
+                if(!Specification.IsHeaderItemSizeLimited(valueInBytes))
+                    throw new EncodeException("header value exceeds specification.");
 
                 buffer = Combine(buffer, keyLengthInBytes, keyInBytes, valueLengthInBytes, valueInBytes);
             }
@@ -69,8 +72,10 @@ namespace Bundlr.Codecs
         {
             //1.    Check that the message to be decoded is free from
             //      errors that might have been introduced from transmission or storage
+            if(!IsViableBinaryMessage(data))
+                throw new DecodeException("binary message is not viable.");
             if (!IsValidChecksum(data))
-              throw new DecodeException("the error code checks do not match");  
+              throw new DecodeException("the error code checks do not match.");  
             
             //2.    Retreive the header size that describes how many key values
             //      are in the binary message. this will be crucial in extracting the 
@@ -142,7 +147,11 @@ namespace Bundlr.Codecs
             
             return (headers, headerPosition);
         }
-        
+
+        internal static bool IsViableBinaryMessage(Span<byte> data)
+        {
+            return data.Length > sizeof(byte) + sizeof(uint) + sizeof(ushort);
+        }
         internal static bool IsValidChecksum(Span<byte> data)
         {
             //    Checksum works by extracting the checksum at the tail end

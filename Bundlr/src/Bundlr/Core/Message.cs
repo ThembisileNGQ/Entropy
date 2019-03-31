@@ -17,7 +17,11 @@ namespace Bundlr.Core
                 throw new ArgumentException(nameof(headers));
             if(payload == null)
                 throw new ArgumentException(nameof(headers));
-
+            if(!Specification.IsHeaderSizeLimited(headers))
+                throw new ArgumentException(nameof(headers));
+            if(!Specification.IsPayloadSizeLimited(payload))
+                throw new ArgumentException(nameof(payload));
+            
             Payload = payload;
             Headers = headers;
         }

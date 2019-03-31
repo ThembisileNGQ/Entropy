@@ -4,14 +4,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BD05BC1C-03E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{59AD7880-C715-460C-B5D8-D52DD0C22F5C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "task", "task", "{0759D4C0-572B-488A-ABB8-26E9EA914181}"
-ProjectSection(SolutionItems) = preProject
-	Task.txt = Task.txt
-EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bundlr", "src\Bundlr\Bundlr.csproj", "{D842E12F-687D-44BC-B433-2534C6A5E34F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bundlr.Application", "src\Bundlr.Application\Bundlr.Application.csproj", "{8831B70D-C545-497F-8139-C4A0D990B8B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bundlr.Tests", "test\Bundlr.Tests\Bundlr.Tests.csproj", "{1ED47AEA-BED1-496F-B96B-2E3C2820DC1F}"
 EndProject
@@ -25,10 +18,6 @@ Global
 		{D842E12F-687D-44BC-B433-2534C6A5E34F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D842E12F-687D-44BC-B433-2534C6A5E34F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D842E12F-687D-44BC-B433-2534C6A5E34F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8831B70D-C545-497F-8139-C4A0D990B8B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8831B70D-C545-497F-8139-C4A0D990B8B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8831B70D-C545-497F-8139-C4A0D990B8B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8831B70D-C545-497F-8139-C4A0D990B8B8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1ED47AEA-BED1-496F-B96B-2E3C2820DC1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1ED47AEA-BED1-496F-B96B-2E3C2820DC1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1ED47AEA-BED1-496F-B96B-2E3C2820DC1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,7 +25,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D842E12F-687D-44BC-B433-2534C6A5E34F} = {BD05BC1C-03E7-4790-BC94-ACCACDAEF152}
-		{8831B70D-C545-497F-8139-C4A0D990B8B8} = {BD05BC1C-03E7-4790-BC94-ACCACDAEF152}
 		{1ED47AEA-BED1-496F-B96B-2E3C2820DC1F} = {59AD7880-C715-460C-B5D8-D52DD0C22F5C}
 	EndGlobalSection
 EndGlobal

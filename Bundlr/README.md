@@ -3,7 +3,7 @@
 The simple binary message codec written for .NET Core applications.
 
 # Motives
-Sometimes if you are transmitting data over the wire with a fixed standard schema, it may be better to use a fixed schema binary formatter that can be faster than the other general purpose binary message formatters like [Hyperion](https://github.com/akkadotnet/Hyperion)
+Sometimes if you are transmitting data over the wire with a fixed standard schema, it may be better to use a fixed schema binary formatter that can be faster than the other general purpose no schema binary message formatters like [Hyperion](https://github.com/akkadotnet/Hyperion)
 The message schema chosen is one that is simple to understand. The message schema should be simple enough to implement on other platforms with relative ease.
 
 # Usage
