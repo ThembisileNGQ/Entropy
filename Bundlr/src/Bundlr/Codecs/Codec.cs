@@ -30,7 +30,7 @@ namespace Bundlr.Codecs
         private byte[] WriteMetadata(Message message)
         {
             var buffer = new List<byte>().ToArray();
-            
+
             var payloadSize = (uint)message.Payload.Length;
             var headerSize = (byte)message.Headers.Count;
 
@@ -40,7 +40,7 @@ namespace Bundlr.Codecs
 
             return buffer;
         }
-        
+
         private byte[] WriteHeaders(byte[] buffer, Message message)
         {
             var header = message.Headers;
@@ -48,13 +48,13 @@ namespace Bundlr.Codecs
             foreach (var key in header.Keys)
             {
                 var keyInBytes = Encoding.UTF8.GetBytes(key);
-                var keyLengthInBytes = BitConverter.GetBytes(keyInBytes.Length);
+                var keyLengthInBytes = BitConverter.GetBytes((short)keyInBytes.Length);
 
                 if(!Specification.IsHeaderItemSizeLimited(keyInBytes))
                     throw new EncodeException("header key does not meet specification.");
 
                 var valueInBytes = Encoding.UTF8.GetBytes(header[key]);
-                var valueLengthInBytes = BitConverter.GetBytes(valueInBytes.Length);
+                var valueLengthInBytes = BitConverter.GetBytes((short)valueInBytes.Length);
 
                 if(!Specification.IsHeaderItemSizeLimited(valueInBytes))
                     throw new EncodeException("header value does not meet specification.");
@@ -64,7 +64,7 @@ namespace Bundlr.Codecs
 
             return buffer;
         }
-        
+
         private byte[] WritePayload(byte[] buffer, Message message)
         {
             buffer = Combine(buffer, message.Payload);
@@ -87,13 +87,12 @@ namespace Bundlr.Codecs
             if(!IsViableBinaryMessage(data))
                 throw new DecodeException("binary message is not viable.");
             if (!IsValidChecksum(data))
-              throw new DecodeException("the error code checks do not match."); 
-            
+              throw new DecodeException("the error code checks do not match.");
             var headerSize = data[0];
 
-            var headerStart = 
+            var headerStart =
                 Constants.HeaderSizeDescriptorByteLength +
-                Constants.PayloadSizeDescriptorByteLength + 
+                Constants.PayloadSizeDescriptorByteLength +
                 Constants.ChecksumSizeDescriptorByteLength;
 
             var headers = GetHeaders(data, headerSize, headerStart);
@@ -112,12 +111,11 @@ namespace Bundlr.Codecs
 
             for (byte i = 0; i < headerSize; i++)
             {
-
-                var keyLength = BitConverter.ToInt32(data.Slice(headerPosition, Constants.HeaderItemDescriptorByteLength));
+                var keyLength = BitConverter.ToUInt16(data.Slice(headerPosition, Constants.HeaderItemDescriptorByteLength));
                 var key = Encoding.UTF8.GetString(data.Slice(headerPosition + Constants.HeaderItemDescriptorByteLength, keyLength));
 
                 headerPosition = headerPosition + Constants.HeaderItemDescriptorByteLength + keyLength;
-                var valueLength = BitConverter.ToInt32(data.Slice(headerPosition, Constants.HeaderItemDescriptorByteLength));
+                var valueLength = BitConverter.ToUInt16(data.Slice(headerPosition, Constants.HeaderItemDescriptorByteLength));
                 var value = Encoding.UTF8.GetString(data.Slice(headerPosition + Constants.HeaderItemDescriptorByteLength, valueLength));
 
                 headerPosition = headerPosition + Constants.HeaderItemDescriptorByteLength + valueLength;
@@ -127,8 +125,7 @@ namespace Bundlr.Codecs
 
             return (headers, headerPosition);
         }
-        
-        
+
         internal static byte[] GetPayload(Span<byte> data, int headersEndingPosition)
         {
             return data.Slice(headersEndingPosition, data.Length - headersEndingPosition - Constants.ChecksumSizeMax).ToArray();
@@ -143,7 +140,7 @@ namespace Bundlr.Codecs
             //    Checksum works by extracting the checksum at the tail end
             //    of the binary message, and compares it with the hash of the
             //    rest of the binary string. It is similar to HMAC.
-            
+
             using (MD5 md5 = MD5.Create())
             {
                 var fromCompute = md5.ComputeHash(data.Slice(0,data.Length - Constants.ChecksumSizeMax).ToArray());
