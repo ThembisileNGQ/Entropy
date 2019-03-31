@@ -46,29 +46,29 @@ The first byte describes how many key value pairs are contained in the message. 
 
 It can be aptly described by the message diagram below:
 ```
-+--------------+--------------+---------------+
-|  Header Size | Payload Size | Checksum Size |
-+---------------------+-----------------------+
-|  Header Key Length 1  |    Header Key 1     |
-+-----------------------+---------------------+
-| Header Value Length 1 |    Header Value 1   |
-+-----------------------+---------------------+
-|  Header Key Length 2  |    Header Key 2     |
-+-----------------------+---------------------+
-| Header Value Length 2 |    Header Value 2   |
-+-----------------------+---------------------+
-.                       .                     .
-.                       .                     .
-.                       .                     .
-+-----------------------+---------------------+
-|  Header Key Length n  |    Header Key n     |
-+-----------------------+---------------------+
-| Header Value Length n |    Header Value n   |
-+-----------------------+---------------------+
-|              Message Payload                |
-+---------------------+-----------------------+
-|              Message CheckSum               |
-+---------------------+-----------------------+
++--------------+--------------+----------------+
+|  Header Size | Payload Size | Checksum Size  |
++--------------+---------+-----+---------------+
+|  Header Key Length 1   |    Header Key 1     |
++------------------------+---------------------+
+|  Header Value Length 1 |    Header Value 1   |
++------------------------+---------------------+
+|  Header Key Length 2   |    Header Key 2     |
++------------------------+---------------------+
+|  Header Value Length 2 |    Header Value 2   |
++------------------------+---------------------+
+.                        .                     .
+.                        .                     .
+.                        .                     .
++------------------------+---------------------+
+|  Header Key Length n   |    Header Key n     |
++------------------------+---------------------+
+| Header Value Length n  |    Header Value n   |
++------------------------+---------------------+
+|              Message  Payload                |
++----------------------- ----------------------+
+|              Message CheckSum                |
++------------------------ ---------------------+
 //|n| <= 63
 
 Header Key Length = Describes the byte length of the header key.
