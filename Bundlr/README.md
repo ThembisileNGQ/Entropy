@@ -4,11 +4,6 @@ The simple binary message codec written for .NET Core applications.
 
 Bundlr is a binary message format that encodes a POCO that looks like this.
 
-It is made in a standard netcoreapp in order to access the Span<T> api which will be available in the next netstandard specification.
-
-# Run It
-It is a normal dotnet core 2.2 application. Run the unit tests in `test/Bundlr.Tests.csproj` to see it in action
-
 ```csharp
 public class Message
 {
@@ -18,10 +13,9 @@ public class Message
 ```
 
 # Motives
-Sometimes if you are transmitting data over the wire with a fixed standard schema
+Sometimes if you are transmitting data over the wire with a fixed standard schema, it may be better to use a fixed schema binary formatter that can be faster than the other general purpose no schema binary message formatters like [Hyperion](https://github.com/akkadotnet/Hyperion)
 The message schema chosen is one that is simple to understand. The message schema should be simple enough to implement on other platforms with relative ease.
 
-Bundlr is optimized for ease of understanding and re-implementation on other platforms.
 # Usage
 
 ```csharp
@@ -43,7 +37,7 @@ var data = codec.Encode(object);
 var message = codec.Decode(data);
 ```
 
-Also look at the [unit tests](https://github.com/Lutando/Entropy/blob/master/Bundlr/test/Bundlr.Tests/UnitTests.cs) to see how it works.
+Also look at the [unit tests](https://github.com/Lutando/Entropy/Bundlr/test/Bundlr.Tests/UnitTests.cs) to see how it works.
 
 # Binary Message Format
 The binary message format at a high level can be described as some a series of encoded metadata, followed by an encoded array of key values, followed by a string of bytes that is the payload, and finally followed by the string of bytes that represent the checksum
@@ -87,7 +81,6 @@ Message Checksum = Is the error checking checsum
 ```
 > This diagram may be misleading, the header byte blocks described above ie `Header Size`, `Payload Size`, `Checksum Size`, and `Header Key Length` etc are not proportionally size in relation to one another. eg The header size is only 1 byte, and the header keys can be variable in size just as long as they do not exceed 1023 bytes. This diagram is there to show the sequence of bytes and where they are placed in the encoded binary message.
 
-This binary message format is, on a high level, really close to that of the POCO `Message`. There binary format enodes the class by making sure that it knows where to retreive the elements required to rebuild the c# object from the binary message, with the added bonus of having a message checksum in the form of an MD5 hash, we can also ensure message integrity.
 # Areas for Improvement
 **Benchmarking** - It is not substantial enough to just implement a binary message format without benchmarking it against others. Bundlr would need to be profiled for its computational resource usage. Some metrics to test for could be:
 
