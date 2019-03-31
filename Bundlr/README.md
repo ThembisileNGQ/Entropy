@@ -87,6 +87,7 @@ Message Checksum = Is the error checking checsum
 ```
 > This diagram may be misleading, the header byte blocks described above ie `Header Size`, `Payload Size`, `Checksum Size`, and `Header Key Length` etc are not proportionally size in relation to one another. eg The header size is only 1 byte, and the header keys can be variable in size just as long as they do not exceed 1023 bytes. This diagram is there to show the sequence of bytes and where they are placed in the encoded binary message.
 
+This binary message format is, on a high level, really close to that of the POCO `Message`. There binary format enodes the class by making sure that it knows where to retreive the elements required to rebuild the c# object from the binary message, with the added bonus of having a message checksum in the form of an MD5 hash, we can also ensure message integrity.
 # Areas for Improvement
 **Benchmarking** - It is not substantial enough to just implement a binary message format without benchmarking it against others. Bundlr would need to be profiled for its computational resource usage. Some metrics to test for could be:
 
