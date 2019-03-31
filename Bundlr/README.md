@@ -18,9 +18,10 @@ public class Message
 ```
 
 # Motives
-Sometimes if you are transmitting data over the wire with a fixed standard schema, it may be better to use a fixed schema binary formatter that can be faster than the other general purpose no schema binary message formatters like [Hyperion](https://github.com/akkadotnet/Hyperion)
+Sometimes if you are transmitting data over the wire with a fixed standard schema
 The message schema chosen is one that is simple to understand. The message schema should be simple enough to implement on other platforms with relative ease.
 
+Bundlr is optimized for ease of understanding and re-implementation on other platforms.
 # Usage
 
 ```csharp
