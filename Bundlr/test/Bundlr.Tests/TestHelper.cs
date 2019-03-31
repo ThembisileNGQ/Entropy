@@ -9,7 +9,7 @@ namespace Bundlr.Tests
     {
         private static Random Random = new Random();
         private const string CharacterSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÅÖabcdefghijklmnopqrstuvwxyzäåö0123456789";
-        private static string GetRandomString(int maxLength = 1000)
+        private static string GetRandomString(int maxLength = 800)
         {
             var length = Random.Next(maxLength);
             
