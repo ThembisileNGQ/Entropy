@@ -34,13 +34,13 @@ namespace Bundlr.Codecs
                 var keyInBytes = Encoding.UTF8.GetBytes(key);
                 var keyLengthInBytes = BitConverter.GetBytes(keyInBytes.Length);
                 
-                if(keyLengthInBytes.Length < 1024)
+                if(keyLengthInBytes.Length > Constants.HEADER_ITEM_BYTE_LENGTH_MAX)
                     throw new EncodeException("header key exceeds specification");
                 
                 var valueInBytes = Encoding.UTF8.GetBytes(header[key]);
                 var valueLengthInBytes = BitConverter.GetBytes(valueInBytes.Length);
                 
-                if(valueLengthInBytes.Length < 1024)
+                if(valueLengthInBytes.Length > Constants.HEADER_ITEM_BYTE_LENGTH_MAX)
                     throw new EncodeException("header value exceeds specification");
 
                 buffer = Combine(buffer, keyLengthInBytes, keyInBytes, valueLengthInBytes, valueInBytes);
@@ -95,14 +95,11 @@ namespace Bundlr.Codecs
             {
                 var keyLength = BitConverter.ToInt32(data.Slice(headerPosition, sizeof(int)));
                 var key = Encoding.UTF8.GetString(data.Slice(headerPosition + sizeof(int), keyLength));
-                Console.WriteLine(key);
 
                 headerPosition = headerPosition + sizeof(int) + keyLength;
                 
                 var valueLength = BitConverter.ToInt32(data.Slice(headerPosition, sizeof(int)));
                 var value = Encoding.UTF8.GetString(data.Slice(headerPosition + sizeof(int), valueLength));
-                
-                Console.WriteLine(value);
                 
                 headerPosition = headerPosition + sizeof(int) + valueLength;
 
@@ -117,9 +114,8 @@ namespace Bundlr.Codecs
         {
             using (MD5 md5 = MD5.Create())
             {
-                var fromCompute = md5.ComputeHash(data.Slice(0,data.Length - 16).ToArray());
-                var fromTailer = data.Slice(data.Length - 16, 16);
-
+                var fromCompute = md5.ComputeHash(data.Slice(0,data.Length - ChecksumSizeMax).ToArray());
+                var fromTailer = data.Slice(data.Length - ChecksumSizeMax, ChecksumSizeMax);
                 return fromCompute.SequenceEqual(fromTailer.ToArray());
             }
         }

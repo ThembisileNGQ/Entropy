@@ -21,7 +21,8 @@ namespace Bundlr.Application
 
             var message = new Message(new Dictionary<string, string>
             {
-                {key, value}
+                {key, value},
+                {RandomString(5),RandomString(400)}
             }, payload);
 
             var codec = new NaiveCodec();
