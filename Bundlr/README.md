@@ -2,6 +2,16 @@
 
 The simple binary message codec written for .NET Core applications.
 
+Bundlr is a binary message format that encodes a POCO that looks like this.
+
+```csharp
+public class Message
+{
+    public Dictionary<string, string> Headers { get; }
+    public byte[] Payload { get; }
+}
+```
+
 # Motives
 Sometimes if you are transmitting data over the wire with a fixed standard schema, it may be better to use a fixed schema binary formatter that can be faster than the other general purpose no schema binary message formatters like [Hyperion](https://github.com/akkadotnet/Hyperion)
 The message schema chosen is one that is simple to understand. The message schema should be simple enough to implement on other platforms with relative ease.
@@ -26,6 +36,8 @@ var data = codec.Encode(object);
 //decode a binary formatted message into the typed Message
 var message = codec.Decode(data);
 ```
+
+Also look at the [unit tests](https://github.com/Lutando/Entropy/Bundlr/test/Bundlr.Tests/UnitTests.cs) to see how it works.
 
 # Binary Message Format
 The binary message format at a high level can be described as some a series of encoded metadata, followed by an encoded array of key values, followed by a string of bytes that is the payload, and finally followed by the string of bytes that represent the checksum
