@@ -11,19 +11,19 @@ The message schema chosen is one that is simple to understand. The message schem
 ```csharp
 
 //Create encoder
-var codec = new NaiveCodec();
+var codec = new Codec();
 var headers = new Dictionary<string,string>
 {
     {"Bundlr","The Simple Binary Message Codec."},
     {"Sinch","Bringing Enriched Engagement To The Masses."},
 }
-var payload = new byte[payLoadSize];
+var payload = //some byte array
 var object = new Message(headers,payload)
 
 //Encode your message into the specified binary message format
 var data = codec.Encode(object);
 
-//decode a binary formatted message into the typed POCO
+//decode a binary formatted message into the typed Message
 var message = codec.Decode(data);
 ```
 

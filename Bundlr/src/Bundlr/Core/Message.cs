@@ -49,5 +49,13 @@ namespace Bundlr.Core
         {
             return !Equals(left, right);
         }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Headers != null ? Headers.GetHashCode() : 0) * 397) ^ (Payload != null ? Payload.GetHashCode() : 0);
+            }
+        }
     }
 }

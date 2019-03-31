@@ -22,7 +22,7 @@ namespace Bundlr.Application
                 {RandomString(5),RandomString(400)}
             }, payload);
 
-            var codec = new NaiveCodec();
+            var codec = new Codec();
 
             var data = codec.Encode(message);
             var msg = codec.Decode(data);
