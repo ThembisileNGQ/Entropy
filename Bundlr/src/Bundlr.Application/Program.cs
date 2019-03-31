@@ -15,9 +15,6 @@ namespace Bundlr.Application
             var value = RandomString(30);
             var key = RandomString(4);
             
-            Console.WriteLine(new Guid(payload));
-            Console.WriteLine(key);
-            Console.WriteLine(value);
 
             var message = new Message(new Dictionary<string, string>
             {

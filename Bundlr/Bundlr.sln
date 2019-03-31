@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bundlr", "src\Bundlr\Bundlr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bundlr.Application", "src\Bundlr.Application\Bundlr.Application.csproj", "{8831B70D-C545-497F-8139-C4A0D990B8B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bundlr.Tests", "test\Bundlr.Tests\Bundlr.Tests.csproj", "{1ED47AEA-BED1-496F-B96B-2E3C2820DC1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,9 +29,14 @@ Global
 		{8831B70D-C545-497F-8139-C4A0D990B8B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8831B70D-C545-497F-8139-C4A0D990B8B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8831B70D-C545-497F-8139-C4A0D990B8B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ED47AEA-BED1-496F-B96B-2E3C2820DC1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ED47AEA-BED1-496F-B96B-2E3C2820DC1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ED47AEA-BED1-496F-B96B-2E3C2820DC1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ED47AEA-BED1-496F-B96B-2E3C2820DC1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D842E12F-687D-44BC-B433-2534C6A5E34F} = {BD05BC1C-03E7-4790-BC94-ACCACDAEF152}
 		{8831B70D-C545-497F-8139-C4A0D990B8B8} = {BD05BC1C-03E7-4790-BC94-ACCACDAEF152}
+		{1ED47AEA-BED1-496F-B96B-2E3C2820DC1F} = {59AD7880-C715-460C-B5D8-D52DD0C22F5C}
 	EndGlobalSection
 EndGlobal

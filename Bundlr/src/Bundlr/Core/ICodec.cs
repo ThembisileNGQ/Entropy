@@ -1,8 +1,10 @@
+using System;
+
 namespace Bundlr.Core
 {
     public interface ICodec
     {
         byte[] Encode(Message message);
-        Message Decode(byte[] data);
+        Message Decode(Span<byte> data);
     }
 }

@@ -2,8 +2,13 @@ namespace Bundlr.Core
 {
     public class Constants
     {
-        internal const ushort HEADER_SIZE_MAX = 63;
-        internal const ushort HEADER_ITEM_BYTE_LENGTH_MAX = 1023;
-        internal const uint PAYLOAD_SIZE_MAX = 256 * 1000;
+        public const ushort ChecksumSizeMax = 16;
+        public const ushort HeaderSizeMax = 63;
+        public const uint PayloadSizeMax = 256 * 1000;
+        public const ushort HeaderItemByteLengthMax = 1023;
+        public const ushort HeaderItemDescriptorByteLength = sizeof(int);
+        public const ushort HeaderSizeDescriptorByteLength = sizeof(byte);
+        public const ushort PayloadSizeDescriptorByteLength = sizeof(uint);
+        public const ushort ChecksumSizeDescriptorByteLength = sizeof(ushort);
     }
 }

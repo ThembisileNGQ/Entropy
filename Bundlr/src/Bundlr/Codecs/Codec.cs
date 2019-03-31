@@ -1,31 +1,24 @@
 using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Bundlr.Core;
 
-//<number of entries>
-//<keylength><key><valuelength><value><keylength><key><valuelength><value>…
 namespace Bundlr.Codecs
 {
     public class NaiveCodec : ICodec
     {
-        private const ushort ChecksumSizeMax = 16;
         public byte[] Encode(Message message)
         {
             var payloadSize = (uint)message.Payload.Length;
             var headerSize = (byte)message.Headers.Count;
-            var checksumSize = ChecksumSizeMax;
-                
-            var buffer = new byte[0];
+
+            var buffer = new List<byte>().ToArray();
             
             buffer = Combine(buffer, new [] {headerSize});
             buffer = Combine(buffer, BitConverter.GetBytes(payloadSize));
-            buffer = Combine(buffer, BitConverter.GetBytes(checksumSize));
+            buffer = Combine(buffer, BitConverter.GetBytes(Constants.ChecksumSizeMax));
 
             var header = message.Headers;
             
@@ -34,13 +27,13 @@ namespace Bundlr.Codecs
                 var keyInBytes = Encoding.UTF8.GetBytes(key);
                 var keyLengthInBytes = BitConverter.GetBytes(keyInBytes.Length);
                 
-                if(keyLengthInBytes.Length > Constants.HEADER_ITEM_BYTE_LENGTH_MAX)
+                if(Specification.IsHeaderItemSizeLimited(keyLengthInBytes))
                     throw new EncodeException("header key exceeds specification");
                 
                 var valueInBytes = Encoding.UTF8.GetBytes(header[key]);
                 var valueLengthInBytes = BitConverter.GetBytes(valueInBytes.Length);
                 
-                if(valueLengthInBytes.Length > Constants.HEADER_ITEM_BYTE_LENGTH_MAX)
+                if(Specification.IsHeaderItemSizeLimited(valueInBytes))
                     throw new EncodeException("header value exceeds specification");
 
                 buffer = Combine(buffer, keyLengthInBytes, keyInBytes, valueLengthInBytes, valueInBytes);
@@ -57,34 +50,29 @@ namespace Bundlr.Codecs
             }
         }
 
-        public Message Decode(byte[] data)
+        public Message Decode(Span<byte> data)
         {
-            var span = new Span<byte>(data);
 
-            if (!IsValidChecksum(span))
+            if (!IsValidChecksum(data))
               throw new DecodeException("the error code checks do not match");  
             
-
-            //this would be so much cleaner with c# 8 range/index types
-            var headerSize = span[0];
-            var payloadSize = BitConverter.ToUInt32(span.Slice(sizeof(byte), sizeof(uint)));
-            var checkSumSize = BitConverter.ToUInt16(span.Slice(sizeof(byte) + sizeof(uint), sizeof(ushort)));
-            var headerStart = sizeof(byte) + sizeof(uint) + sizeof(ushort);
+            var headerSize = data[0];
+            var headerStart = Constants.HeaderSizeDescriptorByteLength + Constants.PayloadSizeDescriptorByteLength + Constants.ChecksumSizeDescriptorByteLength;
 
             var headers = GetHeaders(data, headerSize, headerStart);
             var payload = GetPayload(data, headers.position);
-
-            Console.WriteLine(new Guid(payload));
+            
             return new Message(headers.headers, payload);
         }
 
 
+
         internal static byte[] GetPayload(Span<byte> data, int headerPosition)
         {
-            return data.Slice(headerPosition, data.Length - headerPosition - ChecksumSizeMax).ToArray();
+            return data.Slice(headerPosition, data.Length - headerPosition - Constants.ChecksumSizeMax).ToArray();
         }
 
-        private static (Dictionary<string, string> headers, int position) GetHeaders(
+        internal static (Dictionary<string, string> headers, int position) GetHeaders(
             Span<byte> data, 
             byte headerSize, 
             int headerStart)
@@ -93,15 +81,15 @@ namespace Bundlr.Codecs
             var headerPosition = headerStart;
             for (byte i = 0; i < headerSize; i++)
             {
-                var keyLength = BitConverter.ToInt32(data.Slice(headerPosition, sizeof(int)));
-                var key = Encoding.UTF8.GetString(data.Slice(headerPosition + sizeof(int), keyLength));
+                var keyLength = BitConverter.ToInt32(data.Slice(headerPosition, Constants.HeaderItemDescriptorByteLength));
+                var key = Encoding.UTF8.GetString(data.Slice(headerPosition + Constants.HeaderItemDescriptorByteLength, keyLength));
 
-                headerPosition = headerPosition + sizeof(int) + keyLength;
+                headerPosition = headerPosition + Constants.HeaderItemDescriptorByteLength + keyLength;
                 
-                var valueLength = BitConverter.ToInt32(data.Slice(headerPosition, sizeof(int)));
-                var value = Encoding.UTF8.GetString(data.Slice(headerPosition + sizeof(int), valueLength));
+                var valueLength = BitConverter.ToInt32(data.Slice(headerPosition, Constants.HeaderItemDescriptorByteLength));
+                var value = Encoding.UTF8.GetString(data.Slice(headerPosition + Constants.HeaderItemDescriptorByteLength, valueLength));
                 
-                headerPosition = headerPosition + sizeof(int) + valueLength;
+                headerPosition = headerPosition + Constants.HeaderItemDescriptorByteLength + valueLength;
 
                 headers[key] = value;
             }
@@ -114,8 +102,8 @@ namespace Bundlr.Codecs
         {
             using (MD5 md5 = MD5.Create())
             {
-                var fromCompute = md5.ComputeHash(data.Slice(0,data.Length - ChecksumSizeMax).ToArray());
-                var fromTailer = data.Slice(data.Length - ChecksumSizeMax, ChecksumSizeMax);
+                var fromCompute = md5.ComputeHash(data.Slice(0,data.Length - Constants.ChecksumSizeMax).ToArray());
+                var fromTailer = data.Slice(data.Length - Constants.ChecksumSizeMax, Constants.ChecksumSizeMax);
                 return fromCompute.SequenceEqual(fromTailer.ToArray());
             }
         }
