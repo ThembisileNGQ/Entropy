@@ -7,7 +7,7 @@ namespace Bundlr.Core
         public DecodeException(string message)
            : base(message)
         {
-            
+
         }
     }
 
@@ -16,7 +16,7 @@ namespace Bundlr.Core
         public EncodeException(string message)
             : base(message)
         {
-            
+
         }
     }
 }

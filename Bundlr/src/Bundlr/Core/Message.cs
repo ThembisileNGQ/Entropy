@@ -16,44 +16,49 @@ namespace Bundlr.Core
             if(headers == null)
                 throw new ArgumentException(nameof(headers));
             if(payload == null)
-                throw new ArgumentException(nameof(headers));
+                throw new ArgumentException(nameof(payload));
             if(!Specification.IsHeaderSizeLimited(headers))
                 throw new ArgumentException(nameof(headers));
             if(!Specification.IsPayloadSizeLimited(payload))
                 throw new ArgumentException(nameof(payload));
-            
+
             Payload = payload;
             Headers = headers;
         }
-        
+
         public bool Equals(Message other)
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            
+            if (ReferenceEquals(null, other))
+                return false;
+            if (ReferenceEquals(this, other))
+                return true;
+
             return other.Payload.SequenceEqual(Payload) &&
                    Headers.Count == other.Headers.Count &&
                    !Headers.Except(other.Headers).Any();
         }
-        
+
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != GetType())
+                return false;
             return Equals((Message) obj);
         }
-        
+
         public static bool operator ==(Message left, Message right)
         {
             return Equals(left, right);
         }
-        
+
         public static bool operator !=(Message left, Message right)
         {
             return !Equals(left, right);
         }
-        
+
         public override int GetHashCode()
         {
             unchecked
