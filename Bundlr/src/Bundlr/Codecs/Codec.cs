@@ -136,7 +136,7 @@ namespace Bundlr.Codecs
 
         internal static bool IsViableBinaryMessage(Span<byte> data)
         {
-            return data.Length > sizeof(byte) + sizeof(uint) + sizeof(ushort);
+            return data.Length > Constants.HeaderSizeDescriptorByteLength + Constants.PayloadSizeDescriptorByteLength + Constants.ChecksumSizeDescriptorByteLength;
         }
         internal static bool IsValidChecksum(Span<byte> data)
         {
