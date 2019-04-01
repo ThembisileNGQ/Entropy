@@ -82,7 +82,7 @@ namespace Bundlr.Codecs
             }
         }
 
-        public Message Decode(Span<byte> data)
+        public Message Decode(ReadOnlySpan<byte> data)
         {
             if(!IsViableBinaryMessage(data))
                 throw new DecodeException("binary message is not viable.");
@@ -102,7 +102,7 @@ namespace Bundlr.Codecs
         }
 
         internal static (Dictionary<string, string> headers, int position) GetHeaders(
-            Span<byte> data,
+            ReadOnlySpan<byte> data,
             byte headerSize,
             int headerStart)
         {
@@ -126,16 +126,16 @@ namespace Bundlr.Codecs
             return (headers, headerPosition);
         }
 
-        internal static byte[] GetPayload(Span<byte> data, int headersEndingPosition)
+        internal static byte[] GetPayload(ReadOnlySpan<byte> data, int headersEndingPosition)
         {
             return data.Slice(headersEndingPosition, data.Length - headersEndingPosition - Constants.ChecksumSizeMax).ToArray();
         }
 
-        internal static bool IsViableBinaryMessage(Span<byte> data)
+        internal static bool IsViableBinaryMessage(ReadOnlySpan<byte> data)
         {
             return data.Length > Constants.HeaderSizeDescriptorByteLength + Constants.PayloadSizeDescriptorByteLength + Constants.ChecksumSizeDescriptorByteLength;
         }
-        internal static bool IsValidChecksum(Span<byte> data)
+        internal static bool IsValidChecksum(ReadOnlySpan<byte> data)
         {
             //    Checksum works by extracting the checksum at the tail end
             //    of the binary message, and compares it with the hash of the

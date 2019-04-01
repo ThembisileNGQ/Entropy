@@ -12,16 +12,15 @@ namespace Bundlr.Tests
         private static string GetRandomString(int maxLength = 800)
         {
             var length = Random.Next(maxLength);
-            
+
             var characters = Enumerable
                 .Repeat(CharacterSet, length)
                 .Select(s => s[Random.Next(s.Length)])
                 .ToArray();
-            
+
             return new string(characters);
         }
 
-        
         // Helper class to create a random message with randomly generated data
         internal static Message CreateMessage()
         {
@@ -32,11 +31,10 @@ namespace Bundlr.Tests
                 .Range(0, headerSize)
                 .Select(x => new KeyValuePair<string, string>(GetRandomString(), GetRandomString()))
                 .ToDictionary(x => x.Key, x => x.Value);
-            
-            
+
             var payload = new byte[payloadSize];
             Random.NextBytes(payload);
-            
+
             return new Message(headers,payload);
         }
     }

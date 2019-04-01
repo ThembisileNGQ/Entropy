@@ -5,6 +5,6 @@ namespace Bundlr.Core
     public interface ICodec
     {
         byte[] Encode(Message message);
-        Message Decode(Span<byte> data);
+        Message Decode(ReadOnlySpan<byte> data);
     }
 }
