@@ -125,6 +125,12 @@ namespace Bundlr.Codecs
 
             return (headers, headerPosition);
         }
+        
+        
+        internal static byte[] GetPayload(Span<byte> data, int headersEndingPosition)
+        {
+            return data.Slice(headersEndingPosition, data.Length - headersEndingPosition - Constants.ChecksumSizeMax).ToArray();
+        }
 
         internal static byte[] GetPayload(ReadOnlySpan<byte> data, int headersEndingPosition)
         {
