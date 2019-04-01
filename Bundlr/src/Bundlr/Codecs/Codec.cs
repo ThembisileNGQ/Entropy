@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Bundlr.Core;
@@ -141,17 +140,19 @@ namespace Bundlr.Codecs
         {
             return data.Length > Constants.HeaderSizeDescriptorByteLength + Constants.PayloadSizeDescriptorByteLength + Constants.ChecksumSizeDescriptorByteLength;
         }
+        
         internal static bool IsValidChecksum(ReadOnlySpan<byte> data)
         {
             //    Checksum works by extracting the checksum at the tail end
             //    of the binary message, and compares it with the hash of the
             //    rest of the binary string. It is similar to HMAC.
-
+            
+            var fromCompute = new Span<byte>(new byte[Constants.ChecksumSizeMax]);
             using (MD5 md5 = MD5.Create())
             {
-                var fromCompute = md5.ComputeHash(data.Slice(0,data.Length - Constants.ChecksumSizeMax).ToArray());
+                var didHash = md5.TryComputeHash(data.Slice(0,data.Length - Constants.ChecksumSizeMax),fromCompute, out var bytesWritten);
                 var fromTailer = data.Slice(data.Length - Constants.ChecksumSizeMax, Constants.ChecksumSizeMax);
-                return fromCompute.SequenceEqual(fromTailer.ToArray());
+                return didHash && fromTailer.SequenceEqual(fromCompute) && bytesWritten == Constants.ChecksumSizeMax;
             }
         }
 

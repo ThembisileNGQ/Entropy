@@ -37,7 +37,7 @@ var data = codec.Encode(object);
 var message = codec.Decode(data);
 ```
 
-Also look at the [unit tests](https://github.com/Lutando/Entropy/Bundlr/test/Bundlr.Tests/UnitTests.cs) to see how it works.
+Also look at the [unit tests](https://github.com/Lutando/Entropy/blob/master/Bundlr/test/Bundlr.Tests/UnitTests.cs) to see how it works.
 
 # Binary Message Format
 The binary message format at a high level can be described as some a series of encoded metadata, followed by an encoded array of key values, followed by a string of bytes that is the payload, and finally followed by the string of bytes that represent the checksum
