@@ -10,9 +10,9 @@ namespace WriteApi
 {
     public class CarsController : Controller
     {
-        private readonly ActorRefProvider<CarAggregateManager> _aggregateManager;
+        private readonly ActorRefProvider<GiftCardManager> _aggregateManager;
         public CarsController(
-            ActorRefProvider<CarAggregateManager> aggregateManager)
+            ActorRefProvider<GiftCardManager> aggregateManager)
         {
             _aggregateManager = aggregateManager;
         }
@@ -20,9 +20,9 @@ namespace WriteApi
         [HttpPost("cars")]
         public async Task<IActionResult> PostCar()
         {
-            var aggregateId = CarId.New;
+            var aggregateId = GiftCardId.New;
 
-            var command = new CreateCarCommand(aggregateId);
+            var command = new RedeemCommand(aggregateId);
             
             var executionResult = await _aggregateManager.Ask<ExecutionResult>(command);
             
@@ -35,9 +35,9 @@ namespace WriteApi
         [HttpPatch("cars/{id:Guid}/name")]
         public async Task<IActionResult>  PatchCar([FromRoute] Guid id, [FromBody] CarInputModel model)
         {
-            var aggregateId = CarId.With(id);
+            var aggregateId = GiftCardId.With(id);
 
-            var command = new ChangeCarNameCommand(aggregateId, model.Name);
+            var command = new IssueCommand(aggregateId, model.Name);
             
             var executionResult = await _aggregateManager.Ask<ExecutionResult>(command);
             

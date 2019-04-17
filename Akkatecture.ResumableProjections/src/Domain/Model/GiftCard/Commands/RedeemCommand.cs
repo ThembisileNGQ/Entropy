@@ -2,10 +2,10 @@ using Akkatecture.Commands;
 
 namespace Domain.Model.Car.Commands
 {
-    public class CreateCarCommand : Command<CarAggregate, CarId>
+    public class RedeemCommand : Command<GiftCard, GiftCardId>
     {
-        public CreateCarCommand(
-            CarId aggreagateId)
+        public RedeemCommand(
+            GiftCardId aggreagateId)
             : base(aggreagateId)
         {
         }

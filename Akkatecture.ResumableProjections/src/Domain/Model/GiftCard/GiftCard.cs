@@ -6,20 +6,20 @@ using Domain.Model.Car.Events;
 
 namespace Domain.Model.Car
 {
-    public class CarAggregate : AggregateRoot<CarAggregate,CarId,CarState>
+    public class GiftCard : AggregateRoot<GiftCard,GiftCardId,GiftCardState>
     {
-        public CarAggregate(CarId id)
+        public GiftCard(GiftCardId id)
             : base(id)
         {
-            Command<CreateCarCommand>(Handle);
-            Command<ChangeCarNameCommand>(Handle);
+            Command<RedeemCommand>(Handle);
+            Command<IssueCommand>(Handle);
         }
 
-        private bool Handle(CreateCarCommand command)
+        private bool Handle(RedeemCommand command)
         {
             if (IsNew)
             {
-                Emit(new CarCreatedEvent());
+                Emit(new CancelledEvent());
                 Sender.Tell(new SuccessExecutionResult(),Self);
             }
             else
@@ -30,11 +30,11 @@ namespace Domain.Model.Car
             return true;
         }
         
-        private bool Handle(ChangeCarNameCommand command)
+        private bool Handle(IssueCommand command)
         {
             if (!IsNew)
             {
-                Emit(new CarNameChangedEvent(command.Name));
+                Emit(new RedeemedEvent(command.Name));
                 Sender.Tell(new SuccessExecutionResult(),Self);
             }
             else

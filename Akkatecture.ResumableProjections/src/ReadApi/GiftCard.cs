@@ -6,14 +6,14 @@ using Akka.Streams;
 
 namespace ReadApi
 {
-    public class CarProjector : ReceiveActor
+    public class GiftCardProjector : ReceiveActor
     {
         private static string _schema = "projection";
         private static string _table = "cars";
         private readonly string _version;
         private readonly ILoggingAdapter _logger;
 
-        public CarProjector(ProjectorSettings settings)
+        public GiftCardProjector(ProjectorSettings settings)
         {
             _logger = Context.GetLogger();
             _version = settings.Version;
@@ -29,7 +29,7 @@ namespace ReadApi
                     .ReadJournalFor<SqlReadJournal>(SqlReadJournal.Identifier);
 
             readJournal
-                .EventsByTag("CarAggregate", NoOffset.Instance)
+                .EventsByTag("GiftCard", NoOffset.Instance)
                 .RunForeach(e => Handle(Context,e), mat);
             return true;
         }

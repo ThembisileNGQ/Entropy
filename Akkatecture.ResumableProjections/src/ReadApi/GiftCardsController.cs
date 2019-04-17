@@ -10,11 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ReadApi
 {
-    public class CarsController : Controller
+    public class GiftCardsController : Controller
     {
 
-        [HttpGet("cars/{id:Guid}")]
-        public async Task<IActionResult> GetCar([FromRoute] Guid id)
+        [HttpGet("giftcards/{id:Guid}")]
+        public async Task<IActionResult> GetGiftCard([FromRoute] Guid id)
         {
             throw new NotImplementedException();
         }

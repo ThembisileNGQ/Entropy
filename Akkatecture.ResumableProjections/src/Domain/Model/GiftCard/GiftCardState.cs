@@ -3,18 +3,18 @@ using Domain.Model.Car.Events;
 
 namespace Domain.Model.Car
 {
-    public class CarState: AggregateState<CarAggregate,CarId>,
-        IApply<CarCreatedEvent>,
-        IApply<CarNameChangedEvent>
+    public class GiftCardState: AggregateState<GiftCard,GiftCardId>,
+        IApply<CancelledEvent>,
+        IApply<RedeemedEvent>
     {
         public string Name { get; private set; }
         
-        public void Apply(CarCreatedEvent aggregateEvent)
+        public void Apply(CancelledEvent aggregateEvent)
         {
             
         }
 
-        public void Apply(CarNameChangedEvent aggregateEvent)
+        public void Apply(RedeemedEvent aggregateEvent)
         {
             Name = aggregateEvent.Name;
         }

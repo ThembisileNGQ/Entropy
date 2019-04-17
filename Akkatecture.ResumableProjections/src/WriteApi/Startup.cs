@@ -36,11 +36,11 @@ namespace WriteApi
 
             var config = ConfigurationFactory.ParseString(Config.Postgres);
             var actorSystem = ActorSystem.Create("write-system", config);
-            var aggregateManager = actorSystem.ActorOf(Props.Create(() => new CarAggregateManager()), "car-aggregatemanager");
+            var aggregateManager = actorSystem.ActorOf(Props.Create(() => new GiftCardManager()), "car-aggregatemanager");
 
             services
                 .AddAkkatecture(actorSystem)
-                .AddActorReference<CarAggregateManager>(aggregateManager);
+                .AddActorReference<GiftCardManager>(aggregateManager);
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 namespace Domain.Model.Car
 {
     [JsonConverter(typeof(SingleValueObjectConverter))]
-    public class CarId: Identity<CarId>
+    public class GiftCardId: Identity<GiftCardId>
     {
-        public CarId(string value)
+        public GiftCardId(string value)
             : base(value)
         {  
         }

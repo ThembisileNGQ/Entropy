@@ -2,10 +2,10 @@ using Akkatecture.Aggregates;
 
 namespace Domain.Model.Car.Events
 {
-    public class CarNameChangedEvent : AggregateEvent<CarAggregate, CarId>
+    public class RedeemedEvent : AggregateEvent<GiftCard, GiftCardId>
     {
         public string Name { get; }
-        public CarNameChangedEvent(string name)
+        public RedeemedEvent(string name)
         {
             Name = name;
         }

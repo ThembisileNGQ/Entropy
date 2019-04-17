@@ -2,11 +2,11 @@ using Akkatecture.Commands;
 
 namespace Domain.Model.Car.Commands
 {
-    public class ChangeCarNameCommand : Command<CarAggregate, CarId>
+    public class IssueCommand : Command<GiftCard, GiftCardId>
     {
         public string Name { get; }
-        public ChangeCarNameCommand(
-            CarId aggreagateId,
+        public IssueCommand(
+            GiftCardId aggreagateId,
             string name)
             : base(aggreagateId)
         {
