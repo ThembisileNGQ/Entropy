@@ -1,13 +1,13 @@
 using Akkatecture.Aggregates;
 
-namespace Domain.Model.Car.Events
+namespace Domain.Model.GiftCard.Events
 {
     public class RedeemedEvent : AggregateEvent<GiftCard, GiftCardId>
     {
-        public string Name { get; }
-        public RedeemedEvent(string name)
+        public int Credits { get; }
+        public RedeemedEvent(int credits)
         {
-            Name = name;
+            Credits = credits;
         }
     }
 }

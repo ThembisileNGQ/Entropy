@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Akkatecture.Commands;
 
 namespace Domain.Model.GiftCard.Commands
 {
-    public class CancelCommand
+    public class CancelCommand: Command<GiftCard, GiftCardId>
     {
+        public CancelCommand(
+            GiftCardId aggreagateId)
+            : base(aggreagateId)
+        {
+        }
     }
 }

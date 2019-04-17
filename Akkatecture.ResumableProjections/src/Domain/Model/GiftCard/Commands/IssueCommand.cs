@@ -1,16 +1,16 @@
 using Akkatecture.Commands;
 
-namespace Domain.Model.Car.Commands
+namespace Domain.Model.GiftCard.Commands
 {
     public class IssueCommand : Command<GiftCard, GiftCardId>
     {
-        public string Name { get; }
+        public int Credits { get; }
         public IssueCommand(
             GiftCardId aggreagateId,
-            string name)
+            int credits)
             : base(aggreagateId)
         {
-            Name = name;
+            Credits = credits;
         }
     }
 }

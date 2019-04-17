@@ -1,13 +1,16 @@
 using Akkatecture.Commands;
 
-namespace Domain.Model.Car.Commands
+namespace Domain.Model.GiftCard.Commands
 {
     public class RedeemCommand : Command<GiftCard, GiftCardId>
     {
+        public int Credits { get; }
         public RedeemCommand(
-            GiftCardId aggreagateId)
+            GiftCardId aggreagateId,
+            int credits)
             : base(aggreagateId)
         {
+            Credits = credits;
         }
     }
 }

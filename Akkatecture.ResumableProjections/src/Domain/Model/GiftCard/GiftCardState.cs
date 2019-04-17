@@ -1,22 +1,29 @@
 using Akkatecture.Aggregates;
-using Domain.Model.Car.Events;
+using Domain.Model.GiftCard.Events;
 
-namespace Domain.Model.Car
+namespace Domain.Model.GiftCard
 {
     public class GiftCardState: AggregateState<GiftCard,GiftCardId>,
-        IApply<CancelledEvent>,
-        IApply<RedeemedEvent>
+        IApply<IssuedEvent>,
+        IApply<RedeemedEvent>,
+        IApply<CancelledEvent>
     {
-        public string Name { get; private set; }
+        public int Credits { get; private set; }
+        
+
+        public void Apply(IssuedEvent aggregateEvent)
+        {
+            Credits = aggregateEvent.Credits;
+        }
+        
+        public void Apply(RedeemedEvent aggregateEvent)
+        {
+            Credits = Credits - aggregateEvent.Credits;
+        }
         
         public void Apply(CancelledEvent aggregateEvent)
         {
-            
-        }
-
-        public void Apply(RedeemedEvent aggregateEvent)
-        {
-            Name = aggregateEvent.Name;
+            Credits = 0;
         }
     }
 }

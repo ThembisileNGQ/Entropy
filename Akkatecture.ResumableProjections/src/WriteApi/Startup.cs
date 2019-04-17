@@ -1,6 +1,6 @@
 ﻿using Akka.Actor;
 using Akka.Configuration;
-using Domain.Model.Car;
+using Domain.Model.GiftCard;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
