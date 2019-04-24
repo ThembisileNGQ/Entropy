@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Akkatecture.Aggregates;
 using Akkatecture.Aggregates.ExecutionResults;
+using Akkatecture.Extensions;
 using Domain.Model.GiftCard.Commands;
 using Domain.Model.GiftCard.Events;
 
@@ -11,38 +12,42 @@ namespace Domain.Model.GiftCard
         public GiftCard(GiftCardId id)
             : base(id)
         {
-            Command<RedeemCommand>(Handle);
             Command<IssueCommand>(Handle);
+            Command<RedeemCommand>(Handle);
             Command<CancelCommand>(Handle);
         }
-
-        private bool Handle(RedeemCommand command)
+        
+        
+        
+        private bool Handle(IssueCommand command)
         {
             if (IsNew)
             {
-                Emit(new CancelledEvent());
+                Emit(new IssuedEvent(command.Credits));
                 Sender.Tell(new SuccessExecutionResult(),Self);
             }
             else
             {
-                Sender.Tell(new FailedExecutionResult(new List<string> {"aggregate is already created"}),Self);
+                Logger.Error($"{command.GetType().PrettyPrint()} has failed ");
+                Sender.Tell(new FailedExecutionResult(new List<string> {"aggregate is not created"}),Self);
             }
-
+            
             return true;
         }
-        
-        private bool Handle(IssueCommand command)
+
+        private bool Handle(RedeemCommand command)
         {
-            if (!IsNew)
+            if (!IsNew && State.Credits >= command.Credits)
             {
                 Emit(new RedeemedEvent(command.Credits));
                 Sender.Tell(new SuccessExecutionResult(),Self);
             }
             else
             {
-                Sender.Tell(new FailedExecutionResult(new List<string> {"aggregate is not created"}),Self);
+                Logger.Error($"{command.GetType().PrettyPrint()} has failed ");
+                Sender.Tell(new FailedExecutionResult(new List<string> {"aggregate is already created"}),Self);
             }
-            
+
             return true;
         }
         private bool Handle(CancelCommand command)
@@ -54,6 +59,7 @@ namespace Domain.Model.GiftCard
             }
             else
             {
+                Logger.Error($"{command.GetType().PrettyPrint()} has failed ");
                 Sender.Tell(new FailedExecutionResult(new List<string> {"aggregate is not created"}),Self);
             }
             
