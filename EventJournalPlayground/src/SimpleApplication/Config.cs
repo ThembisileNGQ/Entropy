@@ -13,15 +13,15 @@ akka.persistence {
             connection-name = ""Akka""
             read-batch-size = 500
 			event-adapters {
-        
-				aggregate-event-tagger  = ""SimpleDomain.UserAccountAggregateEventUpcaster, SimpleDomain""
-    
+
+				aggregate-event-upcaster  = ""SimpleDomain.UserAccountAggregateEventUpcaster, SimpleDomain""
+
 			}
-    
+
 			event-adapter-bindings = {
-    
-				""Akkatecture.Aggregates.ICommittedEvent, Akkatecture"" = aggregate-event-tagger
-    
+
+				""Akkatecture.Aggregates.ICommittedEvent, Akkatecture"" = aggregate-event-upcaster
+
 			}
         }
     }
@@ -54,10 +54,10 @@ akka.persistence{
 
 			# should corresponding journal table be initialized automatically
 			auto-initialize = on
-			
+
 			# timestamp provider used for generation of journal entries timestamps
 			timestamp-provider = ""Akka.Persistence.Sql.Common.Journal.DefaultTimestampProvider, Akka.Persistence.Sql.Common""
-		
+
 			# metadata table
 			metadata-table-name = metadata
 
@@ -89,7 +89,7 @@ akka.persistence{
 
 			# should corresponding journal table be initialized automatically
 			auto-initialize = on
-			
+
 			# defines column db type used to store payload. Available option: BYTEA (default), JSON, JSONB
 			stored-as = JSONB
 		}
