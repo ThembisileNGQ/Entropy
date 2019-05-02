@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Projections.Prototype
 {
     public delegate Task CustomHandler<in TContext>(TContext context, Func<Task> projector);
-    public delegate Task CreationHandler<out TProjection, TKey, in TContext>(TKey key,TContext context,Func<TProjection, Task> projector,Func<TProjection, bool> shouldOverwite);
+    public delegate Task CreationHandler<out TProjection, in TKey, in TContext>(TKey key,TContext context,Func<TProjection, Task> projector,Func<TProjection, bool> shouldOverwite);
     public delegate Task UpdateHandler<out TProjection, in TKey, in TContext>(TKey key, TContext context, Func<TProjection, Task> projector,Func<bool> createIfMissing);
     public delegate Task<bool> DeletionHandler<in TKey, in TContext>(TKey key, TContext context);
 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2003
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28809.33
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8F45543B-8189-42AF-87D5-60A6811C8289}"
 EndProject
@@ -18,7 +18,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_k8s", "_k8s", "{DF736ACC-1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projections.Prototype", "src\Projections.Prototype\Projections.Prototype.csproj", "{5369692F-CCB8-40F3-ACDA-CC23C8AEA609}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{09F2BE48-1FC2-442B-B5B7-0AE6E0546557}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\Application\Application.csproj", "{09F2BE48-1FC2-442B-B5B7-0AE6E0546557}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projections.Playground", "src\Projections.Playground\Projections.Playground.csproj", "{5E3F7CAF-6F5D-4851-9A98-F24AC566B3E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,10 @@ Global
 		{09F2BE48-1FC2-442B-B5B7-0AE6E0546557}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09F2BE48-1FC2-442B-B5B7-0AE6E0546557}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09F2BE48-1FC2-442B-B5B7-0AE6E0546557}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E3F7CAF-6F5D-4851-9A98-F24AC566B3E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E3F7CAF-6F5D-4851-9A98-F24AC566B3E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E3F7CAF-6F5D-4851-9A98-F24AC566B3E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E3F7CAF-6F5D-4851-9A98-F24AC566B3E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +62,7 @@ Global
 		{7E672CFB-9D4C-4EB2-A140-ED1F9523A966} = {8F45543B-8189-42AF-87D5-60A6811C8289}
 		{5369692F-CCB8-40F3-ACDA-CC23C8AEA609} = {8F45543B-8189-42AF-87D5-60A6811C8289}
 		{09F2BE48-1FC2-442B-B5B7-0AE6E0546557} = {8F45543B-8189-42AF-87D5-60A6811C8289}
+		{5E3F7CAF-6F5D-4851-9A98-F24AC566B3E8} = {8F45543B-8189-42AF-87D5-60A6811C8289}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E830C93-D353-41BD-9CB6-F189617FE15E}

@@ -42,13 +42,13 @@ namespace Projections.Prototype
 
             if (await PassesFilter(anEvent, context))
             {
-                Type eventType = anEvent.GetType();
+                var eventType = anEvent.GetType();
 
-                List<Handler> handlers = GetHandlersForType(eventType);
+                var handlers = GetHandlersForType(eventType);
 
                 if (handlers.Any())
                 {
-                    foreach (Handler handler in handlers)
+                    foreach (var handler in handlers)
                     {
                         await handler(anEvent, context);
                     }
@@ -64,7 +64,7 @@ namespace Projections.Prototype
         {
             if (filters.Count > 0)
             {
-                bool[] results = await Task.WhenAll(filters.Select(filter => filter(anEvent, context)));
+                var results = await Task.WhenAll(filters.Select(filter => filter(anEvent, context)));
 
                 return results.All(x => x);
             }
@@ -77,7 +77,7 @@ namespace Projections.Prototype
         private List<Handler> GetHandlersForType(Type eventType)
         {
             var handlers = new List<Handler>();
-            Type baseType = mappings.Keys.FirstOrDefault(key => eventType.GetTypeInfo().IsSubclassOf(key));
+            var baseType = mappings.Keys.FirstOrDefault(key => eventType.GetTypeInfo().IsSubclassOf(key));
             if (baseType != null)
             {
                 handlers.AddRange(mappings[baseType]);
