@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Akka.Persistence.Query" Version="1.3.13" />
     <PackageReference Include="Akkatecture" Version="0.4.1" />
   </ItemGroup>
 

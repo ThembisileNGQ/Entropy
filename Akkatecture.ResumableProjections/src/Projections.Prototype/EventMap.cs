@@ -9,23 +9,22 @@ namespace Projections.Prototype
 {
     public class EventMap<TContext> : IEventMap<TContext>
     {
-        private readonly Dictionary<Type, List<Handler>> mappings = new Dictionary<Type, List<Handler>>();
-        private readonly List<Func<object, TContext, Task<bool>>> filters =
-            new List<Func<object, TContext, Task<bool>>>();
+        private readonly Dictionary<Type, List<Handler>> _mappings = new Dictionary<Type, List<Handler>>();
+        private readonly List<Func<object, TContext, Task<bool>>> _filters = new List<Func<object, TContext, Task<bool>>>();
 
         internal void Add<TEvent>(Func<TEvent, TContext, Task> action)
         {
-            if (!mappings.ContainsKey(typeof(TEvent)))
+            if (!_mappings.ContainsKey(typeof(TEvent)))
             {
-                mappings[typeof(TEvent)] = new List<Handler>();
+                _mappings[typeof(TEvent)] = new List<Handler>();
             }
 
-            mappings[typeof(TEvent)].Add((@event, context) => action((TEvent)@event, context));
+            _mappings[typeof(TEvent)].Add((@event, context) => action((TEvent)@event, context));
         }
 
         internal void AddFilter(Func<object, TContext, Task<bool>> filter)
         {
-            filters.Add(filter);
+            _filters.Add(filter);
         }
 
         public async Task<bool> Handle(object anEvent, TContext context)
@@ -62,9 +61,9 @@ namespace Projections.Prototype
 
         private async Task<bool> PassesFilter(object anEvent, TContext context)
         {
-            if (filters.Count > 0)
+            if (_filters.Count > 0)
             {
-                var results = await Task.WhenAll(filters.Select(filter => filter(anEvent, context)));
+                var results = await Task.WhenAll(_filters.Select(filter => filter(anEvent, context)));
 
                 return results.All(x => x);
             }
@@ -77,13 +76,13 @@ namespace Projections.Prototype
         private List<Handler> GetHandlersForType(Type eventType)
         {
             var handlers = new List<Handler>();
-            var baseType = mappings.Keys.FirstOrDefault(key => eventType.GetTypeInfo().IsSubclassOf(key));
+            var baseType = _mappings.Keys.FirstOrDefault(key => eventType.GetTypeInfo().IsSubclassOf(key));
             if (baseType != null)
             {
-                handlers.AddRange(mappings[baseType]);
+                handlers.AddRange(_mappings[baseType]);
             }
 
-            if (mappings.TryGetValue(eventType, out var concreteTypeHandlers))
+            if (_mappings.TryGetValue(eventType, out var concreteTypeHandlers))
             {
                 handlers.AddRange(concreteTypeHandlers);
             }

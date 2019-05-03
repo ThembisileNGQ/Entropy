@@ -47,4 +47,23 @@ namespace Projections.Playground
     {
 
     }
+
+    public class GiftCardProjection
+    {
+        public DateTime Issued { get; set; }
+        public int Credits { get; set; }
+        public bool IsCancelled { get; set; }
+    }
+    
+    
+    public class IssuedGiftCards
+    {
+        public int Count { get; set; }
+    }
+    
+    
+    public class DepletedGiftCards
+    {
+        public int Count { get; set; }
+    }
 }
