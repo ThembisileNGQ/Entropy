@@ -93,4 +93,6 @@ namespace Projections.Prototype
 
         private delegate Task Handler(object @event, TContext context);
     }
+    
+    
 }

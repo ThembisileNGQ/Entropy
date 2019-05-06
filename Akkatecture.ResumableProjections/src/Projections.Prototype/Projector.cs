@@ -1,8 +1,8 @@
-using System.Reflection.Metadata;
 using System.Security.Principal;
+using Akka;
 using Akka.Actor;
 using Akka.Persistence.Query;
-using Akkatecture.Aggregates;
+using Akka.Streams.Dsl;
 
 namespace Projections.Prototype
 {
@@ -25,20 +25,18 @@ namespace Projections.Prototype
         IEventsByTagQuery,
         ICurrentEventsByTagQuery
     {
-        protected IProjectionLocator<TIdentity> ProjectionLocator { get; }
         protected ProjectorMap<TProjection, TIdentity, TProjectionContext> ProjectorMap { get; }
-
-        public virtual bool ShouldProject(IDomainEvent domainEvent)
-        {
-            return ProjectionLocator.LocateProjector(domainEvent) != null;
-        }
+        protected EventMapBuilder<TProjection, TIdentity, TProjectionContext> EventMap { get; }
+        protected Source<EventEnvelope, NotUsed> EventStream { get; }
 
         protected Projector(
-            IProjectionLocator<TIdentity> projectionLocator, 
-            ProjectorMap<TProjection,TIdentity,TProjectionContext> projectorMap)
+            ProjectorMap<TProjection,TIdentity,TProjectionContext> projectorMap,
+            EventMapBuilder<TProjection,TIdentity,TProjectionContext> eventMap,
+            Source<EventEnvelope, NotUsed> eventStream)
         {
-            ProjectionLocator = projectionLocator;
             ProjectorMap = projectorMap;
+            EventStream = eventStream;
+            EventMap = eventMap;
             //this probably needs to be sent the stream reference so that this actor can sink the stream and start processing the messages
             // from the journal, the wierd thing here is the stream can be either from tags or from actual persistence ids (aggregate or saga Ids)
             Receive<CreateProjectorSchema>(Handle);

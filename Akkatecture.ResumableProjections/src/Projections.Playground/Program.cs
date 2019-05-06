@@ -82,22 +82,30 @@ namespace Projections.Playground
 
     }
 
-    public class GiftCardProjection
+    public class GiftCardProjectionId : IProjectionId
     {
+        public string Value { get; }
+    }
+
+    public class GiftCardProjection : IProjection<GiftCardProjectionId>
+    {
+        public GiftCardProjectionId Id { get; set; }
         public DateTime Issued { get; set; }
         public int Credits { get; set; }
         public bool IsCancelled { get; set; }
     }
     
     
-    public class IssuedGiftCardsProjection
+    /*public class IssuedGiftCardsProjection : IProjection
     {
+        public IProjection Id { get; set; }
         public int Count { get; set; }
     }
     
     
-    public class DepletedGiftCardsProjection
+    public class DepletedGiftCardsProjection : IProjection
     {
+        public IProjection Id { get; set; }
         public int Count { get; set; }
-    }
+    }*/
 }

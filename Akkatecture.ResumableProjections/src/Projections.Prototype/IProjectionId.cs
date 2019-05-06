@@ -6,4 +6,10 @@ namespace Projections.Prototype
     {
         
     }
+
+    public interface IProjection<TProjectionId>
+        where TProjectionId : IProjectionId
+    {
+        TProjectionId Id { get; set; }
+    }
 }
