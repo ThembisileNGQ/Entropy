@@ -40,21 +40,40 @@ namespace Projections.Prototype
             ProjectionLocator = projectionLocator;
             ProjectorMap = projectorMap;
             //this probably needs to be sent the stream reference so that this actor can sink the stream and start processing the messages
-            //from the journal, the weird thing here is the stream can be either from tags or from actual persistence ids (aggregate or saga Ids)
+            // from the journal, the wierd thing here is the stream can be either from tags or from actual persistence ids (aggregate or saga Ids)
+            Receive<CreateProjectorSchema>(Handle);
             Receive<BeginProjectorStream>(Handle);
+            Receive<ClearProjectorSchema>(Handle);
+            Receive<DropProjectorSchema>(Handle);
         }
+
+        protected bool Handle(CreateProjectorSchema command)
+        {
+            
+            return true;
+        }
+        
+        
 
         protected bool Handle(BeginProjectorStream command)
         {
             
             return true;
         }
-
-        protected virtual void Handle(EventEnvelope envelope)
-        {
-            //ProjectorMap.
-        }
         
+        
+
+        protected bool Handle(ClearProjectorSchema command)
+        {
+            
+            return true;
+        }
+
+        protected bool Handle(DropProjectorSchema command)
+        {
+            
+            return true;
+        }
     }
 
     
@@ -70,6 +89,11 @@ namespace Projections.Prototype
     }
     
     public class ClearProjectorSchema : ISetupProjectorSchema
+    {
+        
+    }
+    
+    public class DropProjectorSchema : ISetupProjectorSchema
     {
         
     }
