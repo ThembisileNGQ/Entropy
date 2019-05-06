@@ -2,6 +2,7 @@
 using Projections.Prototype;
 using System;
 using System.Threading.Tasks;
+using Domain.Model.GiftCard;
 
 namespace Projections.Playground
 {
@@ -84,16 +85,10 @@ namespace Projections.Playground
 
     public class GiftCardProjectionId : IProjectionId
     {
-        public string Value { get; }
+        public string Value { get; set; }
     }
 
-    public class GiftCardProjection : IProjection<GiftCardProjectionId>
-    {
-        public GiftCardProjectionId Id { get; set; }
-        public DateTime Issued { get; set; }
-        public int Credits { get; set; }
-        public bool IsCancelled { get; set; }
-    }
+    
     
     
     /*public class IssuedGiftCardsProjection : IProjection
@@ -108,4 +103,12 @@ namespace Projections.Playground
         public IProjection Id { get; set; }
         public int Count { get; set; }
     }*/
+
+    public static class IProjectionIdExtensions
+    {
+        public static GiftCardProjectionId From(GiftCardId id)
+        {
+            return new GiftCardProjectionId(){Value = id.Value};
+        }
+    }
 }

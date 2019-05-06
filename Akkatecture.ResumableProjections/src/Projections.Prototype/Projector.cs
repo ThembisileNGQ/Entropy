@@ -3,6 +3,7 @@ using Akka;
 using Akka.Actor;
 using Akka.Persistence.Query;
 using Akka.Streams.Dsl;
+using Projections.Prototype.Repository;
 
 namespace Projections.Prototype
 {
@@ -14,9 +15,10 @@ namespace Projections.Prototype
     }
     
     //Copy Generic ExampleProjector
-    public abstract class Projector<TJournal,TProjection,TIdentity,TProjectionContext> : ReceiveActor
+    public abstract class Projector<TJournal,TProjection,TProjectionId,TProjectionContext> : ReceiveActor
+        where TProjection : class, IProjection<TProjectionId>
         where TProjectionContext : ProjectionContext
-        where TIdentity : IProjectionId
+        where TProjectionId : IProjectionId
         where TJournal : IReadJournal,
         IPersistenceIdsQuery,
         ICurrentPersistenceIdsQuery,
@@ -25,18 +27,24 @@ namespace Projections.Prototype
         IEventsByTagQuery,
         ICurrentEventsByTagQuery
     {
-        protected ProjectorMap<TProjection, TIdentity, TProjectionContext> ProjectorMap { get; }
-        protected EventMapBuilder<TProjection, TIdentity, TProjectionContext> EventMap { get; }
-        protected Source<EventEnvelope, NotUsed> EventStream { get; }
+        protected string Id { get; set; }
+        private ProjectionRepository<TProjection,TProjectionId> Repository { get; set; }
+        protected ProjectorMap<TProjection, TProjectionId, TProjectionContext> ProjectorMap { get; set; }
+        protected EventMapBuilder<TProjection, TProjectionId, TProjectionContext> EventMap { get; set; }
+        protected Source<EventEnvelope, NotUsed> EventStream { get; set; }
 
         protected Projector(
-            ProjectorMap<TProjection,TIdentity,TProjectionContext> projectorMap,
-            EventMapBuilder<TProjection,TIdentity,TProjectionContext> eventMap,
+            string id,
+            ProjectionRepository<TProjection,TProjectionId> repository,
+            ProjectorMap<TProjection,TProjectionId,TProjectionContext> projectorMap,
+            EventMapBuilder<TProjection,TProjectionId,TProjectionContext> eventMap,
             Source<EventEnvelope, NotUsed> eventStream)
         {
+            Id = id;
             ProjectorMap = projectorMap;
             EventStream = eventStream;
             EventMap = eventMap;
+            Repository = repository;
             //this probably needs to be sent the stream reference so that this actor can sink the stream and start processing the messages
             // from the journal, the wierd thing here is the stream can be either from tags or from actual persistence ids (aggregate or saga Ids)
             Receive<CreateProjectorSchema>(Handle);
