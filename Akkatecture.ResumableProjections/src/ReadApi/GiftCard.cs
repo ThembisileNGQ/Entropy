@@ -31,6 +31,7 @@ namespace ReadApi
             readJournal
                 .EventsByTag("GiftCard", NoOffset.Instance)
                 .RunForeach(e => Handle(Context,e), mat);
+            
             return true;
         }
 
