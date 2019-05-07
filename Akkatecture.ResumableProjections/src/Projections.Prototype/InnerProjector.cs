@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Transactions;
-using Akka.Persistence.Query;
 
 namespace Projections.Prototype
 {
@@ -81,7 +79,7 @@ namespace Projections.Prototype
 
         private async Task ProjectTransaction(Transaction transaction)
         {
-            foreach (EventEnvelope eventEnvelope in transaction.Events)
+            foreach (var eventEnvelope in transaction.Events)
             {
                 try
                 {
@@ -91,7 +89,7 @@ namespace Projections.Prototype
                         {
                             TransactionId = transaction.Id,
                             StreamId = transaction.StreamId,
-                            TimeStamp = transaction.Timestamp,
+                            Timestamp = transaction.Timestamp,
                             Checkpoint = transaction.Checkpoint,
                             TransactionHeaders = transaction.Headers
                         });
