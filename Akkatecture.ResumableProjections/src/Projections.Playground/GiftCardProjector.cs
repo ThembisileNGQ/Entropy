@@ -20,19 +20,24 @@ namespace Projections.Playground
         public int Credits { get; set; }
         public bool IsCancelled { get; set; }
     }
-    public class GiftCardProjector : Projector<SqlReadJournal,GiftCardProjection,GiftCardProjectionId,TestContext>
+    public class GiftCardProjector : Projector<SqlReadJournal,GiftCardProjection,GiftCardProjectionId,GiftCardProjectionContext>
     {
         public GiftCardProjector(
             string projectorId,
             ProjectionRepository<GiftCardProjection,GiftCardProjectionId> repository,
-            ProjectorMap<GiftCardProjection, GiftCardProjectionId, TestContext> projectorMap,
-            EventMapBuilder<GiftCardProjection, GiftCardProjectionId, TestContext> eventMap,
+            ProjectorMap<GiftCardProjection, GiftCardProjectionId, GiftCardProjectionContext> projectorMap,
+            EventMapBuilder<GiftCardProjection, GiftCardProjectionId, GiftCardProjectionContext> eventMap,
             Source<EventEnvelope, NotUsed> eventStream) 
             : base(projectorId,repository,projectorMap, eventMap, eventStream)
         {
-            EventMap = new EventMapBuilder<GiftCardProjection, GiftCardProjectionId, TestContext>();
+            
+        }
 
-            EventMap.Map<IDomainEvent<GiftCard, GiftCardId, IssuedEvent>>()
+        public static EventMapBuilder<GiftCardProjection, GiftCardProjectionId, GiftCardProjectionContext> GetEventMap()
+        {
+            var eventMap = new EventMapBuilder<GiftCardProjection, GiftCardProjectionId, GiftCardProjectionContext>();
+
+            eventMap.Map<IDomainEvent<GiftCard, GiftCardId, IssuedEvent>>()
                 .AsCreateOf(x => From(x.AggregateIdentity))
                 .Using((projection, evt) =>
                 {
@@ -41,7 +46,7 @@ namespace Projections.Playground
                     projection.Issued = evt.Timestamp.UtcDateTime;
                 });
             
-            EventMap.Map<IDomainEvent<GiftCard, GiftCardId, RedeemedEvent>>()
+            eventMap.Map<IDomainEvent<GiftCard, GiftCardId, RedeemedEvent>>()
                 .AsUpdateOf(x => From(x.AggregateIdentity))
                 .Using((projection, evt) =>
                 {
@@ -49,14 +54,14 @@ namespace Projections.Playground
                 });
             
             
-            EventMap.Map<IDomainEvent<GiftCard, GiftCardId, CancelledEvent>>()
+            eventMap.Map<IDomainEvent<GiftCard, GiftCardId, CancelledEvent>>()
                 .AsUpdateOf(x => From(x.AggregateIdentity))
                 .Using((projection, evt) =>
                 {
                     projection.IsCancelled = false;
                 });
 
-            var map = eventMap.Build(ProjectorMap);
+            return eventMap;
         }
     }
 }
