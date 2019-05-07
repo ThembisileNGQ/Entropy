@@ -54,7 +54,7 @@ namespace Projections.Prototype
 
         public async Task Handle(IReadOnlyList<Transaction> transactions)
         {
-            foreach (Transaction transaction in transactions)
+            foreach (var transaction in transactions)
             {
                 await ExecuteWithRetry(() => ProjectTransaction(transaction)).ConfigureAwait(false);
             }
@@ -62,7 +62,7 @@ namespace Projections.Prototype
 
         private async Task ExecuteWithRetry(Func<Task> action)
         {
-            for (int attempt = 1;;attempt++)
+            for (var attempt = 1;;attempt++)
             {
                 try
                 {

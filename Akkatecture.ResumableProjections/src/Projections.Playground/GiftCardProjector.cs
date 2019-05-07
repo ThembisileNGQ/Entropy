@@ -55,8 +55,8 @@ namespace Projections.Playground
                 {
                     projection.IsCancelled = false;
                 });
-            
-            
+
+            var map = eventMap.Build(ProjectorMap);
         }
     }
 }
