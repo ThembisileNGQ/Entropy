@@ -1,5 +1,6 @@
 using System;
 using Akka;
+using Akka.Actor;
 using Akka.Persistence.Query;
 using Akka.Persistence.Query.Sql;
 using Akka.Streams.Dsl;
@@ -24,11 +25,11 @@ namespace Projections.Playground
     {
         public GiftCardProjector(
             string projectorId,
-            ProjectionRepository<GiftCardProjection,GiftCardProjectionId> repository,
+            IActorRef repository,
             ProjectorMap<GiftCardProjection, GiftCardProjectionId, GiftCardProjectionContext> projectorMap,
             EventMapBuilder<GiftCardProjection, GiftCardProjectionId, GiftCardProjectionContext> eventMap,
             Source<EventEnvelope, NotUsed> eventStream) 
-            : base(projectorId,repository,projectorMap, eventMap, eventStream)
+            : base(projectorId,repository, eventMap)
         {
             
         }
@@ -37,7 +38,7 @@ namespace Projections.Playground
         {
             var eventMap = new EventMapBuilder<GiftCardProjection, GiftCardProjectionId, GiftCardProjectionContext>();
 
-            eventMap.Map<IDomainEvent<GiftCard, GiftCardId, IssuedEvent>>()
+            eventMap.Map<DomainEvent<GiftCard, GiftCardId, IssuedEvent>>()
                 .AsCreateOf(x => From(x.AggregateIdentity))
                 .Using((projection, evt) =>
                 {
@@ -46,7 +47,7 @@ namespace Projections.Playground
                     projection.Issued = evt.Timestamp.UtcDateTime;
                 });
             
-            eventMap.Map<IDomainEvent<GiftCard, GiftCardId, RedeemedEvent>>()
+            eventMap.Map<DomainEvent<GiftCard, GiftCardId, RedeemedEvent>>()
                 .AsUpdateOf(x => From(x.AggregateIdentity))
                 .Using((projection, evt) =>
                 {
@@ -54,7 +55,7 @@ namespace Projections.Playground
                 });
             
             
-            eventMap.Map<IDomainEvent<GiftCard, GiftCardId, CancelledEvent>>()
+            eventMap.Map<DomainEvent<GiftCard, GiftCardId, CancelledEvent>>()
                 .AsUpdateOf(x => From(x.AggregateIdentity))
                 .Using((projection, evt) =>
                 {

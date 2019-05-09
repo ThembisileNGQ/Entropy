@@ -35,6 +35,18 @@ akka.persistence{
 		
 			# metadata table
 			metadata-table-name = metadata
+			
+			event-adapters {
+        
+				committed-event-mapper  = ""Akkatecture.Events.DomainEventReadAdapter, Akkatecture""
+    
+			}
+    
+			event-adapter-bindings = {
+    
+				""Akkatecture.Aggregates.ICommittedEvent, Akkatecture"" = committed-event-mapper
+    
+			}
 
 			# defines column db type used to store payload. Available option: BYTEA (default), JSON, JSONB
 			stored-as = JSONB
