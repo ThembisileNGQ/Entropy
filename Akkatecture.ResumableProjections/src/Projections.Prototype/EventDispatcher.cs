@@ -8,7 +8,7 @@ using Akka.Streams.Dsl;
 namespace Projections.Prototype
 {
     public class EventDispatcher<TProjectionContext> : ReceiveActor
-        where TProjectionContext : ProjectionContext
+        where TProjectionContext : ProjectionContext, new()
     {
         private IEventMap<TProjectionContext> _eventMap { get; }
         private Source<EventEnvelope, NotUsed> _eventStream { get; }

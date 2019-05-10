@@ -19,10 +19,10 @@ namespace Projections.Prototype
         private TJournal _journal { get; }
         private IActorRef _repository { get; }
 
-        private EventMapBuilder<TProjection,TProjectionId,TProjectionContext> _eventMap { get; }
+        private IEventMap<TProjectionContext> _eventMap { get; }
         public ProjectorManager(
             IActorRef repository,
-            EventMapBuilder<TProjection,TProjectionId,TProjectionContext> eventMap,
+            IEventMap<TProjectionContext> eventMap,
             TJournal journal)
         {
             _journal = journal;

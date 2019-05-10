@@ -5,25 +5,26 @@ using Projections.Prototype.Transactions;
 
 namespace Projections.Prototype
 {
-    public class EventMapBuilder<TContext> : IEventMapBuilder<TContext>
+    public class EventMapBuilder<TProjectionContext> : IEventMapBuilder<TProjectionContext>
+        where TProjectionContext : ProjectionContext, new()
     {
-        private readonly EventMap<TContext> _eventMap = new EventMap<TContext>();
-        private ProjectorMap<TContext> _projector;
+        private readonly EventMap<TProjectionContext> _eventMap = new EventMap<TProjectionContext>();
+        private ProjectorMap<TProjectionContext> _projector;
 
-        public EventMapBuilder<TContext> Where(Func<object, TContext, Task<bool>> filter)
+        public EventMapBuilder<TProjectionContext> Where(Func<object, TProjectionContext, Task<bool>> filter)
         {
             _eventMap.AddFilter(filter);
             return this;
         }
 
-        public IAction<TEvent, TContext> Map<TEvent>()
+        public IAction<TEvent, TProjectionContext> Map<TEvent>()
         {
             AssertNotBuilt();
 
             return new Action<TEvent>(this, () => _projector);
         }
 
-        public IEventMap<TContext> Build(ProjectorMap<TContext> projector)
+        public IEventMap<TProjectionContext> Build(ProjectorMap<TProjectionContext> projector)
         {
             AssertNotBuilt();
 
@@ -35,7 +36,7 @@ namespace Projections.Prototype
             if (projector.Custom == null)
             {
                 throw new ArgumentException(
-                    $"Expected the Custom property to point to a valid instance of {nameof(CustomHandler<TContext>)}", nameof(projector));
+                    $"Expected the Custom property to point to a valid instance of {nameof(CustomHandler<TProjectionContext>)}", nameof(projector));
             }
 
             this._projector = projector;
@@ -51,21 +52,21 @@ namespace Projections.Prototype
             }
         }
 
-        private sealed class Action<TEvent> : IAction<TEvent, TContext>
+        private sealed class Action<TEvent> : IAction<TEvent, TProjectionContext>
         {
-            private readonly EventMapBuilder<TContext> _parent;
-            private readonly Func<ProjectorMap<TContext>> _getProjector;
+            private readonly EventMapBuilder<TProjectionContext> _parent;
+            private readonly Func<ProjectorMap<TProjectionContext>> _getProjector;
 
-            private readonly List<Func<TEvent, TContext, Task<bool>>> predicates =
-                new List<Func<TEvent, TContext, Task<bool>>>();
+            private readonly List<Func<TEvent, TProjectionContext, Task<bool>>> predicates =
+                new List<Func<TEvent, TProjectionContext, Task<bool>>>();
 
-            public Action(EventMapBuilder<TContext> parent, Func<ProjectorMap<TContext>> getProjector)
+            public Action(EventMapBuilder<TProjectionContext> parent, Func<ProjectorMap<TProjectionContext>> getProjector)
             {
                 _parent = parent;
                 _getProjector = getProjector;
             }
 
-            public IAction<TEvent, TContext> When(Func<TEvent, TContext, Task<bool>> predicate)
+            public IAction<TEvent, TProjectionContext> When(Func<TEvent, TProjectionContext, Task<bool>> predicate)
             {
                 if (predicate == null)
                 {
@@ -76,7 +77,7 @@ namespace Projections.Prototype
                 return this;
             }
 
-            public void As(Func<TEvent, TContext, Task> action)
+            public void As(Func<TEvent, TProjectionContext, Task> action)
             {
                 if (action == null)
                 {
@@ -86,11 +87,11 @@ namespace Projections.Prototype
                 Add((anEvent, context) => _getProjector().Custom(context, async () => await action(anEvent, context)));
             }
 
-            private void Add(Func<TEvent, TContext, Task> action)
+            private void Add(Func<TEvent, TProjectionContext, Task> action)
             {
                 _parent._eventMap.Add<TEvent>(async (anEvent, context) =>
                 {
-                    foreach (Func<TEvent, TContext, Task<bool>> predicate in predicates)
+                    foreach (Func<TEvent, TProjectionContext, Task<bool>> predicate in predicates)
                     {
                         if (!await predicate(anEvent, context))
                         {
@@ -105,42 +106,45 @@ namespace Projections.Prototype
     }
     
     
-    public sealed class EventMapBuilder<TProjection, TKey, TContext> : IEventMapBuilder<TProjection, TKey, TContext>
+    public sealed class EventMapBuilder<TProjection, TProjectionId, TProjectionContext> : IEventMapBuilder<TProjection, TProjectionId, TProjectionContext>
+        where TProjection : class, IProjection<TProjectionId>, new()
+        where TProjectionContext : ProjectionContext, new()
+        where TProjectionId : IProjectionId
     {
-        private readonly EventMapBuilder<TContext> _innerBuilder = new EventMapBuilder<TContext>();
-        private ProjectorMap<TProjection, TKey, TContext> _projector;
+        private readonly EventMapBuilder<TProjectionContext> _innerBuilder = new EventMapBuilder<TProjectionContext>();
+        private ProjectorMap<TProjection, TProjectionId, TProjectionContext> _projector;
 
-        public EventMapBuilder<TProjection, TKey, TContext> Where(Func<object, TContext, Task<bool>> predicate)
+        public EventMapBuilder<TProjection, TProjectionId, TProjectionContext> Where(Func<object, TProjectionContext, Task<bool>> predicate)
         {
             _innerBuilder.Where(predicate);
             return this;
         }
-        public ICrudAction<TEvent, TProjection, TKey, TContext> Map<TEvent>()
+        public ICrudAction<TEvent, TProjection, TProjectionId, TProjectionContext> Map<TEvent>()
         {
             return new CrudAction<TEvent>(this);
         }
-        public IEventMap<TContext> Build(ProjectorMap<TProjection, TKey, TContext> projector)
+        public IEventMap<TProjectionContext> Build(ProjectorMap<TProjection, TProjectionId, TProjectionContext> projector)
         {
             _projector = projector;
             
-            return _innerBuilder.Build(new ProjectorMap<TContext>
+            return _innerBuilder.Build(new ProjectorMap<TProjectionContext>
             {
                 Custom = (context, projectEvent) => projectEvent()
             });
         }
 
-        private sealed class CrudAction<TEvent> : ICrudAction<TEvent, TProjection, TKey, TContext>
+        private sealed class CrudAction<TEvent> : ICrudAction<TEvent, TProjection, TProjectionId, TProjectionContext>
         {
-            private readonly IAction<TEvent, TContext> _actionBuilder;
-            private readonly Func<ProjectorMap<TProjection, TKey, TContext> > _getProjector;
+            private readonly IAction<TEvent, TProjectionContext> _actionBuilder;
+            private readonly Func<ProjectorMap<TProjection, TProjectionId, TProjectionContext> > _getProjector;
 
-            public CrudAction(EventMapBuilder<TProjection, TKey, TContext> parent)
+            public CrudAction(EventMapBuilder<TProjection, TProjectionId, TProjectionContext> parent)
             {
                 _actionBuilder = parent._innerBuilder.Map<TEvent>();
                 _getProjector = () => parent._projector;
             }
 
-            public ICreateAction<TEvent, TProjection, TContext> AsCreateOf(Func<TEvent, TKey> getKey)
+            public ICreateAction<TEvent, TProjection, TProjectionContext> AsCreateOf(Func<TEvent, TProjectionId> getKey)
             {
                 if (getKey == null)
                 {
@@ -150,18 +154,18 @@ namespace Projections.Prototype
                 return new CreateAction(_actionBuilder, _getProjector, getKey);
             }
 
-            public ICreateAction<TEvent, TProjection, TContext> AsCreateIfDoesNotExistOf(
-                Func<TEvent, TKey> getKey)
+            public ICreateAction<TEvent, TProjection, TProjectionContext> AsCreateIfDoesNotExistOf(
+                Func<TEvent, TProjectionId> getKey)
             {
                 return AsCreateOf(getKey).IgnoringDuplicates();
             }
 
-            public ICreateAction<TEvent, TProjection, TContext> AsCreateOrUpdateOf(Func<TEvent, TKey> getKey)
+            public ICreateAction<TEvent, TProjection, TProjectionContext> AsCreateOrUpdateOf(Func<TEvent, TProjectionId> getKey)
             {
                 return AsCreateOf(getKey).OverwritingDuplicates();
             }
 
-            public IDeleteAction<TEvent, TKey, TContext> AsDeleteOf(Func<TEvent, TKey> getKey)
+            public IDeleteAction<TEvent, TProjectionId, TProjectionContext> AsDeleteOf(Func<TEvent, TProjectionId> getKey)
             {
                 if (getKey == null)
                 {
@@ -171,12 +175,12 @@ namespace Projections.Prototype
                 return new DeleteAction(_actionBuilder, _getProjector, getKey);
             }
 
-            public IDeleteAction<TEvent, TKey, TContext> AsDeleteIfExistsOf(Func<TEvent, TKey> getKey)
+            public IDeleteAction<TEvent, TProjectionId, TProjectionContext> AsDeleteIfExistsOf(Func<TEvent, TProjectionId> getKey)
             {
                 return AsDeleteOf(getKey).IgnoringMisses();
             }
 
-            public IUpdateAction<TEvent, TKey, TProjection, TContext> AsUpdateOf(Func<TEvent, TKey> getKey)
+            public IUpdateAction<TEvent, TProjectionId, TProjection, TProjectionContext> AsUpdateOf(Func<TEvent, TProjectionId> getKey)
             {
                 if (getKey == null)
                 {
@@ -186,23 +190,23 @@ namespace Projections.Prototype
                 return new UpdateAction(_actionBuilder, _getProjector, getKey);
             }
 
-            public IUpdateAction<TEvent, TKey, TProjection, TContext> AsUpdateIfExistsOf(Func<TEvent, TKey> getKey)
+            public IUpdateAction<TEvent, TProjectionId, TProjection, TProjectionContext> AsUpdateIfExistsOf(Func<TEvent, TProjectionId> getKey)
             {
                 return AsUpdateOf(getKey).IgnoringMisses();
             }
 
-            public void As(Func<TEvent, TContext, Task> action)
+            public void As(Func<TEvent, TProjectionContext, Task> action)
             {
                 _actionBuilder.As((anEvent, context) => _getProjector().Custom(context, () => action(anEvent, context)));
             }
 
-            Transactions.IAction<TEvent, TContext> Transactions.IAction<TEvent, TContext>.When(Func<TEvent, TContext, Task<bool>> predicate)
+            Transactions.IAction<TEvent, TProjectionContext> Transactions.IAction<TEvent, TProjectionContext>.When(Func<TEvent, TProjectionContext, Task<bool>> predicate)
             {
                 return When(predicate);
             }
 
-            public ICrudAction<TEvent, TProjection, TKey, TContext> When(
-                Func<TEvent, TContext, Task<bool>> predicate)
+            public ICrudAction<TEvent, TProjection, TProjectionId, TProjectionContext> When(
+                Func<TEvent, TProjectionContext, Task<bool>> predicate)
             {
                 if (predicate == null)
                 {
@@ -213,16 +217,18 @@ namespace Projections.Prototype
                 return this;
             }
 
-            private sealed class CreateAction : ICreateAction<TEvent, TProjection, TContext>
+            private sealed class CreateAction : ICreateAction<TEvent, TProjection, TProjectionContext>
             {
-                private Func<TProjection, TEvent, TContext, bool> _shouldOverwrite;
+                private Func<TProjection, TEvent, TProjectionContext, bool> _shouldOverwrite;
 
-                private readonly IAction<TEvent, TContext> _actionBuilder;
-                private readonly Func<ProjectorMap<TProjection, TKey, TContext>> _projector;
-                private readonly Func<TEvent, TKey> _getKey;
+                private readonly IAction<TEvent, TProjectionContext> _actionBuilder;
+                private readonly Func<ProjectorMap<TProjection, TProjectionId, TProjectionContext>> _projector;
+                private readonly Func<TEvent, TProjectionId> _getKey;
 
-                public CreateAction(IAction<TEvent, TContext> actionBuilder,
-                    Func<ProjectorMap<TProjection, TKey, TContext>> projector, Func<TEvent, TKey> getKey)
+                public CreateAction(
+                    IAction<TEvent, TProjectionContext> actionBuilder,
+                    Func<ProjectorMap<TProjection, TProjectionId, TProjectionContext>> projector, 
+                    Func<TEvent, TProjectionId> getKey)
                 {
                     _actionBuilder = actionBuilder;
                     _projector = projector;
@@ -233,14 +239,14 @@ namespace Projections.Prototype
                             $"Projection {typeof(TProjection)} with key {getKey(@event)}already exists.");
                 }
 
-                public ICreateAction<TEvent, TProjection, TContext> Using(Func<TProjection, TEvent, TContext, Task> projector)
+                public ICreateAction<TEvent, TProjection, TProjectionContext> Using(Func<TProjection, TEvent, TProjectionContext, Task> projector)
                 {
                     if (projector == null)
                     {
                         throw new ArgumentNullException(nameof(projector));
                     }
 
-                    _actionBuilder.As((anEvent, context) => this._projector().Create(
+                    _actionBuilder.As((anEvent, context) => _projector().Create(
                             _getKey(anEvent),
                             context,
                             projection => projector(projection, anEvent, context),
@@ -249,36 +255,36 @@ namespace Projections.Prototype
                     return this;
                 }
 
-                public ICreateAction<TEvent, TProjection, TContext>  IgnoringDuplicates()
+                public ICreateAction<TEvent, TProjection, TProjectionContext>  IgnoringDuplicates()
                 {
                     _shouldOverwrite = (duplicate, @event,context) => false;
                     return this;
                 }
 
-                public ICreateAction<TEvent, TProjection, TContext> OverwritingDuplicates()
+                public ICreateAction<TEvent, TProjection, TProjectionContext> OverwritingDuplicates()
                 {
                     _shouldOverwrite = (duplicate, @event,context) => true;
                     return this;
                 }
 
-                public ICreateAction<TEvent, TProjection, TContext> HandlingDuplicatesUsing(Func<TProjection, TEvent, TContext, bool> shouldOverwrite)
+                public ICreateAction<TEvent, TProjection, TProjectionContext> HandlingDuplicatesUsing(Func<TProjection, TEvent, TProjectionContext, bool> shouldOverwrite)
                 {
                     _shouldOverwrite = shouldOverwrite;
                     return this;
                 }
             }
 
-            private sealed class UpdateAction : IUpdateAction<TEvent, TKey, TProjection, TContext>
+            private sealed class UpdateAction : IUpdateAction<TEvent, TProjectionId, TProjection, TProjectionContext>
             {
-                private readonly IAction<TEvent, TContext> _actionBuilder;
-                private readonly Func<ProjectorMap<TProjection, TKey, TContext>> _projector;
-                private readonly Func<TEvent, TKey> _getKey;
-                private Func<TKey, TContext, bool> _handleMissesUsing;
+                private readonly IAction<TEvent, TProjectionContext> _actionBuilder;
+                private readonly Func<ProjectorMap<TProjection, TProjectionId, TProjectionContext>> _projector;
+                private readonly Func<TEvent, TProjectionId> _getKey;
+                private Func<TProjectionId, TProjectionContext, bool> _handleMissesUsing;
 
                 public UpdateAction(
-                    IAction<TEvent, TContext> actionBuilder,
-                    Func<ProjectorMap<TProjection, TKey, TContext>> projector,
-                    Func<TEvent, TKey> getKey)
+                    IAction<TEvent, TProjectionContext> actionBuilder,
+                    Func<ProjectorMap<TProjection, TProjectionId, TProjectionContext>> projector,
+                    Func<TEvent, TProjectionId> getKey)
                 {
                     _projector = projector;
                     _actionBuilder = actionBuilder;
@@ -287,67 +293,68 @@ namespace Projections.Prototype
                     ThrowingIfMissing();
                 }
 
-                public IUpdateAction<TEvent, TKey, TProjection, TContext> Using(Func<TProjection, TEvent, TContext, Task> updateAction)
+                public IUpdateAction<TEvent, TProjectionId, TProjection, TProjectionContext> Using(Func<TProjection, TEvent, TProjectionContext, Task> updateAction)
                 {
                     if (updateAction == null)
                     {
                         throw new ArgumentNullException(nameof(updateAction));
                     }
 
+                    
                     _actionBuilder.As((anEvent, context) => OnUpdate(updateAction, anEvent, context));
 
                     return this;
                 }
 
-                private async Task OnUpdate(Func<TProjection, TEvent, TContext, Task> projector, TEvent anEvent, TContext context)
+                private async Task OnUpdate(Func<TProjection, TEvent, TProjectionContext, Task> projector, TEvent anEvent, TProjectionContext context)
                 {
                     var key = _getKey(anEvent);
                     
                     await this._projector().Update(
                         key,
                         context,
-                        projection => projector(projection, anEvent, context),
+                        async projection => await projector(projection, anEvent, context),
                         () => _handleMissesUsing(key, context));
                 }
 
-                public IUpdateAction<TEvent, TKey, TProjection, TContext> ThrowingIfMissing()
+                public IUpdateAction<TEvent, TProjectionId, TProjection, TProjectionContext> ThrowingIfMissing()
                 {
                     _handleMissesUsing = (key, ctx) => throw new InvalidOperationException($"Failed to find {typeof(TProjection).Name} with key {key}");
                     return this;
                 }
 
-                public IUpdateAction<TEvent, TKey, TProjection, TContext> IgnoringMisses()
+                public IUpdateAction<TEvent, TProjectionId, TProjection, TProjectionContext> IgnoringMisses()
                 {
                     _handleMissesUsing = (_, __) => false;
                     return this;
                 }
 
-                public IUpdateAction<TEvent, TKey, TProjection, TContext> CreatingIfMissing()
+                public IUpdateAction<TEvent, TProjectionId, TProjection, TProjectionContext> CreatingIfMissing()
                 {
                     _handleMissesUsing = (_, __) => true;
                     return this;
                 }
 
-                public IUpdateAction<TEvent, TKey, TProjection, TContext> HandlingMissesUsing(Func<TKey, TContext, bool> action)
+                public IUpdateAction<TEvent, TProjectionId, TProjection, TProjectionContext> HandlingMissesUsing(Func<TProjectionId, TProjectionContext, bool> action)
                 {
                     _handleMissesUsing = action;
                     return this;
                 }
             }
 
-            private class DeleteAction : IDeleteAction<TEvent, TKey, TContext>
+            private class DeleteAction : IDeleteAction<TEvent, TProjectionId, TProjectionContext>
             {
-                private Action<TKey, TContext> _handleMissing;
+                private Action<TProjectionId, TProjectionContext> _handleMissing;
 
-                public DeleteAction(IAction<TEvent, TContext> actionBuilder,
-                    Func<ProjectorMap<TProjection, TKey, TContext>> projector, Func<TEvent, TKey> getKey)
+                public DeleteAction(IAction<TEvent, TProjectionContext> actionBuilder,
+                    Func<ProjectorMap<TProjection, TProjectionId, TProjectionContext>> projector, Func<TEvent, TProjectionId> getKey)
                 {
                     actionBuilder.As((anEvent, context) => OnDelete(projector(), getKey, anEvent, context));
 
                     ThrowingIfMissing();
                 }
 
-                private async Task OnDelete(ProjectorMap<TProjection, TKey, TContext> projector, Func<TEvent, TKey> getKey, TEvent anEvent, TContext context)
+                private async Task OnDelete(ProjectorMap<TProjection, TProjectionId, TProjectionContext> projector, Func<TEvent, TProjectionId> getKey, TEvent anEvent, TProjectionContext context)
                 {
                     var key = getKey(anEvent);
                     var deleted = await projector.Delete(key, context);
@@ -358,19 +365,19 @@ namespace Projections.Prototype
                     }
                 }
 
-                public IDeleteAction<TEvent, TKey, TContext> ThrowingIfMissing()
+                public IDeleteAction<TEvent, TProjectionId, TProjectionContext> ThrowingIfMissing()
                 {
                     _handleMissing = (key, ctx) => throw new InvalidOperationException($"Could not delete {typeof(TProjection).Name} with key {key} because it does not exist");;
                     return this;
                 }
 
-                public IDeleteAction<TEvent, TKey, TContext> IgnoringMisses()
+                public IDeleteAction<TEvent, TProjectionId, TProjectionContext> IgnoringMisses()
                 {
                     _handleMissing = (_, __) => {};
                     return this;
                 }
 
-                public IDeleteAction<TEvent, TKey, TContext> HandlingMissesUsing(Action<TKey, TContext> action)
+                public IDeleteAction<TEvent, TProjectionId, TProjectionContext> HandlingMissesUsing(Action<TProjectionId, TProjectionContext> action)
                 {
                     _handleMissing = action;
                     return this;

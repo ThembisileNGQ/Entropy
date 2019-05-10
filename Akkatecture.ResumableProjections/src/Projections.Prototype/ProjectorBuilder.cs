@@ -18,45 +18,41 @@ namespace Projections.Prototype
         IEventsByTagQuery,
         ICurrentEventsByTagQuery
     {
-        public IActorRef RepositoryActor { get; }
         public ProjectorMap<TProjection, TProjectionId, TProjectionContext> ProjectorMap { get; set; }
-        public EventMapBuilder<TProjection, TProjectionId, TProjectionContext> EventMap { get; set; } 
+        public EventMapBuilder<TProjection, TProjectionId, TProjectionContext> EventMapBuilder { get; set; } 
+        public IEventMap<TProjectionContext> EventMap { get; set; }
         
         public ProjectorBuilder(
             TJournal journal,
             ProjectorMap<TProjection,TProjectionId,TProjectionContext> projectorMap,
-            EventMapBuilder<TProjection,TProjectionId,TProjectionContext> eventMap,
+            EventMapBuilder<TProjection,TProjectionId,TProjectionContext> eventMapBuilder,
             string name,
             ActorSystem actorSystem) 
             : base(journal, name, actorSystem)
         {
             ProjectorMap = projectorMap;
-            EventMap = eventMap;
-            RepositoryActor =
-                actorSystem.ActorOf(Props.Create(() => new RepositoryActor<TProjection, TProjectionId>()),"repository");
-            var projectorName = typeof(TProjection).Name;
-            //Props.Create(() => new Projector<TJournal,TProjection,TProjectionId,TProjectionContext>());
+            EventMapBuilder = eventMapBuilder;
         }
 
-        public ProjectorBuilder<TJournal, TProjection, TProjectionId, TProjectionContext> WithEventMap(
+        public ProjectorBuilder<TJournal, TProjection, TProjectionId, TProjectionContext> WithEventMapBuilder(
             EventMapBuilder<TProjection, TProjectionId, TProjectionContext> eventMap)
         {
             
-            EventMap = eventMap;
+            EventMapBuilder = eventMap;
             return this;
         }
         
-        public ProjectorBuilder<TJournal, TProjection, TProjectionId, TProjectionContext> WithProjectorMap(
+        public ProjectorBuilder<TJournal, TProjection, TProjectionId, TProjectionContext> WithProjectorBuilder(
             ProjectorMap<TProjection, TProjectionId, TProjectionContext> projectorMap)
         {
             ProjectorMap = projectorMap;
             return this;
         }
 
-        public void RunAggregateProjection()
+        public void RunAggregateProjection(IActorRef repository)
         {
-            
-            var projector = ActorSystem.ActorOf(Props.Create( () => new ProjectorManager<TJournal, TProjectionContext, TProjection, TProjectionId>(RepositoryActor,EventMap,Journal)),"PersistentIdStream");
+            EventMap = EventMapBuilder.Build(ProjectorMap);
+            var projector = ActorSystem.ActorOf(Props.Create( () => new ProjectorManager<TJournal, TProjectionContext, TProjection, TProjectionId>(repository,EventMap,Journal)),"PersistentIdStream");
             projector.Tell(new BeginProjection());
         }
         
@@ -88,7 +84,7 @@ namespace Projections.Prototype
             Journal = journal;
         }
         
-        public ProjectorBuilder<TJournal, TProjection, TProjectionId, TProjectionContext> WithEventMap<TProjection, TProjectionId, TProjectionContext>(
+        public ProjectorBuilder<TJournal, TProjection, TProjectionId, TProjectionContext> WithEventMapBuilder<TProjection, TProjectionId, TProjectionContext>(
             EventMapBuilder<TProjection, TProjectionId, TProjectionContext> eventMap)
             where TProjection : class, IProjection<TProjectionId>, new()
             where TProjectionContext : ProjectionContext, new()
@@ -103,7 +99,7 @@ namespace Projections.Prototype
                 ActorSystem);
         }
         
-        public ProjectorBuilder<TJournal, TProjection, TProjectionId, TProjectionContext> WithProjectorMap<TProjection, TProjectionId, TProjectionContext>(
+        public ProjectorBuilder<TJournal, TProjection, TProjectionId, TProjectionContext> WithProjectorBuilder<TProjection, TProjectionId, TProjectionContext>(
             ProjectorMap<TProjection, TProjectionId, TProjectionContext> projectorMap)
             where TProjection : class, IProjection<TProjectionId>, new()
             where TProjectionContext : ProjectionContext, new()
@@ -119,7 +115,7 @@ namespace Projections.Prototype
     }
     public class ProjectorBuilder
     {
-        protected ActorSystem ActorSystem { get; set; }
+        public ActorSystem ActorSystem { get; set; }
         protected string Name { get; set; }
         internal ProjectorBuilder(
             string name,

@@ -3,6 +3,7 @@ using Projections.Prototype;
 using System;
 using System.Threading.Tasks;
 using Akka.Actor;
+using Akka.Actor.Dsl;
 using Akka.Configuration;
 using Akka.Persistence.Query;
 using Akka.Persistence.Query.Sql;
@@ -11,11 +12,88 @@ using Akka.Streams.Dsl;
 using Akkatecture.Aggregates;
 using Domain.Model.GiftCard;
 using Projections.Prototype.Extensions;
+using Projections.Prototype.Repository;
 
 namespace Projections.Playground
 {
     public class Program
     {
+        public static async Task Rubbish(Akka.Configuration.Config config)
+        {
+            var actorSystem = ActorSystem.Create("tessttt", config);
+            
+            var repositoryActor =
+                actorSystem.ActorOf(Props.Create(() => new RepositoryActor<GiftCardProjection, GiftCardProjectionId>()),"repository-actor");
+           
+            var projectorMap = new ProjectorMap<GiftCardProjection, GiftCardProjectionId, GiftCardProjectionContext>
+            {
+                Create = async (key, context, projector, shouldOverride) =>
+                {
+                    var projection = new GiftCardProjection()
+                    {
+                        Id = key
+                    };
+
+                    await projector(projection);
+
+                    repositoryActor.Tell(new Create<GiftCardProjection, GiftCardProjectionId>{ Projection = projection});
+                },
+                Update = async (key, context, projector, createIfMissing) =>
+                {
+                    var query = new Read<GiftCardProjectionId> {Key = key};
+                    var projection =  await repositoryActor.Ask<GiftCardProjection>(query);
+                    
+                    await projector(projection);
+
+                    repositoryActor.Tell(new Update<GiftCardProjection, GiftCardProjectionId>{ Projection = projection});
+                },
+                Delete = (key, context) =>
+                {
+                    var command = new Delete<GiftCardProjectionId> {Key = key};
+                    repositoryActor.Tell(command);
+
+                    return Task.FromResult(true);
+                },
+                Custom = (context, projector) => projector()
+            };
+
+            var eventMap = new EventMapBuilder<GiftCardProjection, GiftCardProjectionId, GiftCardProjectionContext>();
+
+            eventMap.Map<DomainEvent<GiftCard, GiftCardId, IssuedEvent>>()
+                .AsCreateOf(x => IProjectionIdExtensions.From(x.AggregateIdentity))
+                .Using((projection, evt) =>
+                {
+                    projection.Credits = evt.AggregateEvent.Credits;
+                    projection.IsCancelled = false;
+                    projection.Issued = evt.Timestamp.UtcDateTime;
+                });
+            
+            eventMap.Map<DomainEvent<GiftCard, GiftCardId, RedeemedEvent>>()
+                .AsUpdateOf(x => IProjectionIdExtensions.From(x.AggregateIdentity))
+                .Using((projection, evt) =>
+                {
+                    projection.Credits -= evt.AggregateEvent.Credits;
+                });
+            
+            
+            eventMap.Map<DomainEvent<GiftCard, GiftCardId, CancelledEvent>>()
+                .AsUpdateOf(x => IProjectionIdExtensions.From(x.AggregateIdentity))
+                .Using((projection, evt) =>
+                {
+                    projection.IsCancelled = false;
+                });
+
+           var handler = eventMap.Build(projectorMap);
+            var context2 = new GiftCardProjectionContext();
+
+            var mat = ActorMaterializer.Create(actorSystem);
+
+            await PersistenceQuery
+                .Get(actorSystem)
+                .ReadJournalFor<SqlReadJournal>(SqlReadJournal.Identifier)
+                .CurrentEventsByPersistenceId("giftcard-a8fd515e-d4fb-4bf6-9d7f-67abdd0fdeef", 0, 10)
+                .RunForeach(async x => await handler.Handle(x.Event, context2), mat);
+        }
         
         public static async Task Main(string[] args)
         {
@@ -30,9 +108,10 @@ namespace Projections.Playground
              */
             var config = ConfigurationFactory.ParseString(Config.Postgres);
 
-            var eventMap = new EventMapBuilder<GiftCardProjection, GiftCardProjectionId, GiftCardProjectionContext>();
+            
+            var eventMapBuilder = new EventMapBuilder<GiftCardProjection, GiftCardProjectionId, GiftCardProjectionContext>();
 
-            eventMap.Map<IDomainEvent<GiftCard, GiftCardId, IssuedEvent>>()
+            eventMapBuilder.Map<DomainEvent<GiftCard, GiftCardId, IssuedEvent>>()
                 .AsCreateOf(x => IProjectionIdExtensions.From(x.AggregateIdentity))
                 .Using((projection, evt) =>
                 {
@@ -41,27 +120,71 @@ namespace Projections.Playground
                     projection.Issued = evt.Timestamp.UtcDateTime;
                 });
             
-            eventMap.Map<IDomainEvent<GiftCard, GiftCardId, RedeemedEvent>>()
-                .AsUpdateOf(x => IProjectionIdExtensions.From(x.AggregateIdentity))
+            eventMapBuilder.Map<DomainEvent<GiftCard, GiftCardId, RedeemedEvent>>()
+                .AsUpdateOf(x =>
+                {
+                    return IProjectionIdExtensions.From(x.AggregateIdentity);
+                })
                 .Using((projection, evt) =>
                 {
                     projection.Credits -= evt.AggregateEvent.Credits;
                 });
             
             
-            eventMap.Map<IDomainEvent<GiftCard, GiftCardId, CancelledEvent>>()
+            eventMapBuilder.Map<DomainEvent<GiftCard, GiftCardId, CancelledEvent>>()
                 .AsUpdateOf(x => IProjectionIdExtensions.From(x.AggregateIdentity))
                 .Using((projection, evt) =>
                 {
                     projection.IsCancelled = false;
                 });
-
             
-            ProjectorBuilder
-                .Create("giftcard-projection-manager", config)
+            
+            
+            var builder = ProjectorBuilder
+                .Create("giftcard-projection-manager", config);
+
+            var repositoryActor =
+                builder.ActorSystem.ActorOf(Props.Create(() => new RepositoryActor<GiftCardProjection, GiftCardProjectionId>()),"repository-actor-monkas");
+           
+            var projectorMap = new ProjectorMap<GiftCardProjection, GiftCardProjectionId, GiftCardProjectionContext>
+            {
+                Create = async (key, context, projector, shouldOverride) =>
+                {
+                    var projection = new GiftCardProjection()
+                    {
+                        Id = key
+                    };
+
+                    await projector(projection);
+
+                    repositoryActor.Tell(new Create<GiftCardProjection, GiftCardProjectionId>{ Projection = projection});
+                },
+                Update = async (key, context, projector, createIfMissing) =>
+                {
+                    var query = new Read<GiftCardProjectionId> {Key = key};
+                    var projection =  await repositoryActor.Ask<GiftCardProjection>(query);
+                    
+                    await projector(projection);
+
+                    repositoryActor.Tell(new Update<GiftCardProjection, GiftCardProjectionId>{ Projection = projection});
+                },
+                Delete = (key, context) =>
+                {
+                    var command = new Delete<GiftCardProjectionId> {Key = key};
+                    repositoryActor.Tell(command);
+
+                    return Task.FromResult(true);
+                },
+                Custom = (context, projector) => projector()
+            };
+                
+                builder
                 .Using<SqlReadJournal>(SqlReadJournal.Identifier)
-                .WithEventMap(eventMap)
-                .RunAggregateProjection();
+                .WithEventMapBuilder(eventMapBuilder)
+                .WithProjectorBuilder(projectorMap)
+                .RunAggregateProjection(repositoryActor);
+            
+            
             
             /*
              *
@@ -80,6 +203,7 @@ namespace Projections.Playground
              *
              * 
              */    
+            Console.WriteLine(" here ");
             Console.ReadLine();
             
         }

@@ -4,13 +4,17 @@ using System.Text;
 
 namespace Projections.Prototype
 {
-    public interface IEventMapBuilder<TContext>
+    public interface IEventMapBuilder<TProjectionContext>
+        where TProjectionContext : ProjectionContext, new()
     {
-        IEventMap<TContext> Build(ProjectorMap<TContext> projector);
+        IEventMap<TProjectionContext> Build(ProjectorMap<TProjectionContext> projector);
     }
 
-    public interface IEventMapBuilder<TProjection, TKey, TContext>
+    public interface IEventMapBuilder<TProjection, TProjectionId, TProjectionContext>
+        where TProjection : class, IProjection<TProjectionId>, new()
+        where TProjectionContext : ProjectionContext, new()
+        where TProjectionId : IProjectionId
     {
-        IEventMap<TContext> Build(ProjectorMap<TProjection, TKey, TContext> projector);
+        IEventMap<TProjectionContext> Build(ProjectorMap<TProjection, TProjectionId, TProjectionContext> projector);
     }
 }

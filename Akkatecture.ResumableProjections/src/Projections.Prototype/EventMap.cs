@@ -8,12 +8,13 @@ using Akka;
 
 namespace Projections.Prototype
 {
-    public class EventMap<TContext> : IEventMap<TContext>
+    public class EventMap<TProjectionContext> : IEventMap<TProjectionContext>
+        where TProjectionContext : ProjectionContext, new()
     {
         private readonly Dictionary<Type, List<Handler>> _mappings = new Dictionary<Type, List<Handler>>();
-        private readonly List<Func<object, TContext, Task<bool>>> _filters = new List<Func<object, TContext, Task<bool>>>();
+        private readonly List<Func<object, TProjectionContext, Task<bool>>> _filters = new List<Func<object, TProjectionContext, Task<bool>>>();
 
-        internal void Add<TEvent>(Func<TEvent, TContext, Task> action)
+        internal void Add<TEvent>(Func<TEvent, TProjectionContext, Task> action)
         {
             if (!_mappings.ContainsKey(typeof(TEvent)))
             {
@@ -23,12 +24,12 @@ namespace Projections.Prototype
             _mappings[typeof(TEvent)].Add((@event, context) => action((TEvent)@event, context));
         }
 
-        internal void AddFilter(Func<object, TContext, Task<bool>> filter)
+        internal void AddFilter(Func<object, TProjectionContext, Task<bool>> filter)
         {
             _filters.Add(filter);
         }
 
-        public async Task<bool> Handle(object anEvent, TContext context)
+        public async Task<bool> Handle(object anEvent, TProjectionContext context)
         {
             if (anEvent == null)
             {
@@ -60,7 +61,7 @@ namespace Projections.Prototype
             return false;
         }
 
-        private async Task<bool> PassesFilter(object anEvent, TContext context)
+        private async Task<bool> PassesFilter(object anEvent, TProjectionContext context)
         {
             if (_filters.Count > 0)
             {
@@ -91,7 +92,7 @@ namespace Projections.Prototype
             return handlers;
         }
 
-        private delegate Task Handler(object @event, TContext context);
+        private delegate Task Handler(object @event, TProjectionContext context);
     }
     
     

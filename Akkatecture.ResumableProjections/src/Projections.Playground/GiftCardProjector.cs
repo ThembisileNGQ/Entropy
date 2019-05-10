@@ -21,7 +21,7 @@ namespace Projections.Playground
         public int Credits { get; set; }
         public bool IsCancelled { get; set; }
     }
-    public class GiftCardProjector : Projector<SqlReadJournal,GiftCardProjection,GiftCardProjectionId,GiftCardProjectionContext>
+    /*public class GiftCardProjector : Projector<SqlReadJournal,GiftCardProjection,GiftCardProjectionId,GiftCardProjectionContext>
     {
         public GiftCardProjector(
             string projectorId,
@@ -64,5 +64,5 @@ namespace Projections.Playground
 
             return eventMap;
         }
-    }
+    }*/
 }

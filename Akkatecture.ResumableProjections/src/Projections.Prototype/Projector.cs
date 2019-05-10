@@ -25,11 +25,11 @@ namespace Projections.Prototype
         private TJournal _journal { get; }
         private IActorRef _repository { get; }
 
-        private EventMapBuilder<TProjection,TProjectionId,TProjectionContext> _eventMap { get; }
+        private IEventMap<TProjectionContext> _eventMap { get; }
         
         public AggregateEventStream(
             IActorRef repository,
-            EventMapBuilder<TProjection,TProjectionId,TProjectionContext> eventMap,
+            IEventMap<TProjectionContext> eventMap,
             TJournal journal)
         {
             _journal = journal;
@@ -77,10 +77,10 @@ namespace Projections.Prototype
         {
             var aggregate = Context.Child(aggregateId);
 
-            if(Equals(aggregate, ActorRefs.Nobody))
+            if(aggregate.IsNobody())
             {
                 aggregate = context.ActorOf(Props.Create(() =>
-                    new Projector<TJournal, TProjection, TProjectionId, TProjectionContext>(aggregateId,_repository,_eventMap)));
+                    new Projector<TJournal, TProjection, TProjectionId, TProjectionContext>(aggregateId,_repository,_eventMap)),aggregateId);
             }
 
             return aggregate;
@@ -139,18 +139,16 @@ namespace Projections.Prototype
         protected string Id { get; set; }
         private IActorRef RepositoryRef { get; set; }
         protected ProjectorMap<TProjection, TProjectionId, TProjectionContext> ProjectorMap { get; set; }
-        protected EventMapBuilder<TProjection, TProjectionId, TProjectionContext> EventMap { get; set; }
-        protected IEventMap<TProjectionContext> EventMapHandler { get; set; }
+        protected IEventMap<TProjectionContext> EventMap { get; set; }
         //protected Source<EventEnvelope, NotUsed> EventStream { get; set; }
 
         public Projector(
             string id,
             IActorRef repositoryRef,
-            EventMapBuilder<TProjection,TProjectionId,TProjectionContext> eventMap)
+            IEventMap<TProjectionContext> eventMap)
         {
             Id = id;
             EventMap = eventMap;
-            RepositoryRef = repositoryRef;
             //this probably needs to be sent the stream reference so that this actor can sink the stream and start processing the messages
             // from the journal, the wierd thing here is the stream can be either from tags or from actual persistence ids (aggregate or saga Ids)
             Receive<CreateProjectorSchema>(Handle);
@@ -158,45 +156,11 @@ namespace Projections.Prototype
             Receive<ClearProjectorSchema>(Handle);
             Receive<DropProjectorSchema>(Handle);
             ReceiveAsync<ProjectEvent<TProjectionContext>>(Handle);
-            
-            ProjectorMap = new ProjectorMap<TProjection, TProjectionId, TProjectionContext>
-            {
-                Create = async (key, context, projector, shouldOverride) =>
-                {
-                    var projection = new TProjection()
-                    {
-                        Id = key
-                    };
-
-                    await projector(projection);
-
-                    RepositoryRef.Tell(new Create<TProjection, TProjectionId>{ Projection = projection});
-                },
-                Update = async (key, context, projector, createIfMissing) =>
-                {
-                    var query = new Read<TProjectionId> {Key = key};
-                    var projection =  await RepositoryRef.Ask<TProjection>(query);
-                    
-                    await projector(projection);
-
-                    RepositoryRef.Tell(new Update<TProjection, TProjectionId>{ Projection = projection});
-                },
-                Delete = (key, context) =>
-                {
-                    var command = new Delete<TProjectionId> {Key = key};
-                    RepositoryRef.Tell(command);
-
-                    return Task.FromResult(true);
-                },
-                Custom = (context, projector) => projector()
-            };
-
-            EventMapHandler = EventMap.Build(ProjectorMap);
         }
 
         protected async Task Handle(ProjectEvent<TProjectionContext> command)
         {
-            var a = await EventMapHandler.Handle(command.Event.Event, command.Context);
+            var a = await EventMap.Handle(command.Event.Event, command.Context);
             if(a)
                 Context.GetLogger().Info("handled");
             else
