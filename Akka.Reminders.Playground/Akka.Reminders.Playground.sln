@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{0F992389-AA10-4F56-AD9D-3049092F42D9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0D3A78FB-B53E-46C3-AE36-21F90C9A3CF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Persistence.Reminders", "lib\Akka.Persistence.Reminders\Akka.Persistence.Reminders.csproj", "{1CA16A04-8CD5-40E0-A62C-F18610DAB875}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Persistence.Reminders.Tests", "lib\Akka.Persistence.Reminders.Tests\Akka.Persistence.Reminders.Tests.csproj", "{CADAF46F-90E6-4D7E-A0EC-F215704A57B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayGroundTests", "test\PlayGroundTests\PlayGroundTests.csproj", "{CDB00A89-EDA1-40FF-88E5-9DFD2CED00D9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{845AAF4E-BD69-4906-8900-D8F3599EE2CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaygroundDomain", "src\PlaygroundDomain\PlaygroundDomain.csproj", "{4D71F528-2EDD-4AC2-800F-B6983486DBFC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1CA16A04-8CD5-40E0-A62C-F18610DAB875} = {0F992389-AA10-4F56-AD9D-3049092F42D9}
+		{CADAF46F-90E6-4D7E-A0EC-F215704A57B5} = {0F992389-AA10-4F56-AD9D-3049092F42D9}
+		{CDB00A89-EDA1-40FF-88E5-9DFD2CED00D9} = {0D3A78FB-B53E-46C3-AE36-21F90C9A3CF8}
+		{4D71F528-2EDD-4AC2-800F-B6983486DBFC} = {845AAF4E-BD69-4906-8900-D8F3599EE2CD}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1CA16A04-8CD5-40E0-A62C-F18610DAB875}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CA16A04-8CD5-40E0-A62C-F18610DAB875}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CA16A04-8CD5-40E0-A62C-F18610DAB875}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CA16A04-8CD5-40E0-A62C-F18610DAB875}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CADAF46F-90E6-4D7E-A0EC-F215704A57B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CADAF46F-90E6-4D7E-A0EC-F215704A57B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CADAF46F-90E6-4D7E-A0EC-F215704A57B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CADAF46F-90E6-4D7E-A0EC-F215704A57B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDB00A89-EDA1-40FF-88E5-9DFD2CED00D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDB00A89-EDA1-40FF-88E5-9DFD2CED00D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDB00A89-EDA1-40FF-88E5-9DFD2CED00D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDB00A89-EDA1-40FF-88E5-9DFD2CED00D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D71F528-2EDD-4AC2-800F-B6983486DBFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D71F528-2EDD-4AC2-800F-B6983486DBFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D71F528-2EDD-4AC2-800F-B6983486DBFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D71F528-2EDD-4AC2-800F-B6983486DBFC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyTitle>Akka.Persistence.Reminders</AssemblyTitle>
+    <Description>Long running Akka.NET scheduler backed by Akka.Persistence </Description>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <PackageTags>akka.net;actors;persistence;reminders;scheduler</PackageTags>
+    <Copyright>Copyright © 2017 Akka.NET Team</Copyright>
+    <Authors>Bartosz Sypytkowski</Authors>
+    <VersionPrefix>0.2</VersionPrefix>
+    <PackageProjectUrl>https://github.com/Horusiath/Akka.Persistence.Reminders</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Horusiath/Akka.Persistence.Reminders/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageReleaseNotes>Added support for cron expressions.</PackageReleaseNotes>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.1</NetStandardImplicitPackageVersion>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="reference.conf" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="reference.conf" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Akka.Persistence" Version="1.3.10" />
+    <PackageReference Include="Cronos" Version="0.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Serialization\Proto\" />
+  </ItemGroup>
+</Project>
