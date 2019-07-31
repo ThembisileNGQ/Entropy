@@ -28,23 +28,17 @@ namespace PlayGroundTests
             var taskId = Guid.NewGuid().ToString();
             var probe = CreateTestProbe("email-sender");
             var scheduler = (TestScheduler)Sys.Scheduler;
-            var persistence = Persistence.Instance.Apply(Sys);
-
             var emailScheduler = Sys.ActorOf(Props.Create(() => new EmailScheduler(settings)).WithDispatcher(CallingThreadDispatcher.Id), "email");
-            //(string taskId, ActorPath recipient, object message, DateTime triggerDateUtc, object ack = null)
             var when = DateTime.UtcNow.AddDays(1);
-            var job = new ScheduleEmail("me", "you", "hi", when);
+            var job = new ScheduleEmail("me", "you", "hi");
             var ack = new Ack(taskId);
-
             var schedule = new Reminder.Schedule(taskId, probe.Ref.Path, job, when, ack);
             
             emailScheduler.Tell(schedule, probe);
-
             probe.ExpectMsg<Ack>(x => x.Id == taskId);
-            
             scheduler.AdvanceTo(when);
 
-            probe.ExpectMsg<ScheduleEmail>(TimeSpan.FromMinutes(1));
+            probe.ExpectMsg<ScheduleEmail>(x=> x.Body == job.Body && x.From == job.From && x.To == job.To);
         }
     }
 }
