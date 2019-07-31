@@ -47,7 +47,8 @@ namespace Akka.Persistence.Reminders
 
         private readonly Action<IReminderEvent> UpdateState;
 
-        public Reminder() : this(ReminderSettings.Create(Context.System.Settings.Config.GetConfig("akka.persistence.reminder")))
+        public Reminder() 
+            : this(ReminderSettings.Create(Context.System.Settings.Config.GetConfig("akka.persistence.reminder")))
         {
         }
 
