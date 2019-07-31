@@ -75,7 +75,7 @@ namespace Akka.Persistence.Reminders
 
             Command<Tick>(_ =>
             {
-                var now = DateTime.UtcNow;
+                var now = Context.System.Scheduler.Now.UtcDateTime;
                 foreach (var schedule in state.Entries.Values.Where(e => ShouldTrigger(e, now)))
                 {
                     Log.Info("Sending message [{0}] to recipient [{1}]", schedule.Message, schedule.Recipient);
@@ -165,7 +165,8 @@ namespace Akka.Persistence.Reminders
 
         protected virtual bool ShouldTrigger(Schedule schedule, DateTime now)
         {
-            return schedule.TriggerDateUtc <= now;
+            var shouldTrigger = schedule.TriggerDateUtc <= now;
+            return shouldTrigger;
         }
 
         private void Emit<T>(T reminderEvent, Action<T> handler) where T : IReminderEvent

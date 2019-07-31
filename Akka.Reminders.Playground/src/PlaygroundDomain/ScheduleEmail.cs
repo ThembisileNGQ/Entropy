@@ -21,4 +21,14 @@ namespace PlaygroundDomain
             DueAfter = dueAfter;
         }
     }
+
+    public class Ack
+    {
+        public string Id { get; private set; }
+
+        public Ack(string id)
+        {
+            Id = id;
+        }
+    }
 }
