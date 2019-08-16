@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="3.0.1" />
+        <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="3.1.0" />
         <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.7.0" />
         <PackageReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
