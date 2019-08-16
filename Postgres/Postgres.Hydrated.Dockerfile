@@ -6,5 +6,7 @@ ENV POSTGRES_PASSWORD="lutando"
 ENV POSTGRES_USER="lutando"
 ENV POSTGRES_DB="entropy"
 
-# docker build -t lutando/postgres-entropy:latest -f Postgres.Hydrated.Dockerfile .
-# docker push lutando/postgres-entropy:latest
+# docker build -t lutando/postgres-entropy:hydrated -f Postgres.Hydrated.Dockerfile .
+# docker push lutando/postgres-entropy:hydrated
+
+# docker build -t lutando/postgres-entropy:hydrated -f Postgres.Hydrated.Dockerfile . && docker push lutando/postgres-entropy:hydrated

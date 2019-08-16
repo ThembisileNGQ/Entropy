@@ -5,7 +5,7 @@ apiVersion: v1
 metadata:
   name: laundry-sts-config
 data:
-  POSTGRES_CONNECTIONSTRING: Host=192.168.99.100; Port=30500; Database=mrwhite; Username=lutando; Password=lutando
+  POSTGRES_CONNECTIONSTRING: Host=localhost; Port=30500; Database=mrwhite; Username=lutando; Password=lutando
 ---
 kind: Service
 apiVersion: v1

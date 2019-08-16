@@ -17,7 +17,7 @@ akka.persistence{
 			plugin-dispatcher = ""akka.actor.default-dispatcher""
 
 			# connection string used for database access
-			connection-string = ""Server=192.168.99.100;Port=30700;User Id=lutando;Password=lutando;Database=entropy;""
+			connection-string = ""Server=localhost;Port=30700;User Id=lutando;Password=lutando;Database=entropy;""
 
 			# default SQL commands timeout
 			connection-timeout = 30s
@@ -64,16 +64,16 @@ akka.persistence{
 			plugin-dispatcher = ""akka.actor.default-dispatcher""
 
 			# connection string used for database access
-			connection-string = ""Server=192.168.99.100;Port=30700;User Id=lutando;Password=lutando;Database=entropy;""
+			connection-string = ""Server=localhost;Port=30700;User Id=lutando;Password=lutando;Database=entropy;""
 
 			# default SQL commands timeout
 			connection-timeout = 30s
 
 			# PostgreSql schema name to table corresponding with persistent journal
-			schema-name = public
+			schema-name = store
 
 			# PostgreSql table corresponding with persistent journal
-			table-name = snapshot_store
+			table-name = aggregate_snapshots
 
 			# should corresponding journal table be initialized automatically
 			auto-initialize = on

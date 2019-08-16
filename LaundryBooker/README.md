@@ -20,7 +20,7 @@ You can run the project either by using minikube, or by going barebones, but you
 ## Minikube
 install minikube and then go into the `deploy` folder and run `kubectl apply -f /k8s``
 
-navigate to `http://192.168.99.100:30505/`
+navigate to `http://localhost:30505/`
 
 ## Barebones
 you need .NET SDK version 2.2. To run the backend systems you need postgres running. You can run it on minikube by going to the `deploy/k8s` folder and running the `kubectl apply -f laundry-db.yaml` command which will start a postgres deployment in k8s.

@@ -5,9 +5,9 @@ apiVersion: v1
 metadata:
   name: laundry-api-config
 data:
-  POSTGRES_CONNECTIONSTRING: Host=192.168.99.100; Port=30500; Database=mrwhite; Username=lutando; Password=lutando
-  AUTHORIZATIONAUTHORITY_URL: http://192.168.99.100:30502
-  AUTHORIZATION_AUDIENCE: http://192.168.99.100:30502/resources
+  POSTGRES_CONNECTIONSTRING: Host=localhost; Port=30500; Database=mrwhite; Username=lutando; Password=lutando
+  AUTHORIZATIONAUTHORITY_URL: http://localhost:30502
+  AUTHORIZATION_AUDIENCE: http://localhost:30502/resources
 ---
 kind: Service
 apiVersion: v1

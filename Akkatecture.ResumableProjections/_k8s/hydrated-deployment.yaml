@@ -1,0 +1,96 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: postgres-journal-service
+  labels:
+    project: entropy
+    lab: resumable-projections
+spec:
+  selector:
+    app: postgres-journal
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+    nodePort: 30700
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-journal-deployment
+  labels:
+    project: entropy
+    lab: resumable-projections
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-journal
+  template:
+    metadata:
+      labels:
+        app: postgres-journal
+        project: entropy
+        lab: resumable-projections
+    spec:
+      containers:
+      - name: postgres
+        image: lutando/postgres-entropy:hydrated #user:lutando; password:lutando
+        imagePullPolicy: Always
+        ports:
+        - name: postgresql
+          containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: entropy
+      restartPolicy: Always
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: postgres-projection-service
+  labels:
+    project: entropy
+    lab: resumable-projections
+spec:
+  selector:
+    app: postgres-projection
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+    nodePort: 30701
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-projection-deployment
+  labels:
+    project: entropy
+    lab: resumable-projections
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-projection
+  template:
+    metadata:
+      labels:
+        app: postgres-projection
+        project: entropy
+        lab: resumable-projections
+    spec:
+      containers:
+      - name: postgres
+        image: lutando/postgres-entropy:hydrated #user:lutando; password:lutando
+        imagePullPolicy: Always
+        ports:
+        - name: postgresql
+          containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: entropy
+      restartPolicy: Always

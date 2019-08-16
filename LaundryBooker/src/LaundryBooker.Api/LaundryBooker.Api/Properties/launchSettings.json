@@ -5,7 +5,7 @@
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "POSTGRES_CONNECTIONSTRING": "Host=192.168.99.100; Port=30500; Database=mrwhite; Username=lutando; Password=lutando",
+        "POSTGRES_CONNECTIONSTRING": "Host=localhost; Port=30500; Database=mrwhite; Username=lutando; Password=lutando",
         "AUTHORIZATIONAUTHORITY_URL": "http://localhost:5002",
         "AUTHORIZATION_AUDIENCE": "http://localhost:5002/resources"
       }

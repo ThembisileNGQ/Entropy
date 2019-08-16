@@ -16,7 +16,7 @@ akka.persistence{
 			plugin-dispatcher = ""akka.actor.default-dispatcher""
 
 			# connection string used for database access
-			connection-string = ""Server=192.168.99.100;Port=30700;User Id=lutando;Password=lutando;Database=entropy;""
+			connection-string = ""Server=localhost;Port=30700;User Id=lutando;Password=lutando;Database=entropy;""
 
 			# default SQL commands timeout
 			connection-timeout = 30s

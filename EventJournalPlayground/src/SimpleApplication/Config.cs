@@ -9,7 +9,7 @@ akka.persistence {
         plugin = ""akka.persistence.journal.eventstore""
         eventstore {
             class = ""Akka.Persistence.EventStore.Journal.EventStoreJournal, Akka.Persistence.EventStore""
-            connection-string = ""ConnectTo=tcp://admin:changeit@192.168.99.100:30405; HeartBeatTimeout=500""
+            connection-string = ""ConnectTo=tcp://admin:changeit@localhost:30405; HeartBeatTimeout=500""
             connection-name = ""Akka""
             read-batch-size = 500
 			event-adapters {
@@ -41,16 +41,16 @@ akka.persistence{
 			plugin-dispatcher = ""akka.actor.default-dispatcher""
 
 			# connection string used for database access
-			connection-string = ""Server=192.168.99.100;Port=30400;User Id=lutando;Password=lutando;Database=entropy;""
+			connection-string = ""Server=localhost;Port=30400;User Id=lutando;Password=lutando;Database=entropy;""
 
 			# default SQL commands timeout
 			connection-timeout = 30s
 
 			# PostgreSql schema name to table corresponding with persistent journal
-			schema-name = public
+			schema-name = journal
 
 			# PostgreSql table corresponding with persistent journal
-			table-name = event_journal
+			table-name = aggregate_events
 
 			# should corresponding journal table be initialized automatically
 			auto-initialize = on
@@ -76,16 +76,16 @@ akka.persistence{
 			plugin-dispatcher = ""akka.actor.default-dispatcher""
 
 			# connection string used for database access
-			connection-string = ""Server=192.168.99.100;Port=30400;User Id=lutando;Password=lutando;Database=entropy;""
+			connection-string = ""Server=localhost;Port=30400;User Id=lutando;Password=lutando;Database=entropy;""
 
 			# default SQL commands timeout
 			connection-timeout = 30s
 
 			# PostgreSql schema name to table corresponding with persistent journal
-			schema-name = public
+			schema-name = store
 
 			# PostgreSql table corresponding with persistent journal
-			table-name = snapshot_store
+			table-name = aggregate_snapshots
 
 			# should corresponding journal table be initialized automatically
 			auto-initialize = on

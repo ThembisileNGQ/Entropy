@@ -48,7 +48,7 @@ namespace LaundryBooker.Sts
                     AllowedCorsOrigins = new List<string>
                     {
                         "http://localhost:3000",
-                        "http://192.168.99.100:30505"
+                        "http://localhost:30505"
                     },
                     AllowedScopes = new List<string>
                     {
@@ -61,12 +61,12 @@ namespace LaundryBooker.Sts
                     RedirectUris = new List<string>
                     {
                         "http://localhost:3000/authentication/callback",
-                        "http://192.168.99.100:30505/authentication/callback"
+                        "http://localhost:30505/authentication/callback"
                     },
                     PostLogoutRedirectUris = new List<string>
                     {
                         "http://localhost:3000",
-                        "http://192.168.99.100:30505"
+                        "http://localhost:30505"
                     }
                 }
             };
