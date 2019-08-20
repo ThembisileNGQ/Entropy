@@ -7,19 +7,19 @@ using Domain.Model.GiftCard.Events;
 
 namespace Domain.Model.GiftCard
 {
-    public class GiftCard : AggregateRoot<GiftCard,GiftCardId,GiftCardState>
+    public class GiftCard : AggregateRoot<GiftCard,GiftCardId,GiftCardState>,
+        IExecute<IssueCommand>,
+        IExecute<RedeemCommand>,
+        IExecute<CancelCommand>
     {
         public GiftCard(GiftCardId id)
             : base(id)
         {
-            Command<IssueCommand>(Handle);
-            Command<RedeemCommand>(Handle);
-            Command<CancelCommand>(Handle);
         }
         
         
         
-        private bool Handle(IssueCommand command)
+        public bool Execute(IssueCommand command)
         {
             if (IsNew)
             {
@@ -28,14 +28,14 @@ namespace Domain.Model.GiftCard
             }
             else
             {
-                Logger.Error($"{command.GetType().PrettyPrint()} has failed ");
+                Log.Error($"{command.GetType().PrettyPrint()} has failed ");
                 Sender.Tell(new FailedExecutionResult(new List<string> {"aggregate is not created"}),Self);
             }
             
             return true;
         }
 
-        private bool Handle(RedeemCommand command)
+        public bool Execute(RedeemCommand command)
         {
             if (!IsNew && State.Credits >= command.Credits)
             {
@@ -44,13 +44,13 @@ namespace Domain.Model.GiftCard
             }
             else
             {
-                Logger.Error($"{command.GetType().PrettyPrint()} has failed ");
+                Log.Error($"{command.GetType().PrettyPrint()} has failed ");
                 Sender.Tell(new FailedExecutionResult(new List<string> {"aggregate is already created"}),Self);
             }
 
             return true;
         }
-        private bool Handle(CancelCommand command)
+        public bool Execute(CancelCommand command)
         {
             if (!IsNew)
             {
@@ -59,7 +59,7 @@ namespace Domain.Model.GiftCard
             }
             else
             {
-                Logger.Error($"{command.GetType().PrettyPrint()} has failed ");
+                Log.Error($"{command.GetType().PrettyPrint()} has failed ");
                 Sender.Tell(new FailedExecutionResult(new List<string> {"aggregate is not created"}),Self);
             }
             
