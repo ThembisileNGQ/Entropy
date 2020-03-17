@@ -17,6 +17,7 @@ namespace Transcoding.Transcoder.Actors.Transcoding
 
             Receive<StatusPls>(Handle);
             Receive<StartTranscoding>(Handle);
+            Receive<StartAnalysis>(Handle);
             Receive<ReportTranscodingProgress>(Handle);
             Receive<ReportTranscodingCompletion>(Handle);
             Receive<ReportTranscodingFailure>(Handle);
@@ -31,6 +32,21 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                 command.Output,
                 command.ConversionOptions,
                 command._ffmpegPath)),$"transcododer-{command.TranscodingId}");
+            
+            actor.Tell(new Start());
+            InProgress++;
+            
+            return true;
+        }
+        
+        public bool Handle(StartAnalysis command)
+        {
+            var actor = Context.ActorOf(Props.Create(() => new WaveformActor(
+                command.TranscodingId,
+                command.Input,
+                command.Output,
+                command.ConversionOptions,
+                command._ffmpegPath)),$"analysis-{command.TranscodingId}");
             
             actor.Tell(new Start());
             InProgress++;

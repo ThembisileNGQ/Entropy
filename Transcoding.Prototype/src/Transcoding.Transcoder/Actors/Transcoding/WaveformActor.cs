@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -12,7 +12,7 @@ using Transcoding.Transcoder.Util;
 
 namespace Transcoding.Transcoder.Actors.Transcoding
 {
-    public class TranscodingActor : ReceiveActor
+    public class WaveformActor : ReceiveActor
     {
         private readonly string _ffmpegPath;
         private readonly ILoggingAdapter _logger;
@@ -34,7 +34,7 @@ namespace Transcoding.Transcoder.Actors.Transcoding
         public List<Exception> Exceptions { get; private set; }
 
 
-        public TranscodingActor(
+        public WaveformActor(
             Guid transcodingId,
             MediaFile input,
             MediaFile output,
@@ -55,7 +55,7 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                 InputFile = Input,
                 OutputFile = Output,
                 ConversionOptions = ConversionOptions,
-                Task = FFmpegTask.Convert
+                Task = FFmpegTask.GetWaveform
             };
             
             Receive<Start>(Handle);
@@ -286,14 +286,5 @@ namespace Transcoding.Transcoder.Actors.Transcoding
 
             return this.GenerateStartInfo(arguments);
         }
-    }
-
-    public enum Status
-    {
-        Unkown,
-        NotStarted,
-        InProgress,
-        Completed,
-        Failed,
     }
 }

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Transcoding.Transcoder.Actors.Transcoding;
@@ -18,7 +15,7 @@ namespace Transcoding.Application
     {
         public static async Task Main(string[] args)
         {
-            if (true) //windoze
+            if (false) //windoze
             {
                 var ffmpegPath = Path.Combine(@"C:\Workspace\FFMPEG\bin\ffmpeg.exe");
                 var input = Path.Combine(Environment.CurrentDirectory, "0.wav");
@@ -30,17 +27,23 @@ namespace Transcoding.Application
 
                 await TranscodeAudio(ffmpegPath,input, outputs);
             } 
-            else if (false) //mac
+            else if (true) //mac
             {
                 var ffmpegPath = Path.Combine(@"/usr/local/bin/ffmpeg");
-                var input = Path.Combine(Environment.CurrentDirectory, "../../media/0.wav");
+                var input = "/Users/lutandongqakaza/Workspace/Entropy/Transcoding.Prototype/media/0.wav";
+                var runs = 1;
 
-                var outputs = Enumerable
-                    .Range(1, 1)
-                    .Select(x => Path.Combine(Environment.CurrentDirectory, $"../../media/{Guid.NewGuid()}.mp3"))
+                var audioOutputs = Enumerable
+                    .Range(1, runs)
+                    .Select(x => $"/Users/lutandongqakaza/Workspace/Entropy/Transcoding.Prototype/media/{Guid.NewGuid()}.mp3")
+                    .ToArray();
+                
+                var waveformOutputs = Enumerable
+                    .Range(1, runs)
+                    .Select(x => $"/Users/lutandongqakaza/Workspace/Entropy/Transcoding.Prototype/media/{Guid.NewGuid()}.png")
                     .ToArray();
 
-                await TranscodeAudio(ffmpegPath,input, outputs);
+                await TranscodeAudio(ffmpegPath,input, waveformOutputs);
             }
             
         }
@@ -56,10 +59,12 @@ namespace Transcoding.Application
             
             var actorSystem = ActorSystem.Create("transcoding-system", config);
 
-            var options = new ConversionOptions
+            var transcodingOptions = new ConversionOptions
             {
                 AudioBitRate = 320
             };
+
+            var analysisOptions = new ConversionOptions();
 
             var inputFile = new MediaFile(sourceFilePath);
 
@@ -68,9 +73,12 @@ namespace Transcoding.Application
             foreach (var path in destinationPaths)
             {
                 var outputFile = new MediaFile(path);
-                await Task.Delay(1000);
-                var command = new StartTranscoding(Guid.NewGuid(),inputFile,outputFile,options,ffmpegPath);
-                transcoderManager.Tell(command);
+                await Task.Delay(200);
+                var command = new StartTranscoding(Guid.NewGuid(),inputFile,outputFile,transcodingOptions,ffmpegPath);
+                var waveformCommand = new StartAnalysis(Guid.NewGuid(),inputFile,outputFile,analysisOptions,ffmpegPath);
+                
+                //transcoderManager.Tell(command);
+                transcoderManager.Tell(waveformCommand);
             }
             
             Console.WriteLine("Done");
