@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text.RegularExpressions;
 using Akka.Actor;
 using Akka.Event;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using Transcoding.Transcoder.Actors.Transcoding.Commands;
 using Transcoding.Transcoder.Model;
 using Transcoding.Transcoder.Options;
@@ -50,18 +51,50 @@ namespace Transcoding.Transcoder.Actors.Transcoding
             ReceivedMessagesLog = new List<string>();
             Exceptions = new List<Exception>();
             Status = Status.NotStarted;
-            EngineParameters  = new EngineParameters
-            {
-                InputFile = Input,
-                OutputFile = Output,
-                ConversionOptions = ConversionOptions,
-                Task = FFmpegTask.GetWaveform
-            };
+            EngineParameters = new EngineParameters(ConversionOptions, Input, Output, FFmpegTask.AnalyseAudio);
             
             Receive<Start>(Handle);
+            Receive<GetWaveformData>(Handle);
             
         }
 
+        public bool Handle(GetWaveformData command)
+        {
+            using(var fs = File.Create("/Users/lutandongqakaza/Workspace/Entropy/Transcoding.Prototype/media/0.png"))
+            using (var bmp = Image.Load(Output.Filename).CloneAs<Rgba32>())
+            {
+                var waveform = new List<int>();
+
+                var pic = new Image<Rgba32>(bmp.Width, bmp.Height / 2);
+                var clearColor = Rgba32.Black;
+                clearColor.A = 0;
+                
+                for (var i = 0; i < pic.Width; i++)
+                {
+                    for (var j = 0; j < pic.Height; j++)
+                    {
+                        var idx = (int) j + bmp.Height / 2;
+                        var a = bmp[i, idx];
+                        if (bmp[i, idx] == clearColor)
+                        {
+                            pic[i, j] = Rgba32.Blue;
+                            waveform.Add(j);
+                            j = bmp.Height;
+
+                        }
+                        else
+                        {
+                            pic[i, j] = Rgba32.Blue;
+                        }
+
+                    }
+                }
+                pic.SaveAsPng(fs);
+
+            }
+            
+            return true;
+        }
         public bool Handle(Start command)
         {
             Invoker = Sender;
@@ -74,9 +107,7 @@ namespace Transcoding.Transcoder.Actors.Transcoding
         private void StartProcess(EngineParameters engineParameters)
         {
 
-            var processStartInfo = engineParameters.HasCustomArguments
-                ? this.GenerateStartInfo(engineParameters.CustomArguments)
-                : this.GenerateStartInfo(engineParameters);
+            var processStartInfo = GenerateStartInfo(engineParameters);
 
             RunProcess(processStartInfo);
         }
@@ -102,24 +133,19 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                         
                         if (EngineParameters.InputFile != null)
                         {
-                            RegexEngine.TestVideo(e.Data, EngineParameters);
-                            RegexEngine.TestAudio(e.Data, EngineParameters);
+                            //RegexEngine.TestAudio(e.Data, EngineParameters);
         
-                            Match matchDuration = RegexEngine.Index[RegexEngine.Find.Duration].Match(e.Data);
+                            var matchDuration = RegexEngine.Index[RegexEngine.Find.Duration].Match(e.Data);
                             if (matchDuration.Success)
                             {
-                                if (EngineParameters.InputFile.Metadata == null)
-                                {
-                                    EngineParameters.InputFile.Metadata = new Metadata();
-                                }
                                 var totalMediaDuration = new TimeSpan();
                                 TimeSpan.TryParse(matchDuration.Groups[1].Value, out totalMediaDuration);
                                 TotalMediaDuration = totalMediaDuration;
-                                EngineParameters.InputFile.Metadata.Duration = TotalMediaDuration;
+                                //EngineParameters.InputFile.Metadata.Duration = TotalMediaDuration;
                             }
                         }
                         ConversionCompleted convertCompleted;
-                        ConvertProgressEmitted progressEvent;
+                        ConversionProgressed progressEvent;
         
                         if (RegexEngine.IsProgressData(e.Data, out progressEvent))
                         {
@@ -228,8 +254,7 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                         break;
                 }
 
-                
-                Context.Stop(Self);
+                Self.Tell(new GetWaveformData());
             }
         }
 
@@ -282,9 +307,23 @@ namespace Transcoding.Transcoder.Actors.Transcoding
 
         private ProcessStartInfo GenerateStartInfo(EngineParameters engineParameters)
         {
-            string arguments = CommandBuilder.Serialize(engineParameters);
+            var arguments = CommandBuilder.Serialize(engineParameters);
 
             return this.GenerateStartInfo(arguments);
+        }
+        
+        public class GetWaveformData{}
+        
+        public static Image<Rgba32> InitPic(Image<Rgba32> bmp)
+        {
+            for (var i = 0; i < bmp.Width; i++)
+            {
+                for (var j = 0; j < bmp.Height; j++)
+                {
+                    bmp[i, j] = Rgba32.White;
+                }
+            }
+            return bmp;
         }
     }
 }

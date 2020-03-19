@@ -16,6 +16,7 @@ namespace Transcoding.Application
         public static async Task Main(string[] args)
         {
             if (false) //windoze
+#pragma warning disable 162
             {
                 var ffmpegPath = Path.Combine(@"C:\Workspace\FFMPEG\bin\ffmpeg.exe");
                 var input = Path.Combine(Environment.CurrentDirectory, "0.wav");
@@ -27,6 +28,7 @@ namespace Transcoding.Application
 
                 await TranscodeAudio(ffmpegPath,input, outputs);
             } 
+#pragma warning restore 162
             else if (true) //mac
             {
                 var ffmpegPath = Path.Combine(@"/usr/local/bin/ffmpeg");
@@ -43,7 +45,7 @@ namespace Transcoding.Application
                     .Select(x => $"/Users/lutandongqakaza/Workspace/Entropy/Transcoding.Prototype/media/{Guid.NewGuid()}.png")
                     .ToArray();
 
-                await TranscodeAudio(ffmpegPath,input, waveformOutputs);
+                await TranscodeAudio(ffmpegPath,input, audioOutputs);
             }
             
         }
@@ -74,11 +76,11 @@ namespace Transcoding.Application
             {
                 var outputFile = new MediaFile(path);
                 await Task.Delay(200);
-                var command = new StartTranscoding(Guid.NewGuid(),inputFile,outputFile,transcodingOptions,ffmpegPath);
+                var transcodingCommand = new StartTranscoding(Guid.NewGuid(),inputFile,outputFile,transcodingOptions,ffmpegPath);
                 var waveformCommand = new StartAnalysis(Guid.NewGuid(),inputFile,outputFile,analysisOptions,ffmpegPath);
                 
-                //transcoderManager.Tell(command);
-                transcoderManager.Tell(waveformCommand);
+                transcoderManager.Tell(transcodingCommand);
+                //transcoderManager.Tell(waveformCommand);
             }
             
             Console.WriteLine("Done");
@@ -91,7 +93,7 @@ namespace Transcoding.Application
                 try
                 {
                     await Task.Delay(1000);
-                    var result = await transcoderManager.Ask<StatusResult>(new StatusPls(), TimeSpan.FromSeconds(5));
+                    var result = await transcoderManager.Ask<StatusResult>(new GetStatus(), TimeSpan.FromSeconds(5));
                     Console.WriteLine($"P{result.InProgress} - C{result.Completed} - F{result.Failed}");
                 }
                 catch

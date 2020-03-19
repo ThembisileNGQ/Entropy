@@ -3,9 +3,10 @@
     public class MediaFile
     {
         public string Filename { get; set; }
-        public Metadata Metadata { get; internal set; }
+        public Metadata Metadata { get; }
 
-        public MediaFile(string filename)
+        public MediaFile(
+            string filename)
         {
             Filename = filename;
         }

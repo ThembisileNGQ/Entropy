@@ -15,7 +15,7 @@ namespace Transcoding.Transcoder.Actors.Transcoding
         {
             _logger = Context.GetLogger();
 
-            Receive<StatusPls>(Handle);
+            Receive<GetStatus>(Handle);
             Receive<StartTranscoding>(Handle);
             Receive<StartAnalysis>(Handle);
             Receive<ReportTranscodingProgress>(Handle);
@@ -31,7 +31,7 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                 command.Input,
                 command.Output,
                 command.ConversionOptions,
-                command._ffmpegPath)),$"transcododer-{command.TranscodingId}");
+                command._ffmpegPath)),$"transcoder-{command.TranscodingId}");
             
             actor.Tell(new Start());
             InProgress++;
@@ -76,7 +76,7 @@ namespace Transcoding.Transcoder.Actors.Transcoding
             return true;
         }
 
-        public bool Handle(StatusPls query)
+        public bool Handle(GetStatus query)
         {
             Sender.Tell(new StatusResult(InProgress,Completed,Failed));
 

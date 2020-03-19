@@ -50,13 +50,7 @@ namespace Transcoding.Transcoder.Actors.Transcoding
             ReceivedMessagesLog = new List<string>();
             Exceptions = new List<Exception>();
             Status = Status.NotStarted;
-            EngineParameters  = new EngineParameters
-            {
-                InputFile = Input,
-                OutputFile = Output,
-                ConversionOptions = ConversionOptions,
-                Task = FFmpegTask.Convert
-            };
+            EngineParameters = new EngineParameters(ConversionOptions, Input, Output, FFmpegTask.TranscodeAudio);
             
             Receive<Start>(Handle);
             
@@ -74,9 +68,7 @@ namespace Transcoding.Transcoder.Actors.Transcoding
         private void StartProcess(EngineParameters engineParameters)
         {
 
-            var processStartInfo = engineParameters.HasCustomArguments
-                ? this.GenerateStartInfo(engineParameters.CustomArguments)
-                : this.GenerateStartInfo(engineParameters);
+            var processStartInfo = GenerateStartInfo(engineParameters);
 
             RunProcess(processStartInfo);
         }
@@ -102,24 +94,19 @@ namespace Transcoding.Transcoder.Actors.Transcoding
                         
                         if (EngineParameters.InputFile != null)
                         {
-                            RegexEngine.TestVideo(e.Data, EngineParameters);
-                            RegexEngine.TestAudio(e.Data, EngineParameters);
+                            //RegexEngine.TestAudio(e.Data, EngineParameters);
         
-                            Match matchDuration = RegexEngine.Index[RegexEngine.Find.Duration].Match(e.Data);
+                            var matchDuration = RegexEngine.Index[RegexEngine.Find.Duration].Match(e.Data);
                             if (matchDuration.Success)
                             {
-                                if (EngineParameters.InputFile.Metadata == null)
-                                {
-                                    EngineParameters.InputFile.Metadata = new Metadata();
-                                }
                                 var totalMediaDuration = new TimeSpan();
                                 TimeSpan.TryParse(matchDuration.Groups[1].Value, out totalMediaDuration);
                                 TotalMediaDuration = totalMediaDuration;
-                                EngineParameters.InputFile.Metadata.Duration = TotalMediaDuration;
+                                //EngineParameters.InputFile.Metadata.Duration = TotalMediaDuration;
                             }
                         }
                         ConversionCompleted convertCompleted;
-                        ConvertProgressEmitted progressEvent;
+                        ConversionProgressed progressEvent;
         
                         if (RegexEngine.IsProgressData(e.Data, out progressEvent))
                         {
@@ -233,11 +220,6 @@ namespace Transcoding.Transcoder.Actors.Transcoding
             }
         }
 
-        public void Handle(object sender, DataReceivedEventArgs e)
-        {
-            
-            
-        }
 
         private void EnsureFFmpegFileExists(string path)
         {
@@ -282,9 +264,9 @@ namespace Transcoding.Transcoder.Actors.Transcoding
 
         private ProcessStartInfo GenerateStartInfo(EngineParameters engineParameters)
         {
-            string arguments = CommandBuilder.Serialize(engineParameters);
+            var arguments = CommandBuilder.Serialize(engineParameters);
 
-            return this.GenerateStartInfo(arguments);
+            return GenerateStartInfo(arguments);
         }
     }
 

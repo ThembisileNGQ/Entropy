@@ -7,21 +7,7 @@
     {
     }
 
-    public class Begin
-    {
-    }
-
-    public class Done
-    {
-
-    }
-    
-    public class Accepted
-    {
-
-    }
-
-    public class StatusPls
+    public class GetStatus
     {
         
     }
